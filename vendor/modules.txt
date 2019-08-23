@@ -1,0 +1,16 @@
+# github.com/aaronland/go-http-bootstrap v0.0.2
+github.com/aaronland/go-http-bootstrap
+github.com/aaronland/go-http-bootstrap/resources
+# github.com/aaronland/go-http-rewrite v0.0.1
+github.com/aaronland/go-http-rewrite
+# github.com/sfomuseum/go-placeholder-client v0.0.0-20190823231203-babac5a8ec62
+github.com/sfomuseum/go-placeholder-client
+github.com/sfomuseum/go-placeholder-client/filters
+github.com/sfomuseum/go-placeholder-client/results
+# github.com/whosonfirst/go-bindata-assetfs v1.0.1
+github.com/whosonfirst/go-bindata-assetfs
+# github.com/whosonfirst/go-http-nextzenjs v0.1.1
+github.com/whosonfirst/go-http-nextzenjs
+# golang.org/x/net v0.0.0-20190628185345-da137c7871d7
+golang.org/x/net/html
+golang.org/x/net/html/atom
