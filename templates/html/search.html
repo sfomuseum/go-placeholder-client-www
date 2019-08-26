@@ -1,0 +1,35 @@
+{{ define "search" }}
+{{ template "header" . }}
+<div class="container">
+
+    <div class="row">
+	<form class="form-inline" method="GET">
+	    <div class="form-group">
+		<input type="text" class="form-control" name="text" id="text" placeholder="Enter a place name to search for" value="{{ .Query }}" /></input>
+	    </div>
+	    <button type="submit" class="btn btn-primary">Search</button>
+	</form>
+    </div>
+    
+{{ if .Query }}
+    <div class="row">
+	
+	<h3>Query results for {{ .Query }}</h3>
+	
+	{{if  .Error }}
+	<div class="alert alert-warning" role="alert">
+	    <p>Unable to complete query successfully. Error reported is:</p>
+	    <code>{{ .Error }}</code>
+	</div>
+	{{ else }}
+	
+	<div id="map"></div>
+	
+	{{ end }}
+	
+    </div>
+    {{ end }}
+    
+</div>
+{{ template "footer" . }}
+{{ end }}

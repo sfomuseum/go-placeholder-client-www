@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
 	"github.com/sfomuseum/go-placeholder-client"
+	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
 	"github.com/sfomuseum/go-placeholder-client-www/http"
 	"github.com/whosonfirst/go-http-nextzenjs"
 	"html/template"
@@ -36,17 +37,30 @@ func main() {
 
 	if *path_templates != "" {
 
-		tp, err := template.ParseGlob(*path_templates)
+		t, err = template.ParseGlob(*path_templates)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		t = tp
-
 	} else {
 
-		log.Fatal("Please finish writing me")
+		t = template.New("placeholder")
+
+		for _, name := range templates.AssetNames() {
+
+			body, err := templates.Asset(name)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			t, err = t.Parse(string(body))
+
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
 	}
 
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()

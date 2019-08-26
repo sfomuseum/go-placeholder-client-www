@@ -8,6 +8,7 @@ github.com/abbot/go-http-auth v0.4.0 h1:QjmvZ5gSC7jm3Zg54DqWE/T5m1t2AfDu6QlXJT0E
 github.com/abbot/go-http-auth v0.4.0/go.mod h1:Cz6ARTIzApMJDzh5bRMSUou6UMSp0IEXg9km/ci7TJM=
 github.com/sfomuseum/go-placeholder-client v0.0.0-20190823231203-babac5a8ec62 h1:YGejfVUSP5pg7UTEVpH26+h5SUsmnVd3jOpFecS1Fyk=
 github.com/sfomuseum/go-placeholder-client v0.0.0-20190823231203-babac5a8ec62/go.mod h1:YpOxi2qgjCb7agCUMuuv0vZTShHS7n1EJ70bBRr5+hI=
+github.com/whosonfirst/go-bindata v0.1.0 h1:SIjIa/+blKoda8iTaWqxzwFtEc00jNcB2M9dRwGemrg=
 github.com/whosonfirst/go-bindata v0.1.0/go.mod h1:qaBkVepgCeknoVuYsUXTJpnlxqrEcZzaIaqZ6XaK+Hk=
 github.com/whosonfirst/go-bindata-assetfs v1.0.1 h1:AA328GrND8/uDkf5+5U9Fakgr7QkzET/a6uuXDYpQp0=
 github.com/whosonfirst/go-bindata-assetfs v1.0.1/go.mod h1:ZCQnq9roYYk19IAwLQyMnDPSmE+lns9K85+85JSQ4DI=
