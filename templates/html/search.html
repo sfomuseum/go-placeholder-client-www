@@ -14,7 +14,7 @@
 {{ if .Query }}
     <div class="row">
 	
-	<h3>Query results for {{ .Query }}</h3>
+	<h3>Query results for <q>{{ .Query }}</q></h3>
 	
 	{{if  .Error }}
 	<div class="alert alert-warning" role="alert">
@@ -24,6 +24,27 @@
 	{{ else }}
 	
 	<div id="map"></div>
+
+	<table class="table">
+	    <tr>
+		<th>ID</th>
+		<th>Name</th>
+		<th>Placetype</th>
+		<th>Country</th>
+		<th>Latitude</th>
+		<th>Longitude</th>		
+	    </tr>
+	    {{ range $i, $r := .Results }}
+	    <tr class="result" id="result-{{ $r.Id }}">
+		<td><a href="https://spelunker.whosonfirst.org/id/{{ $r.Id }}">{{ $r.Id }}</a></td>
+		<td class="result-name">{{ $r.Name }}</td>
+		<td class="result-placetype">{{ $r.Placetype }}</td>
+		<td class="result-country">...</td>
+		<td class="result-latitude">{{ $r.Geometry.Latitude }}</td>
+		<td class="result-longitude">{{ $r.Geometry.Longitude }}</td>		
+	    </tr>
+	{{ end }}
+	</table>
 	
 	{{ end }}
 	
