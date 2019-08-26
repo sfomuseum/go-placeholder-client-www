@@ -7,6 +7,7 @@ require (
 	github.com/aaronland/go-http-sanitize v0.0.4
 	github.com/abbot/go-http-auth v0.4.0 // indirect
 	github.com/sfomuseum/go-placeholder-client v0.0.0-20190823231203-babac5a8ec62
+	github.com/whosonfirst/algnhsa v0.1.0
 	github.com/whosonfirst/go-bindata v0.1.0
 	github.com/whosonfirst/go-http-nextzenjs v0.1.1
 )

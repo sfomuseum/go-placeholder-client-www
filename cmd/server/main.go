@@ -7,21 +7,24 @@ import (
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
 	"github.com/sfomuseum/go-placeholder-client-www/http"
+	"github.com/sfomuseum/go-placeholder-client-www/server"	
 	"github.com/whosonfirst/go-http-nextzenjs"
 	"html/template"
 	"log"
 	gohttp "net/http"
+	gourl "net/url"	
 )
 
 func main() {
 
-	placeholder_endpoint := flag.String("placeholder-endpoint", client.DEFAULT_ENDPOINT, "...")
+	placeholder_endpoint := flag.String("placeholder-endpoint", client.DEFAULT_ENDPOINT, "The address of the Placeholder endpoint to query.")
 
-	host := flag.String("host", "localhost", "...")
-	port := flag.Int("port", 8080, "...")
+	var proto = flag.String("protocol", "http", "The protocol for placeholder-client server to listen on. Valid protocols are: http, lambda.")	
+	host := flag.String("host", "localhost", "The host to listen for requests on.")
+	port := flag.Int("port", 8080, "The port to listen for requests on.")
 
-	nextzen_apikey := flag.String("nextzen-apikey", "", "...")
-	path_templates := flag.String("templates", "", "...")
+	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
+	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the `templates.ParseGlob` method.")
 
 	flag.Parse()
 
@@ -99,10 +102,23 @@ func main() {
 		log.Fatal(err)
 	}
 
-	www_endpoint := fmt.Sprintf("%s:%d", *host, *port)
-	log.Printf("Listening for requests on %s\n", www_endpoint)
+	address := fmt.Sprintf("http://%s:%d", *host, *port)
 
-	err = gohttp.ListenAndServe(www_endpoint, mux)
+	u, err := gourl.Parse(address)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	s, err := server.NewStaticServer(*proto, u)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Listening on %s\n", s.Address())
+
+	err = s.ListenAndServe(mux)
 
 	if err != nil {
 		log.Fatal(err)
