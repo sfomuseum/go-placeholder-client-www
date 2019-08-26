@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
 	"github.com/sfomuseum/go-placeholder-client"
-	"github.com/sfomuseum/go-placeholder-client-www/http"	
+	"github.com/sfomuseum/go-placeholder-client-www/http"
 	"github.com/whosonfirst/go-http-nextzenjs"
+	"html/template"
 	"log"
 	gohttp "net/http"
 )
@@ -17,18 +18,20 @@ func main() {
 
 	host := flag.String("host", "localhost", "...")
 	port := flag.Int("port", 8080, "...")
-	
+
 	flag.Parse()
-	
+
 	cl, err := client.NewPlaceholderClient(*placeholder_endpoint)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	mux := gohttp.NewServeMux()
 
-	search_handler, err := http.NewSearchHandler(cl)
+	var t *template.Template
+
+	search_handler, err := http.NewSearchHandler(cl, t)
 
 	if err != nil {
 		log.Fatal(err)
@@ -36,9 +39,9 @@ func main() {
 
 	// auth-y bits go here, yeah
 	// "github.com/abbot/go-http-auth"
-	
+
 	mux.Handle("/", search_handler)
-	
+
 	err = bootstrap.AppendAssetHandlers(mux)
 
 	if err != nil {
@@ -50,7 +53,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	www_endpoint := fmt.Sprintf("%s:%d", *host, *port)
 	log.Printf("Listening for requests on %s\n", www_endpoint)
 
