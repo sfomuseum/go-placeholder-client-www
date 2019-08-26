@@ -15,7 +15,7 @@ type SearchVars struct {
 	Error   error
 }
 
-func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohttp.HandlerFunc, error) {
+func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohttp.Handler, error) {
 
 	t = t.Lookup("search")
 

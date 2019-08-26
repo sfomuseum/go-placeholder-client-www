@@ -19,8 +19,9 @@ func main() {
 	host := flag.String("host", "localhost", "...")
 	port := flag.Int("port", 8080, "...")
 
+	nextzen_apikey := flag.String("nextzen-apikey", "", "...")
 	path_templates := flag.String("templates", "", "...")
-	
+
 	flag.Parse()
 
 	cl, err := client.NewPlaceholderClient(*placeholder_endpoint)
@@ -34,7 +35,7 @@ func main() {
 	var t *template.Template
 
 	if *path_templates != "" {
-		
+
 		tp, err := template.ParseGlob(*path_templates)
 
 		if err != nil {
@@ -42,13 +43,26 @@ func main() {
 		}
 
 		t = tp
-		
+
 	} else {
 
 		log.Fatal("Please finish writing me")
 	}
-	
+
+	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
+
+	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
+	nextzen_opts.APIKey = *nextzen_apikey
+
 	search_handler, err := http.NewSearchHandler(cl, t)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	search_handler = bootstrap.AppendResourcesHandler(search_handler, bootstrap_opts)
+
+	search_handler, err = nextzenjs.NextzenJSHandler(search_handler, nextzen_opts)
 
 	if err != nil {
 		log.Fatal(err)
