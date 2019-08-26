@@ -10,4 +10,5 @@ require (
 	github.com/whosonfirst/algnhsa v0.1.0
 	github.com/whosonfirst/go-bindata v0.1.0
 	github.com/whosonfirst/go-http-nextzenjs v0.1.1
+	github.com/whosonfirst/go-whosonfirst-cli v0.1.0
 )

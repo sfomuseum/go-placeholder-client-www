@@ -25,11 +25,12 @@
 	
 	<div id="map"></div>
 
-	<table class="table">
+	<table class="table table-striped">
 	    <tr>
 		<th>ID</th>
 		<th>Name</th>
 		<th>Placetype</th>
+		<th>Region</th>		
 		<th>Country</th>
 		<th>Latitude</th>
 		<th>Longitude</th>		
@@ -39,7 +40,8 @@
 		<td><a href="https://spelunker.whosonfirst.org/id/{{ $r.Id }}">{{ $r.Id }}</a></td>
 		<td class="result-name">{{ $r.Name }}</td>
 		<td class="result-placetype">{{ $r.Placetype }}</td>
-		<td class="result-country">...</td>
+		<td class="result-country">{{ range $j, $rg := Ancestors $r "region" }}{{ $rg.Name }}{{ end }}</td>		
+		<td class="result-country">{{ range $j, $c := Ancestors $r "country" }}{{ $c.Name }}{{ end }}</td>
 		<td class="result-latitude">{{ $r.Geometry.Latitude }}</td>
 		<td class="result-longitude">{{ $r.Geometry.Longitude }}</td>		
 	    </tr>

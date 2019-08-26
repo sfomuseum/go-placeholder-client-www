@@ -23,6 +23,10 @@ func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohtt
 		return nil, errors.New("Missing search template")
 	}
 
+	t = t.Funcs(template.FuncMap{
+		"Ancestors": Ancestors,
+	})
+	
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
 
 		text, err := sanitize.GetString(req, "text")

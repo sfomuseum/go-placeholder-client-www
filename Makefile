@@ -8,3 +8,12 @@ bake-assets:
 	# mv bindata.go http/assetfs.go
 	rm -rf templates/html/*~
 	bin/go-bindata -pkg templates -o assets/templates/html.go templates/html
+
+lambda:
+	go mod vendor
+	@make bake-assets
+	if test -f main; then rm -f main; fi
+	if test -f deployment.zip; then rm -f deployment.zip; fi
+	GOOS=linux go build -mod vendor -o main cmd/server/main.go
+	zip deployment.zip main
+	rm -f main

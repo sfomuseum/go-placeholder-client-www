@@ -9,6 +9,7 @@ import (
 	"github.com/sfomuseum/go-placeholder-client-www/http"
 	"github.com/sfomuseum/go-placeholder-client-www/server"
 	"github.com/whosonfirst/go-http-nextzenjs"
+	"github.com/whosonfirst/go-whosonfirst-cli/flags"	
 	"html/template"
 	"log"
 	gohttp "net/http"
@@ -28,6 +29,12 @@ func main() {
 
 	flag.Parse()
 
+	err := flags.SetFlagsFromEnvVars("PLACEHOLDER")
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+	
 	cl, err := client.NewPlaceholderClient(*placeholder_endpoint)
 
 	if err != nil {
@@ -36,19 +43,19 @@ func main() {
 
 	mux := gohttp.NewServeMux()
 
-	var t *template.Template
+	t := template.New("placeholder-client").Funcs(template.FuncMap{
+		"Ancestors": http.Ancestors,
+	})
 
 	if *path_templates != "" {
 
-		t, err = template.ParseGlob(*path_templates)
+		t, err = t.ParseGlob(*path_templates)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
 	} else {
-
-		t = template.New("placeholder")
 
 		for _, name := range templates.AssetNames() {
 
