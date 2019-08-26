@@ -9,6 +9,11 @@ bake-assets:
 	rm -rf templates/html/*~
 	bin/go-bindata -pkg templates -o assets/templates/html.go templates/html
 
+docker:
+	go mod vendor
+	@make bake-assets
+	docker build -t placeholder-client-www .
+
 lambda:
 	go mod vendor
 	@make bake-assets

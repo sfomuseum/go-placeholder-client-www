@@ -25,7 +25,7 @@ func main() {
 	port := flag.Int("port", 8080, "The port to listen for requests on.")
 
 	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
-	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the `templates.ParseGlob` method.")
+	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
 	flag.Parse()
 

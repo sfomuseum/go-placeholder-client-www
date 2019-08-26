@@ -22,3 +22,5 @@ _Please write me._
 ## See also
 
 * https://github.com/sfomuseum/go-placeholder-client
+* https://github.com/sfomuseum/docker-placeholder
+* https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
