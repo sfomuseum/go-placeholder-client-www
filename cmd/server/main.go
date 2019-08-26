@@ -19,6 +19,8 @@ func main() {
 	host := flag.String("host", "localhost", "...")
 	port := flag.Int("port", 8080, "...")
 
+	path_templates := flag.String("templates", "", "...")
+	
 	flag.Parse()
 
 	cl, err := client.NewPlaceholderClient(*placeholder_endpoint)
@@ -31,6 +33,21 @@ func main() {
 
 	var t *template.Template
 
+	if *path_templates != "" {
+		
+		tp, err := template.ParseGlob(*path_templates)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		t = tp
+		
+	} else {
+
+		log.Fatal("Please finish writing me")
+	}
+	
 	search_handler, err := http.NewSearchHandler(cl, t)
 
 	if err != nil {

@@ -1,0 +1,14 @@
+{{ define "search" }}
+{{ template "header" . }}
+
+<div id="map"></div>
+
+<form class="form" method="GET">
+    <div class="form-group">
+	<input type="text" class="form-control" name="text" id="text" placeholder="..." /></input>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+{{ template "footer" . }}
+{{ end }}
