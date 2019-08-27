@@ -2,6 +2,8 @@ github.com/aaronland/go-http-bootstrap v0.0.2 h1:5lMN2tY7ID8Tv5bFtAuKonX1CxLHEOs
 github.com/aaronland/go-http-bootstrap v0.0.2/go.mod h1:qDKoTlgqhqnYHcvSHGkH7Jrx7uz0t25HpsDv6MIFQio=
 github.com/aaronland/go-http-bootstrap v0.0.3 h1:rzjbj0hD2bcDrUSnU63QgdwoYY7wSp8l/jTLumDcGlA=
 github.com/aaronland/go-http-bootstrap v0.0.3/go.mod h1:RzgPzdG7EYaM7m7mHcTryXoswp7zyu9jtV071j/xgpc=
+github.com/aaronland/go-http-bootstrap v0.0.4 h1:1jQkQ3lUqmJkdFSTWzMuUk+MCnoUDLTejXiCApJ5iCc=
+github.com/aaronland/go-http-bootstrap v0.0.4/go.mod h1:RzgPzdG7EYaM7m7mHcTryXoswp7zyu9jtV071j/xgpc=
 github.com/aaronland/go-http-rewrite v0.0.1 h1:nQ4qqtOC0QHpEhQeFpRRwdXAEwuhHhgsxQaV3hDT8iw=
 github.com/aaronland/go-http-rewrite v0.0.1/go.mod h1:g62jjXpsArD0lzJLs9bVLR9Locdt3f4OmqFkkJL2rQU=
 github.com/aaronland/go-http-rewrite v0.0.2 h1:H9uW+mL6V//BS927a9rFBSkOKDL3bGIlaPiVIC6UN3I=
@@ -34,6 +36,8 @@ github.com/whosonfirst/go-bindata-assetfs v1.0.1 h1:AA328GrND8/uDkf5+5U9Fakgr7Qk
 github.com/whosonfirst/go-bindata-assetfs v1.0.1/go.mod h1:ZCQnq9roYYk19IAwLQyMnDPSmE+lns9K85+85JSQ4DI=
 github.com/whosonfirst/go-http-nextzenjs v0.1.1 h1:0I/gbYPbw6qNGNfqb/ME4KCjgCg8RZk677lZjFmndpw=
 github.com/whosonfirst/go-http-nextzenjs v0.1.1/go.mod h1:Wn7C4qlWF0H5TTu1gasyqiRowHTo7G05HTEO/AUDKLA=
+github.com/whosonfirst/go-http-nextzenjs v0.1.2 h1:9yn2+KqbtDuMujADK7dwIyD077lS67X7a80EOrATFI4=
+github.com/whosonfirst/go-http-nextzenjs v0.1.2/go.mod h1:c7YU2W4Nrk8NR6rF4BrJgcs8q2PzceYWNBkzt5RPn5E=
 github.com/whosonfirst/go-sanitize v0.1.0 h1:ygSqCnakwdzH/m8UEa15zXGDsoo5/JJeRkgmAjXZrBU=
 github.com/whosonfirst/go-sanitize v0.1.0/go.mod h1:p/emgbafMM0p5iVAz2XWwecYPl06Tw4Jos9rhTKIrt8=
 github.com/whosonfirst/go-whosonfirst-cli v0.1.0 h1:Wwj9z0R/ryHmPmpVm5jCbXdG4agJzKMWXDtPVReN/KA=

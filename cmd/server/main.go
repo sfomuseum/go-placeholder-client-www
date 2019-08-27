@@ -24,7 +24,8 @@ func main() {
 	host := flag.String("host", "localhost", "The host to listen for requests on.")
 	port := flag.Int("port", 8080, "The port to listen for requests on.")
 
-	bootstrap_prefix := flag.String("bootstrap-prefix", "", "Prefix to use for Bootstrap resource URLs")
+	bootstrap_prefix := flag.String("bootstrap-prefix", "", "Prefix to use for Bootstrap resource URLs.")
+	nextzenjs_prefix := flag.String("nextzenjs-prefix", "", "Prefix to use for NextzenJS resource URLs.")	
 
 	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
@@ -76,35 +77,11 @@ func main() {
 	}
 
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
-	bootstrap_opts.Prefix = *bootstrap_prefix
 	
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
 	nextzen_opts.APIKey = *nextzen_apikey
 
-	log.Println("NETZEN", nextzen_opts)
-
-	search_handler, err := http.NewSearchHandler(cl, t)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	search_handler = bootstrap.AppendResourcesHandler(search_handler, bootstrap_opts)
-
-	/*
-		search_handler, err = nextzenjs.NextzenJSHandler(search_handler, nextzen_opts)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-	*/
-
-	// auth-y bits go here, yeah
-	// "github.com/abbot/go-http-auth"
-
-	mux.Handle("/", search_handler)
-
-	err = bootstrap.AppendAssetHandlers(mux, bootstrap_opts)
+	err = bootstrap.AppendAssetHandlers(mux)
 
 	if err != nil {
 		log.Fatal(err)
@@ -115,6 +92,20 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	search_handler, err := http.NewSearchHandler(cl, t)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, *bootstrap_prefix)
+	search_handler = nextzenjs.AppendResourcesHandlerWithPrefix(search_handler, nextzen_opts, *nextzenjs_prefix)
+
+	// auth-y bits go here, yeah
+	// "github.com/abbot/go-http-auth"
+
+	mux.Handle("/search", search_handler)
 
 	address := fmt.Sprintf("http://%s:%d", *host, *port)
 

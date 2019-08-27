@@ -11,7 +11,6 @@ import (
 type BootstrapOptions struct {
 	JS  []string
 	CSS []string
-	Prefix string
 }
 
 func DefaultBootstrapOptions() *BootstrapOptions {
@@ -19,29 +18,31 @@ func DefaultBootstrapOptions() *BootstrapOptions {
 	opts := &BootstrapOptions{
 		CSS: []string{"/css/bootstrap.min.css"},
 		JS:  []string{"/javascript/bootstrap.min.js"},
-		Prefix: "",
 	}
 
 	return opts
 }
 
 func AppendResourcesHandler(next http.Handler, opts *BootstrapOptions) http.Handler {
+	return AppendResourcesHandlerWithPrefix(next, opts, "")
+}
+
+func AppendResourcesHandlerWithPrefix(next http.Handler, opts *BootstrapOptions, prefix string) http.Handler {
 
 	js := opts.JS
 	css := opts.CSS
 
-	if opts.Prefix != "" {
+	if prefix != "" {
 
 		for i, path := range js {
-			js[i] = appendPrefix(opts.Prefix, path)
+			js[i] = appendPrefix(prefix, path)
 		}
 
 		for i, path := range css {
-			css[i] = appendPrefix(opts.Prefix, path)
+			css[i] = appendPrefix(prefix, path)
 		}
 	}
-	
-	
+
 	ext_opts := &resources.AppendResourcesOptions{
 		JS:  js,
 		CSS: css,
@@ -56,7 +57,11 @@ func AssetsHandler() (http.Handler, error) {
 	return http.FileServer(fs), nil
 }
 
-func AppendAssetHandlers(mux *http.ServeMux, opts *BootstrapOptions) error {
+func AppendAssetHandlers(mux *http.ServeMux) error {
+	return AppendAssetHandlersWithPrefix(mux, "")
+}
+
+func AppendAssetHandlersWithPrefix(mux *http.ServeMux, prefix string) error {
 
 	asset_handler, err := AssetsHandler()
 
@@ -68,8 +73,8 @@ func AppendAssetHandlers(mux *http.ServeMux, opts *BootstrapOptions) error {
 
 		path := strings.Replace(path, "static", "", 1)
 
-		if opts.Prefix != "" {
-			path = appendPrefix(opts.Prefix, path)
+		if prefix != "" {
+			path = appendPrefix(prefix, path)
 		}
 
 		mux.Handle(path, asset_handler)
@@ -82,7 +87,7 @@ func appendPrefix(prefix string, path string) string {
 
 	prefix = strings.TrimRight(prefix, "/")
 
-	if prefix !=  "" {
+	if prefix != "" {
 		path = strings.TrimLeft(path, "/")
 		path = filepath.Join(prefix, path)
 	}

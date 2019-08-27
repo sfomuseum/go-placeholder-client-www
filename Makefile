@@ -1,5 +1,8 @@
 CWD=$(shell pwd)
 
+debug:
+	go run -mod vendor cmd/server/main.go
+
 bake-assets:
 	go build -o bin/go-bindata cmd/go-bindata/main.go
 	go build -o bin/go-bindata-assetfs cmd/go-bindata-assetfs/main.go
