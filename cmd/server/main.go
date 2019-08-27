@@ -78,12 +78,16 @@ func main() {
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
 	nextzen_opts.APIKey = *nextzen_apikey
 
+	log.Println("BOOTSTRAP", bootstrap_opts)
+	log.Println("NETZEN", nextzen_opts)	
+	
 	search_handler, err := http.NewSearchHandler(cl, t)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	/*
 	search_handler = bootstrap.AppendResourcesHandler(search_handler, bootstrap_opts)
 
 	search_handler, err = nextzenjs.NextzenJSHandler(search_handler, nextzen_opts)
@@ -91,7 +95,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	*/
+	
 	// auth-y bits go here, yeah
 	// "github.com/abbot/go-http-auth"
 

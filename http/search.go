@@ -49,8 +49,10 @@ func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohtt
 			}
 		}
 
-		rsp.Header().Set("Content-Type", "text/html")
+		// important if we're trying to use this in a Lambda/API Gateway context
 		
+		rsp.Header().Set("Content-Type", "text/html; charset=utf-8")
+				
 		err = t.Execute(rsp, search_vars)
 
 		if err != nil {

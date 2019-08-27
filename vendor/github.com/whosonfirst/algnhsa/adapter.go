@@ -14,12 +14,21 @@ func handleEvent(ctx context.Context, event events.APIGatewayProxyRequest, handl
 	if err != nil {
 		return events.APIGatewayProxyResponse{}, err
 	}
-
-	log.Println("NEW REQUEST 2", r)
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, r)
 
-	log.Println("NEW RESPONSE 2", w.Result().Header)
+	log.Println("SERVED")
+	
+	for k, v := range w.Header() {
+		log.Println("W HEADER", k, v)
+	}
+
+	for k, v := range w.HeaderMap {
+		log.Println("W HEADER MAP", k, v)
+	}
+
+	log.Println("RESPONSE")
+	
 	return newAPIGatewayResponse(w, opts.binaryContentTypeMap)
 }
 
