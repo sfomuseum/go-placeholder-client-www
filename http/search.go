@@ -26,7 +26,7 @@ func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohtt
 	t = t.Funcs(template.FuncMap{
 		"Ancestors": Ancestors,
 	})
-	
+
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
 
 		text, err := sanitize.GetString(req, "text")
@@ -50,9 +50,9 @@ func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohtt
 		}
 
 		// important if we're trying to use this in a Lambda/API Gateway context
-		
+
 		rsp.Header().Set("Content-Type", "text/html; charset=utf-8")
-				
+
 		err = t.Execute(rsp, search_vars)
 
 		if err != nil {

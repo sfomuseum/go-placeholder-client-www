@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
-	"log"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
@@ -16,19 +16,6 @@ func handleEvent(ctx context.Context, event events.APIGatewayProxyRequest, handl
 	}
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, r)
-
-	log.Println("SERVED")
-	
-	for k, v := range w.Header() {
-		log.Println("W HEADER", k, v)
-	}
-
-	for k, v := range w.HeaderMap {
-		log.Println("W HEADER MAP", k, v)
-	}
-
-	log.Println("RESPONSE")
-	
 	return newAPIGatewayResponse(w, opts.binaryContentTypeMap)
 }
 

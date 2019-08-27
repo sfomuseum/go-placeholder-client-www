@@ -9,7 +9,7 @@ import (
 	"github.com/sfomuseum/go-placeholder-client-www/http"
 	"github.com/sfomuseum/go-placeholder-client-www/server"
 	"github.com/whosonfirst/go-http-nextzenjs"
-	"github.com/whosonfirst/go-whosonfirst-cli/flags"	
+	"github.com/whosonfirst/go-whosonfirst-cli/flags"
 	"html/template"
 	"log"
 	gohttp "net/http"
@@ -24,17 +24,19 @@ func main() {
 	host := flag.String("host", "localhost", "The host to listen for requests on.")
 	port := flag.Int("port", 8080, "The port to listen for requests on.")
 
+	bootstrap_prefix := flag.String("bootstrap-prefix", "", "Prefix to use for Bootstrap resource URLs")
+
 	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
 	flag.Parse()
 
 	err := flags.SetFlagsFromEnvVars("PLACEHOLDER")
-	
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	cl, err := client.NewPlaceholderClient(*placeholder_endpoint)
 
 	if err != nil {
@@ -74,35 +76,35 @@ func main() {
 	}
 
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
-
+	bootstrap_opts.Prefix = *bootstrap_prefix
+	
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
 	nextzen_opts.APIKey = *nextzen_apikey
 
-	log.Println("BOOTSTRAP", bootstrap_opts)
-	log.Println("NETZEN", nextzen_opts)	
-	
+	log.Println("NETZEN", nextzen_opts)
+
 	search_handler, err := http.NewSearchHandler(cl, t)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	/*
 	search_handler = bootstrap.AppendResourcesHandler(search_handler, bootstrap_opts)
 
-	search_handler, err = nextzenjs.NextzenJSHandler(search_handler, nextzen_opts)
+	/*
+		search_handler, err = nextzenjs.NextzenJSHandler(search_handler, nextzen_opts)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+		if err != nil {
+			log.Fatal(err)
+		}
 	*/
-	
+
 	// auth-y bits go here, yeah
 	// "github.com/abbot/go-http-auth"
 
 	mux.Handle("/", search_handler)
 
-	err = bootstrap.AppendAssetHandlers(mux)
+	err = bootstrap.AppendAssetHandlers(mux, bootstrap_opts)
 
 	if err != nil {
 		log.Fatal(err)

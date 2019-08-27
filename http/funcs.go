@@ -10,19 +10,19 @@ func Ancestors(r *results.PlaceholderRecord, placetype string) []*results.Placeh
 	candidates := make(map[int64]*results.PlaceholderRecord)
 
 	if placetype != r.Placetype {
-	for _, l := range r.Lineage {
+		for _, l := range r.Lineage {
 
-		a, ok := l[placetype]
+			a, ok := l[placetype]
 
-		if ok {
-			candidates[a.Id] = &a
+			if ok {
+				candidates[a.Id] = &a
+			}
+		}
+
+		for _, a := range candidates {
+			ancestors = append(ancestors, a)
 		}
 	}
 
-	for _, a := range candidates {
-		ancestors = append(ancestors, a)
-	}
-	}
-	
 	return ancestors
 }
