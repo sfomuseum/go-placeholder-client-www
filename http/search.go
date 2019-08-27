@@ -49,6 +49,8 @@ func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohtt
 			}
 		}
 
+		rsp.Header().Set("Content-Type", "text/html")
+		
 		err = t.Execute(rsp, search_vars)
 
 		if err != nil {
