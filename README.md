@@ -19,6 +19,17 @@ You will need a `IAM` role with the following (AWS managed) policies:
 
 _Please write me._
 
+#### Environment variables
+
+| Key | Value | Notes |
+| --- | --- | --- |
+| PLACEHOLDER_PLACEHOLDER_ENDPOINT | ... |
+| PLACEHOLDER_PROTOCOL | lambda |
+| PLACEHOLDER_BOOTSTRAP_PREFIX | ... |
+| PLACEHOLDER_NEXTZENJS_PREFIX | ... |
+
+The `PLACEHOLDER_BOOTSTRAP_PREFIX` and `PLACEHOLDER_NEXTZENJS_PREFIX` environment variables are only necessary if access to the Lambda function is being served through an API Gateway endpoint. The value of both variables should the name of the deployment prefixed with a leading "/", for example `/placeholder`. This will cause the `go-http-bootstrap` and `go-http-nextzenjs` HTML rewrite handlers to prefix URLs to their respective resources.
+
 ## See also
 
 * https://github.com/sfomuseum/go-placeholder-client
