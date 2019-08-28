@@ -26,7 +26,7 @@ func main() {
 	host := flag.String("host", "localhost", "The host to listen for requests on.")
 	port := flag.Int("port", 8080, "The port to listen for requests on.")
 
-	prefix := flag.String("prefix", "", "...")
+	static_prefix := flag.String("static-prefix", "", "Prepend this prefix to URLs for static assets.")
 
 	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
@@ -88,12 +88,12 @@ func main() {
 		}
 	}
 
-	if *prefix != "" {
+	if *static_prefix != "" {
 
-		*prefix = strings.TrimRight(*prefix, "/")
+		*static_prefix = strings.TrimRight(*static_prefix, "/")
 
-		if !strings.HasPrefix(*prefix, "/") {
-			log.Fatal("Invalid prefix")
+		if !strings.HasPrefix(*static_prefix, "/") {
+			log.Fatal("Invalid -static-prefix value")
 		}
 	}
 
@@ -106,7 +106,7 @@ func main() {
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
 	nextzen_opts.APIKey = *nextzen_apikey
 
-	err = bootstrap.AppendAssetHandlersWithPrefix(mux, *prefix)
+	err = bootstrap.AppendAssetHandlersWithPrefix(mux, *static_prefix)
 
 	if err != nil {
 		log.Fatal(err)
@@ -115,7 +115,7 @@ func main() {
 	search_opts := &http.SearchHandlerOptions{
 		PlaceholderClient: cl,
 		Templates:         t,
-		URLPrefix:         *prefix,
+		URLPrefix:         *static_prefix,
 	}
 
 	search_handler, err := http.NewSearchHandler(search_opts)
@@ -124,26 +124,22 @@ func main() {
 		log.Fatal(err)
 	}
 
-	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, *prefix)
-	search_handler = nextzenjs.AppendResourcesHandlerWithPrefix(search_handler, nextzen_opts, *prefix)
+	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, *static_prefix)
+	search_handler = nextzenjs.AppendResourcesHandlerWithPrefix(search_handler, nextzen_opts, *static_prefix)
 
 	// auth-y bits go here...
 
 	search_path := "/"
 
-	if *prefix != "" {
-		search_path = filepath.Join(*prefix, search_path)
-	}
-
 	mux.Handle(search_path, search_handler)
 
-	err = nextzenjs.AppendAssetHandlersWithPrefix(mux, *prefix)
+	err = nextzenjs.AppendAssetHandlersWithPrefix(mux, *static_prefix)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = http.AppendStaticAssetHandlersWithPrefix(mux, *prefix)
+	err = http.AppendStaticAssetHandlersWithPrefix(mux, *static_prefix)
 
 	if err != nil {
 		log.Fatal(err)

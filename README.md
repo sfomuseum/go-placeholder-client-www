@@ -27,14 +27,15 @@ _Please write me._
 
 | Key | Value | Notes |
 | --- | --- | --- |
+| PLACEHOLDER_PROTOCOL | `lambda` |
 | PLACEHOLDER_PLACEHOLDER_ENDPOINT | ... |
-| PLACEHOLDER_PROTOCOL | lambda |
-| PLACEHOLDER_PREFIX | ... |
+| PLACEHOLDER_STATIC_PREFIX | ... |
+| PLACEHOLDER_NEXZEN_APIKEY | ... |
 
-_Please write about `PLACEHOLDER_PREFIX`._
+_Please write about `PLACEHOLDER_STATIC_PREFIX`._
 
 ## See also
 
 * https://github.com/sfomuseum/go-placeholder-client
 * https://github.com/sfomuseum/docker-placeholder
-* https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
+* https://github.com/pelias/placeholder/
