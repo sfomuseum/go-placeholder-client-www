@@ -21,6 +21,7 @@ window.addEventListener("load", function load(event){
 	return;
     }
 
+    // we need to do this _before_ Tangram starts trying to draw things
     map_el.style.display = "block";
     
     var map = placeholder.client.maps.getMap(map_el, api_key);
@@ -29,14 +30,6 @@ window.addEventListener("load", function load(event){
 	console.log("Unable to instantiate map");
 	return;
     }
-
-    /*
-    var zoom = 14;
-    var lat = 37.6185;
-    var lon = -122.3829;
-
-    map.setView([ lat, lon ], zoom);   
-     */
     
     if (! placeholder.client.results.drawResultsMap(map, rows)){
 	map_el.style.display = "none";
@@ -47,6 +40,7 @@ window.addEventListener("load", function load(event){
     var features_layer = placeholder.client.results.drawResultsFeatures(map, rows);
 
     if (! features_layer){
+	console.log("Failed to render features layer");
 	return;
     }
 

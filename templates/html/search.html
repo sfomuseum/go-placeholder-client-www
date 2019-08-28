@@ -64,7 +64,7 @@
 			<td id="result-{{ $r.Id }}-id" class="whosonfirst-id" title="Zoom to this place on the map">{{ $r.Id }}</td>
 			<td id="result-{{ $r.Id }}-name">{{ $r.Name }}</td>
 			<td id="result-{{ $r.Id }}-placetype">{{ $r.Placetype }}</td>
-			<td id="result-{{ $r.Id }}-country">{{ range $j, $rg := Ancestors $r "region" }}{{ $rg.Name }}{{ end }}</td>		
+			<td id="result-{{ $r.Id }}-region">{{ range $j, $rg := Ancestors $r "region" }}{{ $rg.Name }}{{ end }}</td>		
 			<td id="result-{{ $r.Id }}-country">{{ range $j, $c := Ancestors $r "country" }}{{ $c.Name }}{{ end }}</td>
 			<td id="result-{{ $r.Id }}-latitude">{{ $r.Geometry.Latitude }}</td>
 			<td id="result-{{ $r.Id }}-longitude">{{ $r.Geometry.Longitude }}</td>		

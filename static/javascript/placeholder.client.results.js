@@ -84,6 +84,18 @@ placeholder.client.results = (function(){
 			var placetype = feature.properties["wof:placetype"];
 
 			var popup_text = name + " (" + wofid + ") is a " + placetype;
+
+			var country = feature.properties["wof:country"];
+			var region = feature.properties["wof:region"];			
+
+			if ((country) && (region)) {
+			    popup_text += " in " + region + " (" + country + ")";
+			}
+
+			else if (country) {
+			    popup_text += " in " + country;
+			}
+			
 			layer.bindPopup(popup_text);
 		    }
 		}
@@ -296,6 +308,23 @@ placeholder.client.results = (function(){
 
 		var name = name_el.innerText;
 		var placetype = placetype_el.innerText;		
+
+		var country = "";
+		var region = "";
+
+		var country_id = "result-" + wof_id + "-country";
+		var country_el = document.getElementById(country_id);
+
+		if (country_el){
+		    country = country_el.innerText;
+		}
+
+		var region_id = "result-" + wof_id + "-region";
+		var region_el = document.getElementById(region_id);
+
+		if (region_el){
+		    region = region_el.innerText;
+		}
 		
 		var coords = [lon, lat];
 		
@@ -308,6 +337,8 @@ placeholder.client.results = (function(){
 		    "wof:id": wof_id,
 		    "wof:placetype": placetype,
 		    "wof:name": name,
+		    "wof:country": country,
+		    "wof:region": region,		    
 		};
 
 		var feature = {
