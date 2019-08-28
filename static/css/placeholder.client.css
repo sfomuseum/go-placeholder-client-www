@@ -15,3 +15,8 @@
 	font-size:.8rem;
 	margin-top:.25rem;
 }
+
+.whosonfirst-id:hover {
+	text-decoration: underline;
+	color: blue;
+}

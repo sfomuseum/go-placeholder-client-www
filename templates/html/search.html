@@ -3,7 +3,12 @@
     
 {{ if .Query }}
 
-{{ $length := len .Results }}
+{{ $length := 0 }}
+
+{{if .Results }}
+{{ $length = len .Results }}
+{{ end }}
+
     <div class="card">
 	
 	<h3 class="card-header">
@@ -48,8 +53,15 @@
 		    </tr>
 		    {{ range $i, $r := .Results }}
 		    <tr class="result" id="result-{{ $r.Id }}" data-whosonfirst-id="{{ $r.Id }}" data-bounding-box="{{ $r.Geometry.BoundingBox }}">
-			<th>{{ Add $i 1 }}</th>
-			<td id="result-{{ $r.Id }}-id">{{ $r.Id }}</td>
+			<th>
+
+			    {{ Add $i 1 }}
+			    
+			    <!-- https://thenounproject.com/search/?q=globe&i=2819866 -->
+			    <a href="https://spelunker.whosonfirst.org/id/{{ $r.Id }}" target="spelunker"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGRhdGEtbmFtZT0iSUNPTiBCQUxDSyIgdmlld0JveD0iMCAwIDMyIDQwIiB4PSIwcHgiIHk9IjBweCI+PHRpdGxlPmdsb2JlPC90aXRsZT48cGF0aCBkPSJNMjQuODEsMTlhMTAsMTAsMCwwLDAsMi4zOC02LjQ4LDkuODEsOS44MSwwLDAsMC0uNTYtMy4yNy41Ni41NiwwLDAsMCwwLS4xMiwxMCwxMCwwLDAsMC0xNi4yLTQuMDZMOS4xMywzLjg1YS41MS41MSwwLDAsMC0uNzEsMCwxMi4zLDEyLjMsMCwwLDAsOC4yMSwyMXYxLjI2SDE1LjlhMi43NSwyLjc1LDAsMCwwLTIuNzUsMi43NVYyOWEuNS41LDAsMCwwLC41LjVoN2EuNS41LDAsMCwwLC41LS41di0uMTRhMi43NSwyLjc1LDAsMCwwLTIuNzUtMi43NWgtLjcyVjI0Ljg1YTEyLjI0LDEyLjI0LDAsMCwwLDguMjEtMy41OC41Mi41MiwwLDAsMCwuMTQtLjM2LjUuNSwwLDAsMC0uMTQtLjM1TDI0LjU3LDE5LjNhMS41NCwxLjU0LDAsMCwwLC4xNy0uMTlBLjIzLjIzLDAsMCwwLDI0LjgxLDE5Wk0yMC4wNywyOC41SDE0LjE5YTEuNzYsMS43NiwwLDAsMSwxLjcxLTEuMzloMi40NUExLjc3LDEuNzcsMCwwLDEsMjAuMDcsMjguNVpNOS4yNCw4LjEzLDExLjQ3LDhsLS4yNSwzYS41LjUsMCwwLDAsLjQ0LjU0bDMuMjguMzksMy41NCwxLjQ0LTEuNjEsMi41MmEuNDguNDgsMCwwLDAtLjA2LjM3bC42NiwzLjA1YS41LjUsMCwwLDAsLjMuMzYuNTguNTgsMCwwLDAsLjE5LDAsLjUzLjUzLDAsMCwwLC4yNy0uMDhsMi4yLTEuNDEsMywuODJBOSw5LDAsMCwxLDkuMjQsOC4xM1ptMTUsMTAuMDYtMy43My0xYS40Ny40NywwLDAsMC0uNC4wNmwtMS43OSwxLjE0LS40Ni0yLjE1LDEuODEtMi44NUEuNTIuNTIsMCwwLDAsMTkuNywxM2EuNTIuNTIsMCwwLDAtLjI5LS4zMUwxNS4yNiwxMWwtLjEzLDAtMi44Ny0uMzQuMjYtMy4xM2EuNS41LDAsMCwwLS4xNS0uNEEuNTEuNTEsMCwwLDAsMTIsNi45MmwtMiwuMTVhOSw5LDAsMCwxLDYuMjUtMy41MkwxNC41Miw2LjE4YS41LjUsMCwwLDAsLjA2LjYybDEuOTIsMmEuNTIuNTIsMCwwLDAsLjYzLjA4bDIuMjEtMS4zOCwxLjUzLDIuMmEuNDguNDgsMCwwLDAsLjQxLjIyaDQuNTFhOSw5LDAsMCwxLTEuNTgsOC4yOFptMS4yLTkuMjhIMjEuNTRMMTkuOSw2LjUzYS41MS41MSwwLDAsMC0uNjgtLjE0TDE2Ljk0LDcuODEsMTUuNTcsNi4zOWwxLjgyLTIuODhBOS4wNyw5LjA3LDAsMCwxLDI1LjQxLDguOTFabS04LjI4LDE1QTExLjM0LDExLjM0LDAsMCwxLDUuODEsMTIuNTZhMTEuMjIsMTEuMjIsMCwwLDEsMy03LjY0bC45LjlBMTAuOTQsMTAuOTQsMCwwLDAsOC41Niw3LjMxYS40NS40NSwwLDAsMC0uMTEuMTlBMTAsMTAsMCwwLDAsMjMuODcsMjBsLjkuOUExMS4yMywxMS4yMywwLDAsMSwxNy4xMywyMy44OFoiLz48dGV4dCB4PSIwIiB5PSI0NyIgZmlsbD0iIzAwMDAwMCIgZm9udC1zaXplPSI1cHgiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LWZhbWlseT0iJ0hlbHZldGljYSBOZXVlJywgSGVsdmV0aWNhLCBBcmlhbC1Vbmljb2RlLCBBcmlhbCwgU2Fucy1zZXJpZiI+Q3JlYXRlZCBieSBQaGlsaXBwIFBldHprYTwvdGV4dD48dGV4dCB4PSIwIiB5PSI1MiIgZmlsbD0iIzAwMDAwMCIgZm9udC1zaXplPSI1cHgiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LWZhbWlseT0iJ0hlbHZldGljYSBOZXVlJywgSGVsdmV0aWNhLCBBcmlhbC1Vbmljb2RlLCBBcmlhbCwgU2Fucy1zZXJpZiI+ZnJvbSB0aGUgTm91biBQcm9qZWN0PC90ZXh0Pjwvc3ZnPg==" height="24" width="24" title="View this place in the Who's On First Spelunker" /></a>			   
+
+			</th>
+			<td id="result-{{ $r.Id }}-id" class="whosonfirst-id" title="Zoom to this place on the map">{{ $r.Id }}</td>
 			<td id="result-{{ $r.Id }}-name">{{ $r.Name }}</td>
 			<td id="result-{{ $r.Id }}-placetype">{{ $r.Placetype }}</td>
 			<td id="result-{{ $r.Id }}-country">{{ range $j, $rg := Ancestors $r "region" }}{{ $rg.Name }}{{ end }}</td>		
