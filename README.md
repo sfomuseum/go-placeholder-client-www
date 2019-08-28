@@ -1,5 +1,7 @@
 # go-placeholder-client-www
 
+![](docs/images/canada.png)
+
 Too soon. Move along.
 
 ## AWS

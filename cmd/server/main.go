@@ -44,14 +44,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	*prefix = strings.TrimRight(*prefix, "/")
-	
-	mux := gohttp.NewServeMux()
-
 	t := template.New("placeholder-client").Funcs(template.FuncMap{
 		"Add": func(i int, offset int) int {
 			return i + offset
-		},		
+		},
 		"Ancestors": http.Ancestors,
 	})
 
@@ -81,6 +77,10 @@ func main() {
 		}
 	}
 
+	*prefix = strings.TrimRight(*prefix, "/")
+
+	mux := gohttp.NewServeMux()
+
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
@@ -88,10 +88,10 @@ func main() {
 
 	search_opts := &http.SearchHandlerOptions{
 		PlaceholderClient: cl,
-		Templates: t,
-		URLPrefix: *prefix,
+		Templates:         t,
+		URLPrefix:         *prefix,
 	}
-	
+
 	search_handler, err := http.NewSearchHandler(search_opts)
 
 	if err != nil {
@@ -113,26 +113,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	static_handler, err := http.StaticHandlerWithPrefix(*prefix)
+	err = http.AppendStaticAssetHandlersWithPrefix(mux, *prefix)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// TO DO: prefix hoohah...
-	mux.Handle("/javascript/whosonfirst.uri.js", static_handler)
-	mux.Handle("/javascript/whosonfirst.net.js", static_handler)
-	mux.Handle("/javascript/whosonfirst.geojson.js", static_handler)			
-	mux.Handle("/javascript/placeholder.client.maps.js", static_handler)
-	mux.Handle("/javascript/placeholder.client.results.js", static_handler)	
-	mux.Handle("/javascript/placeholder.client.init.js", static_handler)
-	mux.Handle("/css/placeholder.client.css", static_handler)		
-	
 	// auth-y bits go here, yeah
 	// "github.com/abbot/go-http-auth"
 
 	search_path := fmt.Sprintf("%s/", *prefix)
-	
+
 	mux.Handle(search_path, search_handler)
 
 	address := fmt.Sprintf("http://%s:%d", *host, *port)

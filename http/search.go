@@ -5,22 +5,22 @@ import (
 	"github.com/aaronland/go-http-sanitize"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client/results"
-	_ "log"
 	"html/template"
+	_ "log"
 	gohttp "net/http"
 )
 
 type SearchVars struct {
-	URLPrefix string	
-	Query   string
-	Results *results.SearchResults
-	Error   error
+	URLPrefix string
+	Query     string
+	Results   *results.SearchResults
+	Error     error
 }
 
 type SearchHandlerOptions struct {
 	PlaceholderClient *client.PlaceholderClient
-	Templates *template.Template
-	URLPrefix string
+	Templates         *template.Template
+	URLPrefix         string
 }
 
 func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
@@ -44,7 +44,7 @@ func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
 		}
 
 		var search_vars SearchVars
-		
+
 		if text != "" {
 
 			search_vars.Query = text

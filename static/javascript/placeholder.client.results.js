@@ -168,7 +168,7 @@ placeholder.client.results = (function(){
 		    map.removeLayer(wof_layer);
 		}
 		
-		map.flyTo([lat, lon], 8);
+		map.setView([lat, lon], 8);
 		focus = wof_id;
 		
 		var wof_url = whosonfirst.uri.id2abspath(wof_id);
