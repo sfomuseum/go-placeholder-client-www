@@ -1,7 +1,7 @@
 CWD=$(shell pwd)
 
 debug:
-	go run -mod vendor cmd/server/main.go
+	go run -mod vendor cmd/server/main.go -templates 'templates/html/*.html'
 
 bake-assets:
 	go build -o bin/go-bindata cmd/go-bindata/main.go

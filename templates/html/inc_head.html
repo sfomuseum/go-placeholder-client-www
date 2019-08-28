@@ -2,6 +2,19 @@
 <html>
     <head>
 	<title></title>
+	<script type="text/javascript" src="javascript/placeholder.client.js"></script>
+	<script type="text/javascript" src="javascript/placeholder.client.init.js"></script>	
     </head>
     <body>
+	<div class="container">
+
+	    <nav class="navbar navbar-light bg-light">
+
+		<form class="form-inline">
+		    <input class="form-control mr-sm-2" type="search" name="text" id="text" placeholder="Enter a place name to search for" value="{{ .Query }}" aria-label="Search">
+		    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+		</form>
+		
+	    </nav>
+	
 {{ end }}

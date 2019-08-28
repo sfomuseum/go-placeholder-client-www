@@ -1,58 +1,52 @@
 {{ define "search" }}
 {{ template "header" . }}
-<div class="container">
-
-    <div class="row">
-	<form class="form-inline" method="GET">
-	    <div class="form-group">
-		<input type="text" class="form-control" name="text" id="text" placeholder="Enter a place name to search for" value="{{ .Query }}" /></input>
-	    </div>
-	    <button type="submit" class="btn btn-primary">Search</button>
-	</form>
-    </div>
     
 {{ if .Query }}
-    <div class="row">
+    <div class="card">
 	
-	<h3>Query results for <q>{{ .Query }}</q></h3>
-	
+	<h3 class="card-header">Query results for <q>{{ .Query }}</q></h3>
+
+	<div class="card-body">
+	    
 	{{if  .Error }}
 	<div class="alert alert-warning" role="alert">
 	    <p>Unable to complete query successfully. Error reported is:</p>
 	    <code>{{ .Error }}</code>
 	</div>
 	{{ else }}
-	
-	<div id="map"></div>
+	    
+	    <div id="map"></div>
 
-	<table class="table table-striped">
-	    <tr>
-		<th>ID</th>
-		<th>Name</th>
-		<th>Placetype</th>
-		<th>Region</th>		
-		<th>Country</th>
-		<th>Latitude</th>
-		<th>Longitude</th>		
-	    </tr>
-	    {{ range $i, $r := .Results }}
-	    <tr class="result" id="result-{{ $r.Id }}">
-		<td><a href="https://spelunker.whosonfirst.org/id/{{ $r.Id }}">{{ $r.Id }}</a></td>
-		<td class="result-name">{{ $r.Name }}</td>
-		<td class="result-placetype">{{ $r.Placetype }}</td>
-		<td class="result-country">{{ range $j, $rg := Ancestors $r "region" }}{{ $rg.Name }}{{ end }}</td>		
-		<td class="result-country">{{ range $j, $c := Ancestors $r "country" }}{{ $c.Name }}{{ end }}</td>
-		<td class="result-latitude">{{ $r.Geometry.Latitude }}</td>
-		<td class="result-longitude">{{ $r.Geometry.Longitude }}</td>		
-	    </tr>
+	    <div class="table-responsive">
+		<table class="table table-hover">
+		    <tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Placetype</th>
+			<th>Region</th>		
+			<th>Country</th>
+			<th>Latitude</th>
+			<th>Longitude</th>		
+		    </tr>
+		    {{ range $i, $r := .Results }}
+		    <tr class="result" id="result-{{ $r.Id }}">
+			<td><a href="https://spelunker.whosonfirst.org/id/{{ $r.Id }}">{{ $r.Id }}</a></td>
+			<td class="result-name">{{ $r.Name }}</td>
+			<td class="result-placetype">{{ $r.Placetype }}</td>
+			<td class="result-country">{{ range $j, $rg := Ancestors $r "region" }}{{ $rg.Name }}{{ end }}</td>		
+			<td class="result-country">{{ range $j, $c := Ancestors $r "country" }}{{ $c.Name }}{{ end }}</td>
+			<td class="result-latitude">{{ $r.Geometry.Latitude }}</td>
+			<td class="result-longitude">{{ $r.Geometry.Longitude }}</td>		
+		    </tr>
+		    {{ end }}
+		</table>
+	    </div>
+	    
 	{{ end }}
-	</table>
-	
-	{{ end }}
+	</div>
 	
     </div>
     {{ end }}
     
-</div>
 {{ template "footer" . }}
 {{ end }}
