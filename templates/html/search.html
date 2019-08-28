@@ -19,7 +19,7 @@
 	    
 	    <div id="map"></div>
 	    
-	    <div class="table-responsive">
+	    <div id="results-table" class="table-responsive">
 		<table class="table table-hover">
 		    <tr>
 			<th>ID</th>
@@ -33,12 +33,12 @@
 		    {{ range $i, $r := .Results }}
 		    <tr class="result" id="result-{{ $r.Id }}" data-whosonfirst-id="{{ $r.Id }}" data-bounding-box="{{ $r.Geometry.BoundingBox }}">
 			<td><a href="https://spelunker.whosonfirst.org/id/{{ $r.Id }}">{{ $r.Id }}</a></td>
-			<td class="result-name">{{ $r.Name }}</td>
-			<td class="result-placetype">{{ $r.Placetype }}</td>
-			<td class="result-country">{{ range $j, $rg := Ancestors $r "region" }}{{ $rg.Name }}{{ end }}</td>		
-			<td class="result-country">{{ range $j, $c := Ancestors $r "country" }}{{ $c.Name }}{{ end }}</td>
-			<td class="result-latitude">{{ $r.Geometry.Latitude }}</td>
-			<td class="result-longitude">{{ $r.Geometry.Longitude }}</td>		
+			<td id="result-{{ $r.Id }}-name">{{ $r.Name }}</td>
+			<td id="result-{{ $r.Id }}-placetype">{{ $r.Placetype }}</td>
+			<td id="result-{{ $r.Id }}-country">{{ range $j, $rg := Ancestors $r "region" }}{{ $rg.Name }}{{ end }}</td>		
+			<td id="result-{{ $r.Id }}-country">{{ range $j, $c := Ancestors $r "country" }}{{ $c.Name }}{{ end }}</td>
+			<td id="result-{{ $r.Id }}-latitude">{{ $r.Geometry.Latitude }}</td>
+			<td id="result-{{ $r.Id }}-longitude">{{ $r.Geometry.Longitude }}</td>		
 		    </tr>
 		    {{ end }}
 		</table>

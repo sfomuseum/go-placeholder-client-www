@@ -60,7 +60,7 @@ placeholder.client.maps = (function(){
 
 	'getAttribution': function(){
 	    return attribution;
-	};
+	},
     };
 
     return self;

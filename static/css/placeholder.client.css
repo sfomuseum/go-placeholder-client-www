@@ -3,3 +3,9 @@
 	height: 40vh;
 	display:none;
 }
+
+#results-table {
+	max-height: 30vh;
+	y-overflow: scroll;
+}
+	
