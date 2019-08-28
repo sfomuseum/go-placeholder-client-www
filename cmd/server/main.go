@@ -89,29 +89,29 @@ func main() {
 	}
 
 	if *prefix != "" {
-		
+
 		*prefix = strings.TrimRight(*prefix, "/")
 
-		if !strings.HasPrefix(*prefix, "/"){
+		if !strings.HasPrefix(*prefix, "/") {
 			log.Fatal("Invalid prefix")
 		}
 	}
-	
+
 	// handlers
-	
+
 	mux := gohttp.NewServeMux()
-	
+
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
 	nextzen_opts.APIKey = *nextzen_apikey
-	
+
 	err = bootstrap.AppendAssetHandlersWithPrefix(mux, *prefix)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	search_opts := &http.SearchHandlerOptions{
 		PlaceholderClient: cl,
 		Templates:         t,
@@ -128,7 +128,7 @@ func main() {
 	search_handler = nextzenjs.AppendResourcesHandlerWithPrefix(search_handler, nextzen_opts, *prefix)
 
 	// auth-y bits go here...
-	
+
 	search_path := "/"
 
 	if *prefix != "" {
@@ -136,7 +136,7 @@ func main() {
 	}
 
 	mux.Handle(search_path, search_handler)
-	
+
 	err = nextzenjs.AppendAssetHandlersWithPrefix(mux, *prefix)
 
 	if err != nil {
@@ -150,7 +150,7 @@ func main() {
 	}
 
 	// end of handlers
-	
+
 	address := fmt.Sprintf("http://%s:%d", *host, *port)
 
 	u, err := gourl.Parse(address)

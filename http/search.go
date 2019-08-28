@@ -45,7 +45,7 @@ func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
 
 		var search_vars SearchVars
 		search_vars.URLPrefix = opts.URLPrefix
-		
+
 		if text != "" {
 
 			search_vars.Query = text
