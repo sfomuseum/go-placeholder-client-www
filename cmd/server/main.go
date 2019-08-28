@@ -14,6 +14,7 @@ import (
 	"log"
 	gohttp "net/http"
 	gourl "net/url"
+	"path/filepath"
 	"strings"
 )
 
@@ -49,6 +50,16 @@ func main() {
 			return i + offset
 		},
 		"Ancestors": http.Ancestors,
+		"Join": func(root string, path string) string {
+
+			root = strings.TrimRight(root, "/")
+
+			if root != "" {
+				path = filepath.Join(root, path)
+			}
+
+			return path
+		},
 	})
 
 	if *path_templates != "" {
@@ -77,15 +88,30 @@ func main() {
 		}
 	}
 
-	*prefix = strings.TrimRight(*prefix, "/")
+	if *prefix != "" {
+		
+		*prefix = strings.TrimRight(*prefix, "/")
 
+		if !strings.HasPrefix(*prefix, "/"){
+			log.Fatal("Invalid prefix")
+		}
+	}
+	
+	// handlers
+	
 	mux := gohttp.NewServeMux()
-
+	
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
 	nextzen_opts.APIKey = *nextzen_apikey
+	
+	err = bootstrap.AppendAssetHandlersWithPrefix(mux, *prefix)
 
+	if err != nil {
+		log.Fatal(err)
+	}
+	
 	search_opts := &http.SearchHandlerOptions{
 		PlaceholderClient: cl,
 		Templates:         t,
@@ -101,12 +127,16 @@ func main() {
 	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, *prefix)
 	search_handler = nextzenjs.AppendResourcesHandlerWithPrefix(search_handler, nextzen_opts, *prefix)
 
-	err = bootstrap.AppendAssetHandlersWithPrefix(mux, *prefix)
+	// auth-y bits go here...
+	
+	search_path := "/"
 
-	if err != nil {
-		log.Fatal(err)
+	if *prefix != "" {
+		search_path = filepath.Join(*prefix, search_path)
 	}
 
+	mux.Handle(search_path, search_handler)
+	
 	err = nextzenjs.AppendAssetHandlersWithPrefix(mux, *prefix)
 
 	if err != nil {
@@ -119,13 +149,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// auth-y bits go here, yeah
-	// "github.com/abbot/go-http-auth"
-
-	search_path := fmt.Sprintf("%s/", *prefix)
-
-	mux.Handle(search_path, search_handler)
-
+	// end of handlers
+	
 	address := fmt.Sprintf("http://%s:%d", *host, *port)
 
 	u, err := gourl.Parse(address)

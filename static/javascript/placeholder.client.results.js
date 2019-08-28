@@ -212,8 +212,12 @@ placeholder.client.results = (function(){
 		var on_fail = function(rsp){
 		    console.log("FAIL", rsp);
 		};
+
+		var fetch_opts = {
+		    "cache_ttl": 300 * 1000,
+		};
 		
-		whosonfirst.net.fetch(wof_url, on_success, on_fail);
+		whosonfirst.net.fetch(wof_url, on_success, on_fail, fetch_opts);
 	    };
 
 	    var count = rows.length;

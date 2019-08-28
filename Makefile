@@ -1,9 +1,10 @@
 CWD=$(shell pwd)
 
-debug: bake
+debug:
+	@make bake-all
 	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY)
 
-bake: bake-static bake-templates
+bake-all: bake-static bake-templates
 
 bake-static:
 	go build -o bin/go-bindata cmd/go-bindata/main.go
@@ -18,12 +19,12 @@ bake-templates:
 
 docker:
 	go mod vendor
-	@make bake-assets
+	@make bake-all
 	docker build -t placeholder-client-www .
 
 lambda:
-	# go mod vendor
-	@make bake-assets
+	go mod vendor
+	@make bake-all
 	if test -f main; then rm -f main; fi
 	if test -f deployment.zip; then rm -f deployment.zip; fi
 	GOOS=linux go build -mod vendor -o main cmd/server/main.go

@@ -144,46 +144,46 @@ whosonfirst.net = (function(){
 	    
 	    'cache_get': function(key, on_hit, on_miss, cache_ttl){
 
-			if (typeof(localforage) != 'object'){
-				return false;
-			}
-
-			var fq_key = self.cache_prep_key(key);
-
-			localforage.getItem(fq_key, function (err, rsp){
+		if (typeof(localforage) != 'object'){
+		    return false;
+		}
+		
+		var fq_key = self.cache_prep_key(key);
 				
-				if ((err) || (! rsp)){
-				    on_miss();
-				    return;
-				}
-				
-				var data = rsp['data'];
-				
-				if (! data){
-				    on_miss();
-				    return;
-				}
-				
-				var dt = new Date();
-				var ts = dt.getTime();
-				
-				var then = rsp['created'];
-				var diff = ts - then;
-				
-				if (diff > cache_ttl){
-				    self.cache_unset(key);
-				    on_miss();
-				    return;
-				}
-				
-				on_hit(data);
-			    });
-			
-			return true;
-		},
+		localforage.getItem(fq_key, function (err, rsp){
+		    
+		    if ((err) || (! rsp)){
+			on_miss();
+			return;
+		    }
+		    
+		    var data = rsp['data'];
+		    
+		    if (! data){
+			on_miss();
+			return;
+		    }
+		    
+		    var dt = new Date();
+		    var ts = dt.getTime();
+		    
+		    var then = rsp['created'];
+		    var diff = ts - then;
+		    
+		    if (diff > cache_ttl){
+			self.cache_unset(key);
+			on_miss();
+			return;
+		    }
+		    
+		    on_hit(data);
+		});
+		
+		return true;
+	    },
 	    
 	    'cache_set': function(key, value){
-		
+
 		if (typeof(localforage) != 'object'){
 		    return false;
 		}
