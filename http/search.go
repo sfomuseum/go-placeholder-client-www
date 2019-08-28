@@ -5,20 +5,27 @@ import (
 	"github.com/aaronland/go-http-sanitize"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client/results"
-	"log"
+	_ "log"
 	"html/template"
 	gohttp "net/http"
 )
 
 type SearchVars struct {
+	URLPrefix string	
 	Query   string
 	Results *results.SearchResults
 	Error   error
 }
 
-func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohttp.Handler, error) {
+type SearchHandlerOptions struct {
+	PlaceholderClient *client.PlaceholderClient
+	Templates *template.Template
+	URLPrefix string
+}
 
-	t = t.Lookup("search")
+func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
+
+	t := opts.Templates.Lookup("search")
 
 	if t == nil {
 		return nil, errors.New("Missing search template")
@@ -30,8 +37,6 @@ func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohtt
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
 
-		log.Println("REQUEST", req.URL.Path)
-		
 		text, err := sanitize.GetString(req, "text")
 
 		if err != nil {
@@ -39,11 +44,11 @@ func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohtt
 		}
 
 		var search_vars SearchVars
-
+		
 		if text != "" {
 
 			search_vars.Query = text
-			res, err := cl.Search(text)
+			res, err := opts.PlaceholderClient.Search(text)
 
 			if err != nil {
 				search_vars.Error = err

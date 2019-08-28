@@ -83,7 +83,13 @@ func main() {
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
 	nextzen_opts.APIKey = *nextzen_apikey
 
-	search_handler, err := http.NewSearchHandler(cl, t)
+	search_opts := &http.SearchHandlerOptions{
+		PlaceholderClient: cl,
+		Templates: t,
+		URLPrefix: *prefix,
+	}
+	
+	search_handler, err := http.NewSearchHandler(search_opts)
 
 	if err != nil {
 		log.Fatal(err)
@@ -104,14 +110,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	static_handler, err := http.StaticHandler()
+	static_handler, err := http.StaticHandlerWithPrefix(*prefix)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	static_path := fmt.Sprintf("%s/fixme/", *prefix)	
-	mux.Handle(static_path, static_handler)
+	// TO DO: prefix hoohah...
+	mux.Handle("/javascript/placeholder.client.maps.js", static_handler)
+	mux.Handle("/javascript/placeholder.client.results.js", static_handler)	
+	mux.Handle("/javascript/placeholder.client.init.js", static_handler)
+	mux.Handle("/css/placeholder.client.css", static_handler)		
 	
 	// auth-y bits go here, yeah
 	// "github.com/abbot/go-http-auth"

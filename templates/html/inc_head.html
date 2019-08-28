@@ -2,13 +2,17 @@
 <html>
     <head>
 	<title></title>
-	<script type="text/javascript" src="javascript/placeholder.client.js"></script>
-	<script type="text/javascript" src="javascript/placeholder.client.init.js"></script>	
+	<script type="text/javascript" src="javascript/placeholder.client.maps.js"></script>
+	<script type="text/javascript" src="javascript/placeholder.client.results.js"></script>	
+	<script type="text/javascript" src="javascript/placeholder.client.init.js"></script>
+	<link type="text/css" rel="stylesheet" href="css/placeholder.client.css" />
     </head>
     <body>
 	<div class="container">
 
 	    <nav class="navbar navbar-light bg-light">
+
+		<a class="navbar-brand">&#160;</a>
 
 		<form class="form-inline">
 		    <input class="form-control mr-sm-2" type="search" name="text" id="text" placeholder="Enter a place name to search for" value="{{ .Query }}" aria-label="Search">

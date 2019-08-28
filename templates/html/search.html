@@ -8,15 +8,17 @@
 
 	<div class="card-body">
 	    
-	{{if  .Error }}
-	<div class="alert alert-warning" role="alert">
-	    <p>Unable to complete query successfully. Error reported is:</p>
-	    <code>{{ .Error }}</code>
-	</div>
-	{{ else }}
+	    {{if  .Error }}
+	    
+	    <div class="alert alert-warning" role="alert">
+		<p>Unable to complete query successfully. Error reported is:</p>
+		<code>{{ .Error }}</code>
+	    </div>
+	    
+	    {{ else }}
 	    
 	    <div id="map"></div>
-
+	    
 	    <div class="table-responsive">
 		<table class="table table-hover">
 		    <tr>
@@ -29,7 +31,7 @@
 			<th>Longitude</th>		
 		    </tr>
 		    {{ range $i, $r := .Results }}
-		    <tr class="result" id="result-{{ $r.Id }}">
+		    <tr class="result" id="result-{{ $r.Id }}" data-whosonfirst-id="{{ $r.Id }}" data-bounding-box="{{ $r.Geometry.BoundingBox }}">
 			<td><a href="https://spelunker.whosonfirst.org/id/{{ $r.Id }}">{{ $r.Id }}</a></td>
 			<td class="result-name">{{ $r.Name }}</td>
 			<td class="result-placetype">{{ $r.Placetype }}</td>
