@@ -104,6 +104,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	static_handler, err := http.StaticHandler()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	static_path := fmt.Sprintf("%s/fixme/", *prefix)	
+	mux.Handle(static_path, static_handler)
+	
 	// auth-y bits go here, yeah
 	// "github.com/abbot/go-http-auth"
 
