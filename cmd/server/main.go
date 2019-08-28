@@ -14,6 +14,7 @@ import (
 	"log"
 	gohttp "net/http"
 	gourl "net/url"
+	"strings"
 )
 
 func main() {
@@ -24,8 +25,7 @@ func main() {
 	host := flag.String("host", "localhost", "The host to listen for requests on.")
 	port := flag.Int("port", 8080, "The port to listen for requests on.")
 
-	bootstrap_prefix := flag.String("bootstrap-prefix", "", "Prefix to use for Bootstrap resource URLs.")
-	nextzenjs_prefix := flag.String("nextzenjs-prefix", "", "Prefix to use for NextzenJS resource URLs.")
+	prefix := flag.String("prefix", "", "...")
 
 	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
@@ -44,6 +44,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	*prefix = strings.TrimRight(*prefix, "/")
+	
 	mux := gohttp.NewServeMux()
 
 	t := template.New("placeholder-client").Funcs(template.FuncMap{
@@ -87,16 +89,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, *bootstrap_prefix)
-	search_handler = nextzenjs.AppendResourcesHandlerWithPrefix(search_handler, nextzen_opts, *nextzenjs_prefix)
+	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, *prefix)
+	search_handler = nextzenjs.AppendResourcesHandlerWithPrefix(search_handler, nextzen_opts, *prefix)
 
-	err = bootstrap.AppendAssetHandlers(mux)
+	err = bootstrap.AppendAssetHandlersWithPrefix(mux, *prefix)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = nextzenjs.AppendAssetHandlers(mux)
+	err = nextzenjs.AppendAssetHandlersWithPrefix(mux, *prefix)
 
 	if err != nil {
 		log.Fatal(err)
@@ -105,7 +107,9 @@ func main() {
 	// auth-y bits go here, yeah
 	// "github.com/abbot/go-http-auth"
 
-	mux.Handle("/", search_handler)
+	search_path := fmt.Sprintf("%s/", *prefix)
+	
+	mux.Handle(search_path, search_handler)
 
 	address := fmt.Sprintf("http://%s:%d", *host, *port)
 

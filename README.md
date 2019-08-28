@@ -4,6 +4,8 @@ Too soon. Move along.
 
 ## AWS
 
+![](docs/images/arch.jpg)
+
 ### Lambda
 
 This assumes you are running `cmd/server/main.go` as a Lambda function and connecting to an instance of Placeholder running inside ECS Fargate instance.
@@ -25,10 +27,9 @@ _Please write me._
 | --- | --- | --- |
 | PLACEHOLDER_PLACEHOLDER_ENDPOINT | ... |
 | PLACEHOLDER_PROTOCOL | lambda |
-| PLACEHOLDER_BOOTSTRAP_PREFIX | ... |
-| PLACEHOLDER_NEXTZENJS_PREFIX | ... |
+| PLACEHOLDER_PREFIX | ... |
 
-The `PLACEHOLDER_BOOTSTRAP_PREFIX` and `PLACEHOLDER_NEXTZENJS_PREFIX` environment variables are only necessary if access to the Lambda function is being served through an API Gateway endpoint. The value of both variables should the name of the deployment prefixed with a leading "/", for example `/placeholder`. This will cause the `go-http-bootstrap` and `go-http-nextzenjs` HTML rewrite handlers to prefix URLs to their respective resources.
+_Please write about `PLACEHOLDER_PREFIX`._
 
 ## See also
 

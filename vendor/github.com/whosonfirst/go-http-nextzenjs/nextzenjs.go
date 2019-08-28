@@ -130,13 +130,36 @@ func NextzenJSAssetsHandler() (http.Handler, error) {
 	return http.FileServer(fs), nil
 }
 
+func NextzenJSAssetsHandlerWithPrefix(prefix string) (http.Handler, error) {
+
+	fs_handler, err := NextzenJSAssetsHandler()
+
+	if err != nil {
+		return nil, err
+	}
+
+	prefix = strings.TrimRight(prefix, "/")
+	
+	if prefix == "" {
+		return fs_handler, nil
+	}
+
+	rewrite_func := func(req *http.Request) (*http.Request, error){
+		req.URL.Path = strings.Replace(req.URL.Path, prefix, "", 1)
+		return req, nil
+	}
+
+	rewrite_handler := rewrite.RewriteRequestHandler(fs_handler, rewrite_func)
+	return rewrite_handler, nil
+}
+
 func AppendAssetHandlers(mux *http.ServeMux) error {
 	return AppendAssetHandlersWithPrefix(mux, "")
 }
 
 func AppendAssetHandlersWithPrefix(mux *http.ServeMux, prefix string) error {
 
-	asset_handler, err := NextzenJSAssetsHandler()
+	asset_handler, err := NextzenJSAssetsHandlerWithPrefix(prefix)
 
 	if err != nil {
 		return nil

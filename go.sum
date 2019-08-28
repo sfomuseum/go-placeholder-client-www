@@ -4,10 +4,14 @@ github.com/aaronland/go-http-bootstrap v0.0.3 h1:rzjbj0hD2bcDrUSnU63QgdwoYY7wSp8
 github.com/aaronland/go-http-bootstrap v0.0.3/go.mod h1:RzgPzdG7EYaM7m7mHcTryXoswp7zyu9jtV071j/xgpc=
 github.com/aaronland/go-http-bootstrap v0.0.4 h1:1jQkQ3lUqmJkdFSTWzMuUk+MCnoUDLTejXiCApJ5iCc=
 github.com/aaronland/go-http-bootstrap v0.0.4/go.mod h1:RzgPzdG7EYaM7m7mHcTryXoswp7zyu9jtV071j/xgpc=
+github.com/aaronland/go-http-bootstrap v0.0.5 h1:g6PehLzQcQjUiXQdYPrl3ZQuNRYTsR6kw9M7u83mI7U=
+github.com/aaronland/go-http-bootstrap v0.0.5/go.mod h1:r8XhNGVceWoc7iwamnU0IIw5RyNyfMmGvcxLA/lQfek=
 github.com/aaronland/go-http-rewrite v0.0.1 h1:nQ4qqtOC0QHpEhQeFpRRwdXAEwuhHhgsxQaV3hDT8iw=
 github.com/aaronland/go-http-rewrite v0.0.1/go.mod h1:g62jjXpsArD0lzJLs9bVLR9Locdt3f4OmqFkkJL2rQU=
 github.com/aaronland/go-http-rewrite v0.0.2 h1:H9uW+mL6V//BS927a9rFBSkOKDL3bGIlaPiVIC6UN3I=
 github.com/aaronland/go-http-rewrite v0.0.2/go.mod h1:g62jjXpsArD0lzJLs9bVLR9Locdt3f4OmqFkkJL2rQU=
+github.com/aaronland/go-http-rewrite v0.0.3 h1:mhRnmKLpv1MiHCXpi1jmgdJujRKQNifctuT/ahv+q0U=
+github.com/aaronland/go-http-rewrite v0.0.3/go.mod h1:g62jjXpsArD0lzJLs9bVLR9Locdt3f4OmqFkkJL2rQU=
 github.com/aaronland/go-http-sanitize v0.0.4 h1:oAYe5DbtbDS6x5Rygv5II6fDHzATGIAyY4/ZDZ63G2w=
 github.com/aaronland/go-http-sanitize v0.0.4/go.mod h1:qUi4rzUPcpMntpUFnHK00yQI5vd/Q7x9MFYwX91/ygI=
 github.com/abbot/go-http-auth v0.4.0 h1:QjmvZ5gSC7jm3Zg54DqWE/T5m1t2AfDu6QlXJT0EVT0=
@@ -38,6 +42,8 @@ github.com/whosonfirst/go-http-nextzenjs v0.1.1 h1:0I/gbYPbw6qNGNfqb/ME4KCjgCg8R
 github.com/whosonfirst/go-http-nextzenjs v0.1.1/go.mod h1:Wn7C4qlWF0H5TTu1gasyqiRowHTo7G05HTEO/AUDKLA=
 github.com/whosonfirst/go-http-nextzenjs v0.1.2 h1:9yn2+KqbtDuMujADK7dwIyD077lS67X7a80EOrATFI4=
 github.com/whosonfirst/go-http-nextzenjs v0.1.2/go.mod h1:c7YU2W4Nrk8NR6rF4BrJgcs8q2PzceYWNBkzt5RPn5E=
+github.com/whosonfirst/go-http-nextzenjs v0.1.3 h1:80F5hVKFUZCgzbi26GZ4Ux49tDFbDFzr0nq/RK42lys=
+github.com/whosonfirst/go-http-nextzenjs v0.1.3/go.mod h1:PsoLD2R6Vb2rvKVVncFuaEPActqLSmaV1CqXCVd+j88=
 github.com/whosonfirst/go-sanitize v0.1.0 h1:ygSqCnakwdzH/m8UEa15zXGDsoo5/JJeRkgmAjXZrBU=
 github.com/whosonfirst/go-sanitize v0.1.0/go.mod h1:p/emgbafMM0p5iVAz2XWwecYPl06Tw4Jos9rhTKIrt8=
 github.com/whosonfirst/go-whosonfirst-cli v0.1.0 h1:Wwj9z0R/ryHmPmpVm5jCbXdG4agJzKMWXDtPVReN/KA=

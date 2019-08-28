@@ -1,7 +1,7 @@
-# github.com/aaronland/go-http-bootstrap v0.0.4
+# github.com/aaronland/go-http-bootstrap v0.0.5
 github.com/aaronland/go-http-bootstrap
 github.com/aaronland/go-http-bootstrap/resources
-# github.com/aaronland/go-http-rewrite v0.0.2
+# github.com/aaronland/go-http-rewrite v0.0.3
 github.com/aaronland/go-http-rewrite
 # github.com/aaronland/go-http-sanitize v0.0.4
 github.com/aaronland/go-http-sanitize
@@ -23,7 +23,7 @@ github.com/whosonfirst/algnhsa
 github.com/whosonfirst/go-bindata
 # github.com/whosonfirst/go-bindata-assetfs v1.0.1
 github.com/whosonfirst/go-bindata-assetfs
-# github.com/whosonfirst/go-http-nextzenjs v0.1.2
+# github.com/whosonfirst/go-http-nextzenjs v0.1.3
 github.com/whosonfirst/go-http-nextzenjs
 # github.com/whosonfirst/go-sanitize v0.1.0
 github.com/whosonfirst/go-sanitize

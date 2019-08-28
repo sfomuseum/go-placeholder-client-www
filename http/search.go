@@ -5,6 +5,7 @@ import (
 	"github.com/aaronland/go-http-sanitize"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client/results"
+	"log"
 	"html/template"
 	gohttp "net/http"
 )
@@ -29,6 +30,8 @@ func NewSearchHandler(cl *client.PlaceholderClient, t *template.Template) (gohtt
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
 
+		log.Println("REQUEST", req.URL.Path)
+		
 		text, err := sanitize.GetString(req, "text")
 
 		if err != nil {
