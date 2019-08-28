@@ -11,7 +11,7 @@
 	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/placeholder.client.init.js" }}"></script>
 	<link type="text/css" rel="stylesheet" href="{{ Join .URLPrefix "/css/placeholder.client.css" }}" />
     </head>
-    <body>
+    <body data-url-prefix="{{ .URLPrefix }}">
 	<div class="container">
 
 	    <nav class="navbar navbar-light bg-light">

@@ -16,7 +16,7 @@ placeholder.client.results = (function(){
     
     var self = {
 
-	'drawResultsMap': function(map, rows){
+	'drawResultsMap': function(rows, map){
 
 	    var count = rows.length;
 
@@ -67,7 +67,7 @@ placeholder.client.results = (function(){
 	    return true;
 	},
 
-	'drawResultsFeatures': function(map, rows){
+	'drawResultsFeatures': function(rows, map){
 
 	    var feature_collection = self.resultsAsFeatureCollection(rows);
 

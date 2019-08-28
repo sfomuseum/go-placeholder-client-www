@@ -44,6 +44,8 @@ github.com/whosonfirst/go-http-nextzenjs v0.1.2 h1:9yn2+KqbtDuMujADK7dwIyD077lS6
 github.com/whosonfirst/go-http-nextzenjs v0.1.2/go.mod h1:c7YU2W4Nrk8NR6rF4BrJgcs8q2PzceYWNBkzt5RPn5E=
 github.com/whosonfirst/go-http-nextzenjs v0.1.3 h1:80F5hVKFUZCgzbi26GZ4Ux49tDFbDFzr0nq/RK42lys=
 github.com/whosonfirst/go-http-nextzenjs v0.1.3/go.mod h1:PsoLD2R6Vb2rvKVVncFuaEPActqLSmaV1CqXCVd+j88=
+github.com/whosonfirst/go-http-nextzenjs v0.1.4 h1:LZiK/qTWx1lvShznhr1liKVZ0fbYyNvsg4uqa0+wO1M=
+github.com/whosonfirst/go-http-nextzenjs v0.1.4/go.mod h1:PsoLD2R6Vb2rvKVVncFuaEPActqLSmaV1CqXCVd+j88=
 github.com/whosonfirst/go-sanitize v0.1.0 h1:ygSqCnakwdzH/m8UEa15zXGDsoo5/JJeRkgmAjXZrBU=
 github.com/whosonfirst/go-sanitize v0.1.0/go.mod h1:p/emgbafMM0p5iVAz2XWwecYPl06Tw4Jos9rhTKIrt8=
 github.com/whosonfirst/go-whosonfirst-cli v0.1.0 h1:Wwj9z0R/ryHmPmpVm5jCbXdG4agJzKMWXDtPVReN/KA=

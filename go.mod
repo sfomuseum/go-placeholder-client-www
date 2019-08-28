@@ -11,6 +11,6 @@ require (
 	github.com/whosonfirst/algnhsa v0.1.0
 	github.com/whosonfirst/go-bindata v0.1.0
 	github.com/whosonfirst/go-bindata-assetfs v1.0.1
-	github.com/whosonfirst/go-http-nextzenjs v0.1.3
+	github.com/whosonfirst/go-http-nextzenjs v0.1.4
 	github.com/whosonfirst/go-whosonfirst-cli v0.1.0
 )

@@ -31,7 +31,7 @@ func (s *LambdaServer) ListenAndServe(mux *http.ServeMux) error {
 	// go-rasterzen/README.md#lambda-api-gateway-and-images#lambda-api-gateway-and-images
 
 	lambda_opts := new(algnhsa.Options)
-	lambda_opts.BinaryContentTypes = []string{"image/png"}
+	lambda_opts.BinaryContentTypes = []string{"application/zip"}
 
 	algnhsa.ListenAndServe(mux, lambda_opts)
 	return nil
