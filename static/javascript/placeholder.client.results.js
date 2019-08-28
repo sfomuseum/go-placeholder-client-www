@@ -11,6 +11,8 @@ placeholder.client.results = (function(){
 	opacity: 1,
 	fillOpacity: 0.8
     };
+
+    var focus;
     
     var self = {
 
@@ -89,6 +91,138 @@ placeholder.client.results = (function(){
 	    
 	    layer.addTo(map);
 	    return layer;
+	},
+
+	'assignHoverEvents': function(rows, map, features_layer){
+
+	    var wof_layer;
+	    
+	    var panTo = function(e){
+		
+		var el = e.target;
+		
+		var wof_id = el.getAttribute("data-whosonfirst-id");
+		var wof_el;
+		
+		if (wof_id){
+		    wof_el = el;
+		}
+		
+		else {
+		    
+		    var parent_el = el.parentNode;
+		    wof_id = parent_el.getAttribute("data-whosonfirst-id")
+		    
+		    if (wof_id){
+			wof_el = parent;
+		    }
+		}
+		
+		if (! wof_el){
+		    console.log("Unable to determine WOF element");
+		    return;
+		}
+		
+		var latitude_id = "result-" + wof_id + "-latitude";
+		var latitude_el = document.getElementById(latitude_id);
+		
+		if (! latitude_el){
+		    console.log("Missing latitude element", latitude_id);
+		    return;
+		}
+		
+		var longitude_id = "result-" + wof_id + "-longitude";
+		var longitude_el = document.getElementById(longitude_id);
+		
+		if (! longitude_el){
+		    console.log("Missing longitude element", longitude_id);
+		    return;
+		}
+		
+		var lat = parseFloat(latitude_el.innerText);
+		var lon = parseFloat(longitude_el.innerText);		
+		
+		if ((! lat) || (lat == NaN)){
+		    console.log("Invalid latitude", latitude_el.innerText);
+		    return;
+		}
+		
+		if ((! lon) || (lon == NaN)){
+		    console.log("Invalid longitude", longitude_el.innerText);
+		    return;
+		}
+
+		if (wof_layer){
+		    map.removeLayer(wof_layer);
+		}
+		
+		map.flyTo([lat, lon], 8);
+		focus = wof_id;
+		
+		var wof_url = whosonfirst.uri.id2abspath(wof_id);
+
+		var on_success = function(f){
+		    
+		    var f_props = f["properties"];
+		    var f_wofid = f_props["wof:id"];
+
+		    if (f_wofid != focus){
+			return;
+		    }
+
+		    var f_geom = f["geometry"];
+
+		    if (f_geom["type"] == "Point"){
+			return;
+		    }
+		    
+		    var bbox = whosonfirst.geojson.derive_bbox(f);
+
+		    var minx = bbox[0];
+		    var miny = bbox[1];
+		    var maxx = bbox[2];
+		    var maxy = bbox[3];		    
+
+		    var sw = [ miny, minx ];
+		    var ne = [ maxy, maxx ];
+		    var bounds = [ sw, ne ];
+		    
+		    wof_layer = L.geoJSON(f);
+		    wof_layer.addTo(map);
+		    
+		    features_layer.bringToFront();
+
+		    map.fitBounds(bounds, {
+			"padding": [ 50, 50 ]
+		    });
+		};
+
+		var on_fail = function(rsp){
+		    console.log("FAIL", rsp);
+		};
+		
+		whosonfirst.net.fetch(wof_url, on_success, on_fail);
+	    };
+
+	    var count = rows.length;
+	    
+	    for (var i=0; i < count; i++){
+		
+		var row = rows[i];
+		var wof_id = row.getAttribute("data-whosonfirst-id");
+		
+		if (! wof_id){
+		    continue;
+		}
+		
+		var wofid_id = "result-" + wof_id + "-id";
+		var wofid_el = document.getElementById(wofid_id);
+		
+		if (wofid_el){
+		    wofid_el.onclick = panTo;
+		}
+		
+	    }
 	},
 	
 	'resultsAsFeatureCollection': function(rows){

@@ -2,9 +2,16 @@
 {{ template "header" . }}
     
 {{ if .Query }}
+
+{{ $length := len .Results }}
     <div class="card">
 	
-	<h3 class="card-header">Query results for <q>{{ .Query }}</q></h3>
+	<h3 class="card-header">
+	    Query results for <q>{{ .Query }}</q>
+	    {{ if ne $length 0 }}
+	    <small>{{ if eq $length 1 }}There is one place matching this query{{ else }}There are {{ $length }} places matching this query{{ end }}</small>
+	    {{ end }}
+	</h3>
 
 	<div class="card-body">
 	    
@@ -16,12 +23,21 @@
 	    </div>
 	    
 	    {{ else }}
+
+	    {{ if eq $length 0 }}
+
+	    <div class="alert alert-info" role="alert">
+		<p>There are no places matching that query.</p>
+	    </div>
+
+	    {{ else }}
 	    
 	    <div id="map"></div>
 	    
 	    <div id="results-table" class="table-responsive">
 		<table class="table table-hover">
 		    <tr>
+			<th>&#160;</th>
 			<th>ID</th>
 			<th>Name</th>
 			<th>Placetype</th>
@@ -32,7 +48,8 @@
 		    </tr>
 		    {{ range $i, $r := .Results }}
 		    <tr class="result" id="result-{{ $r.Id }}" data-whosonfirst-id="{{ $r.Id }}" data-bounding-box="{{ $r.Geometry.BoundingBox }}">
-			<td><a href="https://spelunker.whosonfirst.org/id/{{ $r.Id }}">{{ $r.Id }}</a></td>
+			<th>{{ Add $i 1 }}</th>
+			<td id="result-{{ $r.Id }}-id">{{ $r.Id }}</td>
 			<td id="result-{{ $r.Id }}-name">{{ $r.Name }}</td>
 			<td id="result-{{ $r.Id }}-placetype">{{ $r.Placetype }}</td>
 			<td id="result-{{ $r.Id }}-country">{{ range $j, $rg := Ancestors $r "region" }}{{ $rg.Name }}{{ end }}</td>		
@@ -43,6 +60,7 @@
 		    {{ end }}
 		</table>
 	    </div>
+	    {{ end }}
 	    
 	{{ end }}
 	</div>

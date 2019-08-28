@@ -49,6 +49,9 @@ func main() {
 	mux := gohttp.NewServeMux()
 
 	t := template.New("placeholder-client").Funcs(template.FuncMap{
+		"Add": func(i int, offset int) int {
+			return i + offset
+		},		
 		"Ancestors": http.Ancestors,
 	})
 
@@ -117,6 +120,9 @@ func main() {
 	}
 
 	// TO DO: prefix hoohah...
+	mux.Handle("/javascript/whosonfirst.uri.js", static_handler)
+	mux.Handle("/javascript/whosonfirst.net.js", static_handler)
+	mux.Handle("/javascript/whosonfirst.geojson.js", static_handler)			
 	mux.Handle("/javascript/placeholder.client.maps.js", static_handler)
 	mux.Handle("/javascript/placeholder.client.results.js", static_handler)	
 	mux.Handle("/javascript/placeholder.client.init.js", static_handler)
