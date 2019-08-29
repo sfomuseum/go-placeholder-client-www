@@ -9,6 +9,7 @@ window.addEventListener("load", function load(event){
         
     var api_key = document.body.getAttribute("data-nextzen-api-key");
     var url_prefix = document.body.getAttribute("data-url-prefix");
+    var is_apigw = document.body.getAttribute("data-is-api-gateway");    
     
     if (! api_key){
 	console.log("Missing API key");
@@ -28,6 +29,10 @@ window.addEventListener("load", function load(event){
 
     if (url_prefix != ""){
 	map_args["url_prefix"] = url_prefix;
+    }
+
+    if (is_apigw != ""){
+	map_args["is_api_gateway"] = 1;
     }
     
     // we need to do this _before_ Tangram starts trying to draw things

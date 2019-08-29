@@ -4,6 +4,7 @@ placeholder.client = placeholder.client || {};
 placeholder.client.maps = (function(){
 
     var refill_style = "/tangram/refill-style.zip";
+    var refill_style_apigw = "https://www.nextzen.org/carto/refill-style/refill-style.zip";
 
     var tiles_template = "https://{s}.tile.nextzen.org/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt";
 
@@ -63,9 +64,16 @@ placeholder.client.maps = (function(){
 	    var api_key = args["api_key"];
 
 	    var style_url = refill_style;
-	    
-	    if (args["url_prefix"]){
-		style_url = args["url_prefix"] + style_url;
+
+	    if (args["is_api_gateway"]){
+
+		style_url = refill_style_apigw;
+
+	    } else {
+
+		if (args["url_prefix"]){
+		    style_url = args["url_prefix"] + style_url;
+		}
 	    }
 
 	    var tangram_opts = {

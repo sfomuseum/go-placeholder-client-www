@@ -12,6 +12,7 @@ import (
 
 type SearchVars struct {
 	URLPrefix string
+	IsAPIGateway bool
 	Query     string
 	Results   *results.SearchResults
 	Error     error
@@ -19,6 +20,7 @@ type SearchVars struct {
 
 type SearchHandlerOptions struct {
 	PlaceholderClient *client.PlaceholderClient
+	IsAPIGateway bool	
 	Templates         *template.Template
 	URLPrefix         string
 }
@@ -45,6 +47,7 @@ func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
 
 		var search_vars SearchVars
 		search_vars.URLPrefix = opts.URLPrefix
+		search_vars.IsAPIGateway = opts.IsAPIGateway		
 
 		if text != "" {
 

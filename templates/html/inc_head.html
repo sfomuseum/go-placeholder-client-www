@@ -11,7 +11,7 @@
 	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/placeholder.client.init.js" }}"></script>
 	<link type="text/css" rel="stylesheet" href="{{ Join .URLPrefix "/css/placeholder.client.css" }}" />
     </head>
-    <body data-url-prefix="{{ .URLPrefix }}">
+    <body data-url-prefix="{{ .URLPrefix }}" {{ if .IsAPIGateway }}data-is-api-gateway="1"{{ end }}>
 	<div class="container">
 
 	    <nav class="navbar navbar-light bg-light">

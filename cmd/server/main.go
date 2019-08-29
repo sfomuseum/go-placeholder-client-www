@@ -31,6 +31,8 @@ func main() {
 	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
+	is_api_gateway := flag.Bool("is-api-gateway", false, "...")
+	
 	flag.Parse()
 
 	err := flags.SetFlagsFromEnvVars("PLACEHOLDER")
@@ -116,6 +118,7 @@ func main() {
 		PlaceholderClient: cl,
 		Templates:         t,
 		URLPrefix:         *static_prefix,
+		IsAPIGateway:	*is_api_gateway,
 	}
 
 	search_handler, err := http.NewSearchHandler(search_opts)
