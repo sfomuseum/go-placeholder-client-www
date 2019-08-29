@@ -7,7 +7,7 @@ COPY . /build/go-placeholder-client-www
 RUN apk update && apk upgrade \
     && apk add make git \
     && cd /build/go-placeholder-client-www \
-    && go build -o /usr/local/bin/placeholder-client-www cmd/server/main.go    
+    && go build -mod vendor -o /usr/local/bin/placeholder-client-www cmd/server/main.go    
 
 FROM alpine:latest
 
