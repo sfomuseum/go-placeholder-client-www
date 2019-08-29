@@ -103,6 +103,14 @@ func main() {
 
 	mux := gohttp.NewServeMux()
 
+	ping_handler, err := http.PingHandler()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mux.Handle("/ping", ping_handler)
+	
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
