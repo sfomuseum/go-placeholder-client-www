@@ -62,20 +62,27 @@ placeholder.client.maps = (function(){
 	    }
 
 	    var api_key = args["api_key"];
+	    var style_url;
 
-	    var style_url = refill_style;
-
+	    // the following is to account for the fact that Tangram.js does not
+	    // pass along explicit `Accept` headers (yet) so in an API Gateway
+	    // context it's not possible to tell it (API Gateway) to send .zip
+	    // files as binary data which causes the un-zipping code in Tangram.js
+	    // to be sad (20190829/thisisaaronland)
+	    
 	    if (args["is_api_gateway"]){
 
 		style_url = refill_style_apigw;
 
 	    } else {
 
+		style_url = refill_style;
+		
 		if (args["url_prefix"]){
 		    style_url = args["url_prefix"] + style_url;
 		}
 	    }
-
+	    
 	    var tangram_opts = {
 		scene: {
 		    import: [

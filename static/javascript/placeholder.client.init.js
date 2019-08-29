@@ -27,11 +27,11 @@ window.addEventListener("load", function load(event){
 	"api_key": api_key,
     };
 
-    if (url_prefix != ""){
+    if (url_prefix){
 	map_args["url_prefix"] = url_prefix;
     }
 
-    if (is_apigw != ""){
+    if (is_apigw){
 	map_args["is_api_gateway"] = 1;
     }
     
