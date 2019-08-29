@@ -1,5 +1,11 @@
 CWD=$(shell pwd)
 
+go-bindata:
+	mkdir -p cmd/go-bindata
+	mkdir -p cmd/go-bindata-assetfs
+	curl -s -o cmd/go-bindata/main.go https://raw.githubusercontent.com/whosonfirst/go-bindata/master/cmd/go-bindata/main.go
+	curl -s -o cmd/go-bindata-assetfs/main.go https://raw.githubusercontent.com/whosonfirst/go-bindata-assetfs/master/cmd/go-bindata-assetfs/main.go
+
 debug:
 	@make bake-all
 	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY)

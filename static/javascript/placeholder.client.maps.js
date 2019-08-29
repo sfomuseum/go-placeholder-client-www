@@ -7,6 +7,7 @@ placeholder.client.maps = (function(){
     var refill_style_apigw = "https://www.nextzen.org/carto/refill-style/refill-style.zip";
 
     var tiles_template = "https://{s}.tile.nextzen.org/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt";
+    // tiles_template = "/tiles/{z}/{x}/{y}.mvt";
 
     var attribution = '<a href="https://github.com/tangrams" target="_blank">Tangram</a> | <a href="http://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a> | <a href="https://www.nextzen.org/" target="_blank">Nextzen</a>';
    

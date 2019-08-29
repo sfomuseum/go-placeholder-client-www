@@ -13,16 +13,38 @@ github.com/aws/aws-lambda-go/lambda/messages
 github.com/aws/aws-lambda-go/lambdacontext
 # github.com/go-ini/ini v1.42.0
 github.com/go-ini/ini
+# github.com/jtacoma/uritemplates v1.0.0
+github.com/jtacoma/uritemplates
+# github.com/patrickmn/go-cache v2.1.0+incompatible
+github.com/patrickmn/go-cache
+# github.com/paulmach/orb v0.1.3
+github.com/paulmach/orb/clip
+github.com/paulmach/orb/geojson
+github.com/paulmach/orb/maptile
+github.com/paulmach/orb
+github.com/paulmach/orb/internal/mercator
+# github.com/sfomuseum/go-http-tilezen v0.0.0-20190829212433-f56daccfb2e1
+github.com/sfomuseum/go-http-tilezen/http
 # github.com/sfomuseum/go-placeholder-client v0.0.0-20190823231203-babac5a8ec62
 github.com/sfomuseum/go-placeholder-client
 github.com/sfomuseum/go-placeholder-client/results
 github.com/sfomuseum/go-placeholder-client/filters
+# github.com/sfomuseum/go-tilezen v0.0.0-20190829211934-79a20478511a
+github.com/sfomuseum/go-tilezen
+# github.com/tidwall/gjson v1.3.2
+github.com/tidwall/gjson
+# github.com/tidwall/match v1.0.1
+github.com/tidwall/match
+# github.com/tidwall/pretty v1.0.0
+github.com/tidwall/pretty
 # github.com/whosonfirst/algnhsa v0.1.0
 github.com/whosonfirst/algnhsa
 # github.com/whosonfirst/go-bindata v0.1.0
 github.com/whosonfirst/go-bindata
 # github.com/whosonfirst/go-bindata-assetfs v1.0.1
 github.com/whosonfirst/go-bindata-assetfs
+# github.com/whosonfirst/go-cache v0.0.1
+github.com/whosonfirst/go-cache
 # github.com/whosonfirst/go-http-nextzenjs v0.1.4
 github.com/whosonfirst/go-http-nextzenjs
 # github.com/whosonfirst/go-sanitize v0.1.0

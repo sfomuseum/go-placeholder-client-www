@@ -4,10 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
+	tzhttp "github.com/sfomuseum/go-http-tilezen/http"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
 	"github.com/sfomuseum/go-placeholder-client-www/http"
 	"github.com/sfomuseum/go-placeholder-client-www/server"
+	"github.com/whosonfirst/go-cache"
 	"github.com/whosonfirst/go-http-nextzenjs"
 	"github.com/whosonfirst/go-whosonfirst-cli/flags"
 	"html/template"
@@ -32,7 +34,9 @@ func main() {
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
 	is_api_gateway := flag.Bool("is-api-gateway", false, "...")
-	
+
+	proxy_tiles := flag.Bool("proxy-tiles", false, "...")
+
 	flag.Parse()
 
 	err := flags.SetFlagsFromEnvVars("PLACEHOLDER")
@@ -110,7 +114,31 @@ func main() {
 	}
 
 	mux.Handle("/ping", ping_handler)
-	
+
+	if *proxy_tiles {
+
+		cache_opts, err := cache.DefaultGoCacheOptions()
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		go_cache, err := cache.NewGoCache(cache_opts)
+
+		proxy_opts := &tzhttp.TilezenProxyHandlerOptions{
+			Cache: go_cache,
+		}
+
+		proxy_handler, err := tzhttp.TilezenProxyHandler(proxy_opts)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// prefix...
+		mux.Handle("/tiles/", proxy_handler)
+	}
+
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
 	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
@@ -126,7 +154,7 @@ func main() {
 		PlaceholderClient: cl,
 		Templates:         t,
 		URLPrefix:         *static_prefix,
-		IsAPIGateway:	*is_api_gateway,
+		IsAPIGateway:      *is_api_gateway,
 	}
 
 	search_handler, err := http.NewSearchHandler(search_opts)
