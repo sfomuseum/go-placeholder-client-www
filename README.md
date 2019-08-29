@@ -34,6 +34,16 @@ _Please write me._
 
 _Please write about `PLACEHOLDER_STATIC_PREFIX`._
 
+### ECS
+
+There is also a handy [Dockerfile](Dockerfile) for running things in a container. The following assumes that you want to run the `placeholder-client-www` server in AWS as a Fargate deployment with application load balancer (ALB) in front of it.
+
+```
+/usr/local/bin/placeholder-client-www,-placeholder-endpoint,{PLACEHOLDER_ENDPOINT},-host,0.0.0.0,-nextzen-apikey,{NEXTZEN_APIKEY}
+```
+
+Note the `-host 0.0.0.0` part. This is important. Without it the health checks performed by ALB will always fail.
+
 ## See also
 
 * https://github.com/sfomuseum/go-placeholder-client
