@@ -4,12 +4,14 @@ import (
 	"flag"
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
+	"github.com/aaronland/go-string/dsn"	
 	tzhttp "github.com/sfomuseum/go-http-tilezen/http"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
 	"github.com/sfomuseum/go-placeholder-client-www/http"
 	"github.com/sfomuseum/go-placeholder-client-www/server"
 	"github.com/whosonfirst/go-cache"
+	"github.com/whosonfirst/go-cache-blob"	
 	"github.com/whosonfirst/go-http-nextzenjs"
 	"github.com/whosonfirst/go-whosonfirst-cli/flags"
 	"html/template"
@@ -37,6 +39,9 @@ func main() {
 
 	proxy_tiles := flag.Bool("proxy-tiles", false, "...")
 
+	var proxy_caches flags.MultiDSNString
+	flag.Var(&proxy_caches, "proxy-cache-dsn", "...")
+		
 	flag.Parse()
 
 	err := flags.SetFlagsFromEnvVars("PLACEHOLDER")
@@ -117,16 +122,71 @@ func main() {
 
 	if *proxy_tiles {
 
-		cache_opts, err := cache.DefaultGoCacheOptions()
+		caches := make([]cache.Cache, 0)
+
+		for _, dsn_str := range proxy_caches {
+
+			dsn_map, err := dsn.StringToDSNWithKeys(dsn_str, "cache")
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			switch dsn_map["cache"] {
+			case "blob":
+
+				blob_cache, err := blob.NewBlobCacheWithDSN(dsn_str)
+
+				if err != nil {
+					log.Fatal
+				}
+
+
+				caches = append(caches, blob_cache)
+				
+			case "gocache":
+
+				cache_opts, err := cache.DefaultGoCacheOptions()
+				
+				if err != nil {
+					log.Fatal(err)
+				}
+				
+				go_cache, err := cache.NewGoCache(cache_opts)
+
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				caches = append(caches, go_cache)
+				
+			case "null":
+
+				null_cache, err := cache.NewNullCache()
+
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				caches = append(caches, null_cache)
+				
+			default:
+				log.Fatal("Invalid cache")
+			}
+		}
+
+		if len(caches) == 0 {
+			log.Fatal("No proxy caches defined")
+		}
+		
+		multi_cache, err := cache.NewMultiCache(caches)
 
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		go_cache, err := cache.NewGoCache(cache_opts)
-
+		
 		proxy_opts := &tzhttp.TilezenProxyHandlerOptions{
-			Cache: go_cache,
+			Cache: multi_cache,
 		}
 
 		proxy_handler, err := tzhttp.TilezenProxyHandler(proxy_opts)
