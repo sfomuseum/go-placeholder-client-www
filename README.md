@@ -106,3 +106,6 @@ Note the `-host 0.0.0.0` part. This is important. Without it the health checks p
 * https://github.com/sfomuseum/go-placeholder-client
 * https://github.com/sfomuseum/docker-placeholder
 * https://github.com/pelias/placeholder/
+
+* https://github.com/sfomuseum/go-http-tilezen
+* https://github.com/aaronland/go-http-tangramjs
