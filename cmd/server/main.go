@@ -41,7 +41,7 @@ func main() {
 
 	proxy_tiles := flag.Bool("proxy-tiles", false, "...")
 
-	var proxy_caches flags.MultiDSNString
+	var proxy_caches flags.MultiString
 	flag.Var(&proxy_caches, "proxy-cache-dsn", "...")
 		
 	flag.Parse()
