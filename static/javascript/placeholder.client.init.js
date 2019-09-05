@@ -8,11 +8,24 @@ window.addEventListener("load", function load(event){
     }
         
     var api_key = document.body.getAttribute("data-nextzen-api-key");
+    var style_url = document.body.getAttribute("data-nextzen-style-url");
+    var tile_url = document.body.getAttribute("data-nextzen-tile-url");    
+    
     var url_prefix = document.body.getAttribute("data-url-prefix");
     var is_apigw = document.body.getAttribute("data-is-api-gateway");    
     
     if (! api_key){
 	console.log("Missing API key");
+	return;
+    }
+
+    if (! style_url){
+	console.log("Missing style URL");
+	return;
+    }
+
+    if (! tile_url){
+	console.log("Missing tile URL");
 	return;
     }
     
@@ -25,16 +38,14 @@ window.addEventListener("load", function load(event){
 
     var map_args = {
 	"api_key": api_key,
+	"style_url": style_url,
+	"tile_url": tile_url,
     };
 
     if (url_prefix){
 	map_args["url_prefix"] = url_prefix;
     }
 
-    if (is_apigw){
-	map_args["is_api_gateway"] = 1;
-    }
-    
     // we need to do this _before_ Tangram starts trying to draw things
     map_el.style.display = "block";
     

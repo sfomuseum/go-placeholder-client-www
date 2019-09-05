@@ -33,7 +33,8 @@ func main() {
 	static_prefix := flag.String("static-prefix", "", "Prepend this prefix to URLs for static assets.")
 
 	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
-	style_url := flag.String("style-url", "/tangram/refill-style.zip", "...")
+	nextzen_style_url := flag.String("nextzen-style-url", "/tangram/refill-style.zip", "...")
+	nextzen_tile_url := flag.String("nextzen-tile-url", tangramjs.NEXTZEN_MVT_ENDPOINT, "...")	
 	
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
@@ -197,16 +198,20 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// prefix...
-		mux.Handle("/tiles/", proxy_handler)
+		// prefix...		
+		proxy_tiles_url := "/tiles/"			
+		mux.Handle(proxy_tiles_url, proxy_handler)
+
+		*nextzen_tile_url = proxy_tiles_url		
 	}
 
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
 	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
 	tangramjs_opts.Nextzen.APIKey = *nextzen_apikey
-	tangramjs_opts.Nextzen.StyleURL = *style_url	
-
+	tangramjs_opts.Nextzen.StyleURL = *nextzen_style_url	
+	tangramjs_opts.Nextzen.TileURL = *nextzen_tile_url
+	
 	err = bootstrap.AppendAssetHandlersWithPrefix(mux, *static_prefix)
 
 	if err != nil {

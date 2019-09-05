@@ -22,11 +22,12 @@ bake-assets:
 	@PATH=$(PATH):$(CWD)/bin bin/go-bindata-assetfs -pkg tangramjs -o assets.go static static/javascript static/css static/tangram
 
 debug:
-	go run -mod vendor examples/map/main.go -templates 'templates/html/*.html'
+	@make bake
+	go run -mod vendor examples/map/main.go -templates 'templates/html/*.html' -api-key $(APIKEY)
 
 tangram: 
-	curl -s -o static/javascript/tangram.js https://www.nextzen.org/tangram/tangram.debug.js
-	curl -s -o static/javascript/tangram.min.js https://www.nextzen.org/tangram/tangram.min.js
+	curl -s -o static/javascript/tangram.debug.js https://raw.githubusercontent.com/tangrams/tangram/master/dist/tangram.debug.js
+	curl -s -o static/javascript/tangram.min.js https://raw.githubusercontent.com/tangrams/tangram/master/dist/tangram.min.js
 
 styles: refill walkabout
 

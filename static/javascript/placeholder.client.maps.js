@@ -3,12 +3,6 @@ placeholder.client = placeholder.client || {};
 
 placeholder.client.maps = (function(){
 
-    var refill_style = "/tangram/refill-style.zip";
-    var refill_style_apigw = "https://www.nextzen.org/carto/refill-style/refill-style.zip";
-
-    var tiles_template = "https://{s}.tile.nextzen.org/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt";
-    // tiles_template = "/tiles/{z}/{x}/{y}.mvt";
-
     var attribution = '<a href="https://github.com/tangrams" target="_blank">Tangram</a> | <a href="http://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a> | <a href="https://www.nextzen.org/" target="_blank">Nextzen</a>';
    
     var maps = {};
@@ -37,12 +31,14 @@ placeholder.client.maps = (function(){
 		return maps[map_id];
 	    }
 
+	    // make this work...
 	    var attribution = self.getAttribution();
-	    var tangram_opts = self.getTangramOptions(args);
-
-	    var map = L.map("map");
+	    L.control.attribition = attribution;
 	    
+	    var tangram_opts = self.getTangramOptions(args);	   
 	    var tangramLayer = Tangram.leafletLayer(tangram_opts);
+
+	    var map = L.map("map");	    
 	    tangramLayer.addTo(map);
 	    
 	    return map;
@@ -59,26 +55,8 @@ placeholder.client.maps = (function(){
 	    }
 
 	    var api_key = args["api_key"];
-	    var style_url;
-
-	    // the following is to account for the fact that Tangram.js does not
-	    // pass along explicit `Accept` headers (yet) so in an API Gateway
-	    // context it's not possible to tell it (API Gateway) to send .zip
-	    // files as binary data which causes the un-zipping code in Tangram.js
-	    // to be sad (20190829/thisisaaronland)
-	    
-	    if (args["is_api_gateway"]){
-
-		style_url = refill_style_apigw;
-
-	    } else {
-
-		style_url = refill_style;
-		
-		if (args["url_prefix"]){
-		    style_url = args["url_prefix"] + style_url;
-		}
-	    }
+	    var style_url = args["style_url"];
+	    var tile_url = args["tile_url"];	    
 	    
 	    var tangram_opts = {
 		scene: {
@@ -87,11 +65,11 @@ placeholder.client.maps = (function(){
 		    ],
 		    sources: {
 			mapzen: {
-			    url: tiles_template,
+			    url: tile_url,
 			    url_subdomains: ['a', 'b', 'c', 'd'],
 			    url_params: {api_key: api_key},
 			    tile_size: 512,
-			    max_zoom: 16
+			    max_zoom: 18
 			}
 		    }
 		}
