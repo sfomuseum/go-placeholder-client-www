@@ -7,7 +7,7 @@ go-bindata:
 	curl -s -o cmd/go-bindata-assetfs/main.go https://raw.githubusercontent.com/whosonfirst/go-bindata-assetfs/master/cmd/go-bindata-assetfs/main.go
 
 debug:
-	@make bake-all
+	@make bake
 	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY)
 
 bake: bake-static bake-templates
@@ -25,12 +25,12 @@ bake-templates:
 
 docker:
 	go mod vendor
-	@make bake-all
+	@make bake
 	docker build -t placeholder-client-www .
 
 lambda:
 	go mod vendor
-	@make bake-all
+	@make bake
 	if test -f main; then rm -f main; fi
 	if test -f deployment.zip; then rm -f deployment.zip; fi
 	GOOS=linux go build -mod vendor -o main cmd/server/main.go
