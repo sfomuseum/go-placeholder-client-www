@@ -28,12 +28,18 @@ _Please write me._
 | Key | Value | Required |
 | --- | --- | --- |
 | PLACEHOLDER_PROTOCOL | `lambda` | yes |
-| PLACEHOLDER_PLACEHOLDER_ENDPOINT | ... | yes |
-| PLACEHOLDER_NEXZEN_APIKEY | ... | yes | 
-| PLACEHOLDER_STATIC_PREFIX | ... | no |
-| PLACEHOLDER_NEXTZEN_STYLE_URL | ... | no |
-| PLACEHOLDER_PROXY_TILES | ... | no |
-| PLACEHOLDER_PROXY_TILES_DSN | ... | no |
+| PLACEHOLDER_PLACEHOLDER_ENDPOINT | string | yes |
+| PLACEHOLDER_NEXZEN_APIKEY | string | yes | 
+| PLACEHOLDER_STATIC_PREFIX | string | no |
+| PLACEHOLDER_NEXTZEN_STYLE_URL | string | no |
+| PLACEHOLDER_PROXY_TILES | boolean | no |
+| PLACEHOLDER_PROXY_TILES_DSN | string | no |
+
+#### Nextzen style URLs in a Lambda context
+
+#### Proxying tiles in a Lambda context
+
+Assuming you're connecting to a Placeholder endpoint running in an ECS instance (using the `docker-placeholder` container) then you will have had to set up your Lambda function inside a VPC (see above). Once you've done that your Lambda function will no longer be able to reach the external internet without adding a NAT gateway to your VPC. If you haven't done that then, unless you've pre-seeded all the tiles you're going to request, the tile proxy layer won't work because the proxy will never be able to fetch tiles from Nextzen (aka: the external internet).
 
 ### ECS
 
