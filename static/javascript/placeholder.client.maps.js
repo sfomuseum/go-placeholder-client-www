@@ -39,15 +39,11 @@ placeholder.client.maps = (function(){
 
 	    var attribution = self.getAttribution();
 	    var tangram_opts = self.getTangramOptions(args);
+
+	    var map = L.map("map");
 	    
-	    var nextzen_opts = {
-		apiKey: api_key,
-		attribution: attribution,
-		tangramOptions: tangram_opts,
-	    };
-	    
-	    var map = L.Nextzen.map('map', nextzen_opts);
-	    maps[map_id] = map;
+	    var tangramLayer = Tangram.leafletLayer(tangram_opts);
+	    tangramLayer.addTo(map);
 	    
 	    return map;
 	},

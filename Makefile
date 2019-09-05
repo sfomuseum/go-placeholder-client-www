@@ -10,7 +10,7 @@ debug:
 	@make bake-all
 	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY)
 
-bake-all: bake-static bake-templates
+bake: bake-static bake-templates
 
 bake-static:
 	go build -o bin/go-bindata cmd/go-bindata/main.go
