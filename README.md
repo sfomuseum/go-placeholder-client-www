@@ -25,14 +25,15 @@ _Please write me._
 
 #### Environment variables
 
-| Key | Value | Notes |
+| Key | Value | Required |
 | --- | --- | --- |
-| PLACEHOLDER_PROTOCOL | `lambda` |
-| PLACEHOLDER_PLACEHOLDER_ENDPOINT | ... |
-| PLACEHOLDER_STATIC_PREFIX | ... |
-| PLACEHOLDER_NEXZEN_APIKEY | ... |
-
-_Please write about `PLACEHOLDER_STATIC_PREFIX`._
+| PLACEHOLDER_PROTOCOL | `lambda` | yes |
+| PLACEHOLDER_PLACEHOLDER_ENDPOINT | ... | yes |
+| PLACEHOLDER_NEXZEN_APIKEY | ... | yes | 
+| PLACEHOLDER_STATIC_PREFIX | ... | no |
+| PLACEHOLDER_NEXTZEN_STYLE_URL | ... | no |
+| PLACEHOLDER_PROXY_TILES | ... | no |
+| PLACEHOLDER_PROXY_TILES_DSN | ... | no |
 
 ### ECS
 

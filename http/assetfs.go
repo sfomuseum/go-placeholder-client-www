@@ -111,7 +111,7 @@ func staticJavascriptPlaceholderClientInitJs() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "static/javascript/placeholder.client.init.js", size: 1672, mode: os.FileMode(420), modTime: time.Unix(1567717680, 0)}
+	info := bindataFileInfo{name: "static/javascript/placeholder.client.init.js", size: 1672, mode: os.FileMode(420), modTime: time.Unix(1567721886, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -131,7 +131,7 @@ func staticJavascriptPlaceholderClientMapsJs() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "static/javascript/placeholder.client.maps.js", size: 2037, mode: os.FileMode(420), modTime: time.Unix(1567717984, 0)}
+	info := bindataFileInfo{name: "static/javascript/placeholder.client.maps.js", size: 2037, mode: os.FileMode(420), modTime: time.Unix(1567721886, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

@@ -24,12 +24,12 @@ bake-templates:
 	bin/go-bindata -pkg templates -o assets/templates/html.go templates/html
 
 docker:
-	go mod vendor
+	# go mod vendor
 	@make bake
 	docker build -t placeholder-client-www .
 
 lambda:
-	go mod vendor
+	# go mod vendor
 	@make bake
 	if test -f main; then rm -f main; fi
 	if test -f deployment.zip; then rm -f deployment.zip; fi

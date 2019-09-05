@@ -202,7 +202,15 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// prefix...
+		if *static_prefix != "" {
+			
+			*proxy_tiles_url = filepath.Join(*static_prefix, *proxy_tiles_url)
+
+			if !strings.HasSuffix(*proxy_tiles_url, "/"){
+				*proxy_tiles_url = fmt.Sprintf("%s/", *proxy_tiles_url)
+			}
+		}
+		
 		mux.Handle(*proxy_tiles_url, proxy_handler)
 
 		*nextzen_tile_url = fmt.Sprintf("%s{z}/{x}/{y}.mvt", *proxy_tiles_url)
