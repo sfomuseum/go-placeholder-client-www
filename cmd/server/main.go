@@ -202,7 +202,7 @@ func main() {
 		proxy_tiles_url := "/tiles/"			
 		mux.Handle(proxy_tiles_url, proxy_handler)
 
-		*nextzen_tile_url = proxy_tiles_url		
+		*nextzen_tile_url = fmt.Sprintf("%s{z}/{x}/{y}.mvt", proxy_tiles_url)
 	}
 
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
