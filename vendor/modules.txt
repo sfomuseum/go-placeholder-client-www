@@ -3,10 +3,14 @@ github.com/aaronland/go-aws-session
 # github.com/aaronland/go-http-bootstrap v0.0.5
 github.com/aaronland/go-http-bootstrap
 github.com/aaronland/go-http-bootstrap/resources
-# github.com/aaronland/go-http-rewrite v0.0.3
+# github.com/aaronland/go-http-leaflet v0.0.1
+github.com/aaronland/go-http-leaflet
+# github.com/aaronland/go-http-rewrite v0.0.4
 github.com/aaronland/go-http-rewrite
 # github.com/aaronland/go-http-sanitize v0.0.4
 github.com/aaronland/go-http-sanitize
+# github.com/aaronland/go-http-tangramjs v0.0.1
+github.com/aaronland/go-http-tangramjs
 # github.com/aaronland/go-string v0.1.1
 github.com/aaronland/go-string/dsn
 # github.com/aaronland/gocloud-blob-bucket v0.0.1
@@ -105,8 +109,6 @@ github.com/whosonfirst/go-bindata-assetfs
 github.com/whosonfirst/go-cache
 # github.com/whosonfirst/go-cache-blob v0.0.0-20190830192137-a4883ef421c7
 github.com/whosonfirst/go-cache-blob
-# github.com/whosonfirst/go-http-nextzenjs v0.1.4
-github.com/whosonfirst/go-http-nextzenjs
 # github.com/whosonfirst/go-sanitize v0.1.0
 github.com/whosonfirst/go-sanitize
 # github.com/whosonfirst/go-whosonfirst-cli v0.1.0

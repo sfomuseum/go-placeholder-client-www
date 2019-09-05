@@ -12,7 +12,7 @@ import (
 	"github.com/sfomuseum/go-placeholder-client-www/server"
 	"github.com/whosonfirst/go-cache"
 	"github.com/whosonfirst/go-cache-blob"	
-	"github.com/whosonfirst/go-http-nextzenjs"
+	"github.com/aaronland/go-http-tangramjs"
 	"github.com/whosonfirst/go-whosonfirst-cli/flags"
 	"html/template"
 	"log"
@@ -201,8 +201,8 @@ func main() {
 
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
-	nextzen_opts := nextzenjs.DefaultNextzenJSOptions()
-	nextzen_opts.APIKey = *nextzen_apikey
+	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
+	tangramjs_opts.APIKey = *nextzen_apikey
 
 	err = bootstrap.AppendAssetHandlersWithPrefix(mux, *static_prefix)
 
@@ -224,7 +224,7 @@ func main() {
 	}
 
 	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, *static_prefix)
-	search_handler = nextzenjs.AppendResourcesHandlerWithPrefix(search_handler, nextzen_opts, *static_prefix)
+	search_handler = tangramjs.AppendResourcesHandlerWithPrefix(search_handler, tangramjs_opts, *static_prefix)
 
 	// auth-y bits go here...
 
@@ -232,7 +232,7 @@ func main() {
 
 	mux.Handle(search_path, search_handler)
 
-	err = nextzenjs.AppendAssetHandlersWithPrefix(mux, *static_prefix)
+	err = tangramjs.AppendAssetHandlersWithPrefix(mux, *static_prefix)
 
 	if err != nil {
 		log.Fatal(err)
