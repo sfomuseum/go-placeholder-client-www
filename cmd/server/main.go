@@ -4,15 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
-	"github.com/aaronland/go-string/dsn"	
+	"github.com/aaronland/go-http-tangramjs"
+	"github.com/aaronland/go-string/dsn"
 	tzhttp "github.com/sfomuseum/go-http-tilezen/http"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
 	"github.com/sfomuseum/go-placeholder-client-www/http"
 	"github.com/sfomuseum/go-placeholder-client-www/server"
 	"github.com/whosonfirst/go-cache"
-	"github.com/whosonfirst/go-cache-blob"	
-	"github.com/aaronland/go-http-tangramjs"
+	"github.com/whosonfirst/go-cache-blob"
 	"github.com/whosonfirst/go-whosonfirst-cli/flags"
 	"html/template"
 	"log"
@@ -20,6 +20,7 @@ import (
 	gourl "net/url"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -34,17 +35,15 @@ func main() {
 
 	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
 	nextzen_style_url := flag.String("nextzen-style-url", "/tangram/refill-style.zip", "...")
-	nextzen_tile_url := flag.String("nextzen-tile-url", tangramjs.NEXTZEN_MVT_ENDPOINT, "...")	
-	
+	nextzen_tile_url := flag.String("nextzen-tile-url", tangramjs.NEXTZEN_MVT_ENDPOINT, "...")
+
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
-	is_api_gateway := flag.Bool("is-api-gateway", false, "...")
-
 	proxy_tiles := flag.Bool("proxy-tiles", false, "...")
-
-	var proxy_caches flags.MultiString
-	flag.Var(&proxy_caches, "proxy-cache-dsn", "...")
-		
+	proxy_tiles_url := flag.String("proxy-tiles-url", "/tiles/", "...")
+	proxy_tiles_dsn := flag.String("proxy-tiles-dsn", "cache=gocache", "...")
+	proxy_tiles_timeout := flag.Int("proxy-tiles-timeout", 30, "The maximum number of seconds to allow for fetching a tile from the proxy.")
+	
 	flag.Parse()
 
 	err := flags.SetFlagsFromEnvVars("PLACEHOLDER")
@@ -127,69 +126,74 @@ func main() {
 
 		caches := make([]cache.Cache, 0)
 
-		for _, dsn_str := range proxy_caches {
+		dsn_map, err := dsn.StringToDSNWithKeys(*proxy_tiles_dsn, "cache")
 
-			dsn_map, err := dsn.StringToDSNWithKeys(dsn_str, "cache")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		switch dsn_map["cache"] {
+		case "blob":
+
+			blob_dsn, ok := dsn_map["blob"]
+
+			if !ok {
+				log.Fatal("Missing blob DSN property")
+			}
+			
+			blob_cache, err := blob.NewBlobCacheWithDSN(blob_dsn)
 
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			switch dsn_map["cache"] {
-			case "blob":
+			caches = append(caches, blob_cache)
 
-				blob_cache, err := blob.NewBlobCacheWithDSN(dsn_str)
+		case "gocache":
 
-				if err != nil {
-					log.Fatal(err)
-				}
+			cache_opts, err := cache.DefaultGoCacheOptions()
 
-
-				caches = append(caches, blob_cache)
-				
-			case "gocache":
-
-				cache_opts, err := cache.DefaultGoCacheOptions()
-				
-				if err != nil {
-					log.Fatal(err)
-				}
-				
-				go_cache, err := cache.NewGoCache(cache_opts)
-
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				caches = append(caches, go_cache)
-				
-			case "null":
-
-				null_cache, err := cache.NewNullCache()
-
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				caches = append(caches, null_cache)
-				
-			default:
-				log.Fatal("Invalid cache")
+			if err != nil {
+				log.Fatal(err)
 			}
+
+			go_cache, err := cache.NewGoCache(cache_opts)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			caches = append(caches, go_cache)
+
+		case "null":
+
+			null_cache, err := cache.NewNullCache()
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			caches = append(caches, null_cache)
+
+		default:
+			log.Fatal("Invalid cache")
 		}
 
 		if len(caches) == 0 {
 			log.Fatal("No proxy caches defined")
 		}
-		
+
 		multi_cache, err := cache.NewMultiCache(caches)
 
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		timeout := time.Duration(*proxy_tiles_timeout) * time.Second
 		
 		proxy_opts := &tzhttp.TilezenProxyHandlerOptions{
 			Cache: multi_cache,
+			Timeout: timeout,
 		}
 
 		proxy_handler, err := tzhttp.TilezenProxyHandler(proxy_opts)
@@ -198,20 +202,19 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// prefix...		
-		proxy_tiles_url := "/tiles/"			
-		mux.Handle(proxy_tiles_url, proxy_handler)
+		// prefix...
+		mux.Handle(*proxy_tiles_url, proxy_handler)
 
-		*nextzen_tile_url = fmt.Sprintf("%s{z}/{x}/{y}.mvt", proxy_tiles_url)
+		*nextzen_tile_url = fmt.Sprintf("%s{z}/{x}/{y}.mvt", *proxy_tiles_url)
 	}
 
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
 	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
 	tangramjs_opts.Nextzen.APIKey = *nextzen_apikey
-	tangramjs_opts.Nextzen.StyleURL = *nextzen_style_url	
+	tangramjs_opts.Nextzen.StyleURL = *nextzen_style_url
 	tangramjs_opts.Nextzen.TileURL = *nextzen_tile_url
-	
+
 	err = bootstrap.AppendAssetHandlersWithPrefix(mux, *static_prefix)
 
 	if err != nil {
@@ -222,7 +225,6 @@ func main() {
 		PlaceholderClient: cl,
 		Templates:         t,
 		URLPrefix:         *static_prefix,
-		IsAPIGateway:      *is_api_gateway,
 	}
 
 	search_handler, err := http.NewSearchHandler(search_opts)

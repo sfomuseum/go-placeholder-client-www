@@ -12,7 +12,6 @@ window.addEventListener("load", function load(event){
     var tile_url = document.body.getAttribute("data-nextzen-tile-url");    
     
     var url_prefix = document.body.getAttribute("data-url-prefix");
-    var is_apigw = document.body.getAttribute("data-is-api-gateway");    
     
     if (! api_key){
 	console.log("Missing API key");

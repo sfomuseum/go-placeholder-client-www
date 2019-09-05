@@ -1,3 +1,3 @@
-# go-nextzen
+# go-tilezen
 
 Work in progress.

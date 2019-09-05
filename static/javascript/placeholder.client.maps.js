@@ -54,6 +54,12 @@ placeholder.client.maps = (function(){
 		return null;
 	    }
 
+	    /*
+	    var sceneText = await fetch(new Request('https://somwehere.com/scene.zip', { headers: { 'Accept': 'application/zip' } })).then(r => r.text());
+	    var sceneURL = URL.createObjectURL(new Blob([sceneText]));
+	    scene.load(sceneURL, { base_path: 'https://somwehere.com/' });
+	    */
+	    
 	    var api_key = args["api_key"];
 	    var style_url = args["style_url"];
 	    var tile_url = args["tile_url"];	    

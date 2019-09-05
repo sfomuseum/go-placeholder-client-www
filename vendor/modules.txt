@@ -9,7 +9,7 @@ github.com/aaronland/go-http-leaflet
 github.com/aaronland/go-http-rewrite
 # github.com/aaronland/go-http-sanitize v0.0.4
 github.com/aaronland/go-http-sanitize
-# github.com/aaronland/go-http-tangramjs v0.0.2
+# github.com/aaronland/go-http-tangramjs v0.0.3
 github.com/aaronland/go-http-tangramjs
 # github.com/aaronland/go-string v0.1.1
 github.com/aaronland/go-string/dsn
@@ -85,13 +85,13 @@ github.com/paulmach/orb/geojson
 github.com/paulmach/orb/maptile
 github.com/paulmach/orb
 github.com/paulmach/orb/internal/mercator
-# github.com/sfomuseum/go-http-tilezen v0.0.0-20190829212433-f56daccfb2e1
+# github.com/sfomuseum/go-http-tilezen v0.0.2
 github.com/sfomuseum/go-http-tilezen/http
 # github.com/sfomuseum/go-placeholder-client v0.0.0-20190823231203-babac5a8ec62
 github.com/sfomuseum/go-placeholder-client
 github.com/sfomuseum/go-placeholder-client/results
 github.com/sfomuseum/go-placeholder-client/filters
-# github.com/sfomuseum/go-tilezen v0.0.0-20190829211934-79a20478511a
+# github.com/sfomuseum/go-tilezen v0.0.1
 github.com/sfomuseum/go-tilezen
 # github.com/tidwall/gjson v1.3.2
 github.com/tidwall/gjson
@@ -107,7 +107,7 @@ github.com/whosonfirst/go-bindata
 github.com/whosonfirst/go-bindata-assetfs
 # github.com/whosonfirst/go-cache v0.0.1
 github.com/whosonfirst/go-cache
-# github.com/whosonfirst/go-cache-blob v0.0.0-20190830192137-a4883ef421c7
+# github.com/whosonfirst/go-cache-blob v0.0.1
 github.com/whosonfirst/go-cache-blob
 # github.com/whosonfirst/go-sanitize v0.1.0
 github.com/whosonfirst/go-sanitize

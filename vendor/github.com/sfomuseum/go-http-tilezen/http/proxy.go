@@ -10,7 +10,8 @@ import (
 )
 
 type TilezenProxyHandlerOptions struct {
-	Cache cache.Cache
+	Cache   cache.Cache
+	Timeout time.Duration
 }
 
 func TilezenProxyHandler(proxy_opts *TilezenProxyHandlerOptions) (gohttp.Handler, error) {
@@ -39,16 +40,17 @@ func TilezenProxyHandler(proxy_opts *TilezenProxyHandlerOptions) (gohttp.Handler
 			ApiKey: api_key,
 		}
 
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), proxy_opts.Timeout)
 		defer cancel()
 
 		t_rsp, err := tilezen.FetchTileWithCache(ctx, proxy_opts.Cache, tile, tilezen_opts)
 
 		if err != nil {
 			gohttp.Error(rsp, err.Error(), gohttp.StatusInternalServerError)
-			// gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
 			return
 		}
+
+		defer t_rsp.Close()
 
 		_, err = io.Copy(rsp, t_rsp)
 

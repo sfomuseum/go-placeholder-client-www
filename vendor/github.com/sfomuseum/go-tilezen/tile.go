@@ -11,24 +11,46 @@ import (
 	"github.com/paulmach/orb/geojson"
 	"github.com/paulmach/orb/maptile"
 	"github.com/tidwall/gjson"
-	"github.com/whosonfirst/go-cache"		
+	"github.com/whosonfirst/go-cache"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httputil"
-	"strconv"
 	"regexp"
+	"strconv"
 )
 
-const TILE_URI_TEMPLATE string = "https://tile.nextzen.org/tilezen/vector/{version}/{size}/{layer}/{z}/{x}/{y}.{format}?api_key={apikey}"
+const DEFAULT_URITEMPLATE string = "https://tile.nextzen.org/tilezen/vector/{version}/{size}/{layer}/{z}/{x}/{y}.{format}?api_key={apikey}"
+const DEFAULT_VERSION string = "v1"
+const DEFAULT_SIZE string = "512"
+const DEFAULT_LAYER = "all"
+const DEFAULT_FORMAT = "mvt"
 const MAX_ZOOM int = 16
 
+func NewTile(z int, x int, y int) (*Tile, error) {
+
+	tile := &Tile{
+		Z:       z,
+		X:       x,
+		Y:       y,
+		Version: DEFAULT_VERSION,
+		Size:    DEFAULT_SIZE,
+		Layer:   DEFAULT_LAYER,
+		Format:  DEFAULT_FORMAT,
+	}
+
+	return tile, nil
+}
+
 type Tile struct {
-	X int
-	Y int
-	Z int
-	Format string
+	X       int
+	Y       int
+	Z       int
+	Version string
+	Size    string
+	Layer   string
+	Format  string
 }
 
 func (t *Tile) URI() string {
@@ -55,8 +77,10 @@ func IsOverZoom(z int) bool {
 	return false
 }
 
+// this does not account for version, size or layer yet
+
 func ParseURI(uri string) (*Tile, error) {
-	
+
 	re_path, err := regexp.Compile(`(.*)/?(\d+)/(\d+)/(\d+).(\w+)$`)
 
 	if err != nil {
@@ -66,43 +90,43 @@ func ParseURI(uri string) (*Tile, error) {
 	if !re_path.MatchString(uri) {
 		return nil, errors.New("Invalid URI")
 	}
-	
+
 	m := re_path.FindStringSubmatch(uri)
-		
+
 	z, err := strconv.Atoi(m[2])
-		
-	if err != nil {
-			return nil, err
-	}
-		
-	x, err := strconv.Atoi(m[3])
-	
+
 	if err != nil {
 		return nil, err
 	}
-		
+
+	x, err := strconv.Atoi(m[3])
+
+	if err != nil {
+		return nil, err
+	}
+
 	y, err := strconv.Atoi(m[4])
-		
+
 	if err != nil {
 		return nil, err
 	}
 
 	format := m[5]
 
-	t := &Tile{
-		Z: z,		
-		X: x,
-		Y: y,
-		Format: format,
+	tile, err := NewTile(z, x, y)
+
+	if err != nil {
+		return nil, err
 	}
 
-	return t, nil
+	tile.Format = format
+	return tile, nil
 }
 
 func FetchTileWithCache(ctx context.Context, tile_cache cache.Cache, tile *Tile, opts *Options) (io.ReadCloser, error) {
 
 	cache_key := tile.URI()
-	
+
 	t_rsp, err := tile_cache.Get(ctx, cache_key)
 
 	if err != nil {
@@ -110,9 +134,9 @@ func FetchTileWithCache(ctx context.Context, tile_cache cache.Cache, tile *Tile,
 		if !cache.IsCacheMiss(err) {
 			return nil, err
 		}
-		
+
 		t_rsp, err = FetchTile(tile, opts)
-		
+
 		if err != nil {
 			return nil, err
 		}
@@ -127,27 +151,25 @@ func FetchTileWithCache(ctx context.Context, tile_cache cache.Cache, tile *Tile,
 	return t_rsp, nil
 }
 
-	
 func FetchTile(t *Tile, opts *Options) (io.ReadCloser, error) {
 
 	z := t.Z
 	x := t.X
 	y := t.Y
-	format := t.Format
-	
+
 	fetch_z := z
 	fetch_x := x
 	fetch_y := y
-	
+
 	// see notes below about whether or not we keep the overzooming code
 	// in this package or in tile/rasterzen.go (20190606/thisisaaronland)
 
 	overzoom := IsOverZoom(z)
 
-	if overzoom && format != "json" {
+	if overzoom && t.Format != "json" {
 		return nil, errors.New("Overzooming is only supported for `.json` tiles")
 	}
-	
+
 	if overzoom {
 
 		max := MAX_ZOOM
@@ -164,16 +186,16 @@ func FetchTile(t *Tile, opts *Options) (io.ReadCloser, error) {
 	layer := "all"
 
 	values := make(map[string]interface{})
-	values["version"] = "v1"	
-	values["layer"] = "all"
-	values["size"] = "512"	
-	values["format"] = format
+	values["version"] = t.Version
+	values["layer"] = t.Layer
+	values["size"] = t.Size
+	values["format"] = t.Format
 	values["apikey"] = opts.ApiKey
 	values["z"] = fetch_z
 	values["x"] = fetch_x
 	values["y"] = fetch_y
 
-	template := TILE_URI_TEMPLATE
+	template := DEFAULT_URITEMPLATE
 
 	if opts.URITemplate != "" {
 		template = opts.URITemplate
@@ -184,7 +206,7 @@ func FetchTile(t *Tile, opts *Options) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	url, err := endpoint.Expand(values)
 
 	if err != nil {
@@ -285,7 +307,8 @@ func CropTile(z int, x int, y int, fh io.ReadCloser) (io.ReadCloser, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// Layers is defined in nextzen/layers.go
+	// Layers is defined in layers.go
+	// PLEASE FIX ME TO DO ALL LAYERS AND REMOVE layers.go
 
 	for _, layer_name := range Layers {
 

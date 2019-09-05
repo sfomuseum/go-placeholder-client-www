@@ -55,9 +55,6 @@ func (c *BlobCache) Name() string {
 
 func (c *BlobCache) Get(ctx context.Context, key string) (io.ReadCloser, error) {
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
 	fh, err := c.bucket.NewReader(ctx, key, nil)
 
 	if err != nil {
