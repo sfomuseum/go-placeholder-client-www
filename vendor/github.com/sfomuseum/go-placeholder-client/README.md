@@ -58,7 +58,10 @@ _Error handling has been left out for the sake of brevity._
 
 ### findbyid
 
-_I am still working through some parsing issues with this one._
+```
+$> go run cmd/findbyid/main.go 1326900535
+Beijing, locality (1326900535)
+```
 
 ### query
 
@@ -112,6 +115,38 @@ go run cmd/tokenize/main.go 'sydney new south wales'
 sydney
 new south wales
 ```
+
+## Types
+
+### results.PlaceholderRecord
+
+type PlaceholderRecord struct {
+	Id                int64                          `json:"id"`
+	Name              string                         `json:"name"`
+	Abbreviation      string                         `json:"abbr,omitempty"`
+	Placetype         string                         `json:"placetype"`
+	Rank              Rank                           `json:"rank,omitempty"`
+	Population        int                            `json:"population,omitempty"`
+	LanguageDefaulted bool                           `json:"languageDefaulted"`
+	Lineage           []map[string]*PlaceholderRecord `json:"lineage,omitempty"`
+	Names             map[string][]string            `json:"names,omitempty"`
+	Geometry          Geometry                       `json:"geom,omitempty"`
+}
+
+### results.Geometry
+
+type Geometry struct {
+	BoundingBox string  `json:"bbox"`
+	Latitude    float64 `json:"lat"`
+	Longitude   float64 `json:"lon"`
+}
+
+### results.Rank
+
+type Rank struct {
+	Min uint `json:"min"`
+	Max uint `json:"max"`
+}
 
 ## See also
 

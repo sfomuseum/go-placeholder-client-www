@@ -15,7 +15,7 @@ func Ancestors(r *results.PlaceholderRecord, placetype string) []*results.Placeh
 			a, ok := l[placetype]
 
 			if ok {
-				candidates[a.Id] = &a
+				candidates[a.Id] = a
 			}
 		}
 

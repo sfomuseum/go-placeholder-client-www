@@ -7,7 +7,7 @@ require (
 	github.com/aaronland/go-http-tangramjs v0.0.3
 	github.com/aaronland/go-string v0.1.1
 	github.com/sfomuseum/go-http-tilezen v0.0.2
-	github.com/sfomuseum/go-placeholder-client v0.0.0-20190823231203-babac5a8ec62
+	github.com/sfomuseum/go-placeholder-client v0.0.1
 	github.com/whosonfirst/algnhsa v0.1.0
 	github.com/whosonfirst/go-bindata v0.1.0
 	github.com/whosonfirst/go-bindata-assetfs v1.0.1

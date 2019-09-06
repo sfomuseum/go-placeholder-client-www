@@ -4,49 +4,66 @@ import (
 	"encoding/json"
 )
 
-/*
+type FindByIDResults map[string]*PlaceholderRecord
 
-TBD: the response value for findbyid queries is different than for search queries,
-specifically the "lineage" property:
+type FindByIDResultsRaw map[string]*FindByIdRecord
 
-"101748479": {
-    ...
-    "lineage": [
-      {
-        "continent_id": 102191581,
-        "country_id": 85633111,
-        "county_id": 102063261,
-        "locality_id": 101748479,
-        "macrocounty_id": 404227567,
-        "region_id": 85682571
-      }
-    ],
-    ...
+// FindByIdRecord differs from PlaceholderRecord in that it has a subtly different Lineage
+// property - we use the handy AsPlaceholderRecord() method to make these results look the
+// "same" as search results (20190905/thisisaaronland)
+
+type FindByIdRecord struct {
+	Id                int64               `json:"id"`
+	Name              string              `json:"name"`
+	Placetype         string              `json:"placetype"`
+	Abbreviation      string              `json:"abbr,omitempty"`
+	Rank              Rank                `json:"rank,omitempty"`
+	Population        int                 `json:"population,omitempty"`
+	LanguageDefaulted bool                `json:"languageDefaulted"`
+	Lineage           []map[string]int64  `json:"lineage,omitempty"`
+	Names             map[string][]string `json:"names,omitempty"`
+	Geometry          Geometry            `json:"geom,omitempty"`
 }
 
-which results in the following:
+func (r FindByIdRecord) AsPlaceholderRecord() *PlaceholderRecord {
 
-go run cmd/findbyid/main.go 85922583 101748479
-2019/08/23 22:44:48 GET http://localhost:3000/parser/findbyid?ids=85922583%2C101748479
-2019/08/23 22:44:48 json: cannot unmarshal number into Go struct field PlaceholderRecord.lineage of type results.PlaceholderRecord
-exit status 1
+	ph_lineage := make([]map[string]*PlaceholderRecord, 0)
 
-so for today we're just interface{} -ing all the thing
-(20190823/thisisaaronland)
+	for _, l := range r.Lineage {
 
-*/
+		ph_l := make(map[string]*PlaceholderRecord)
 
-// type FindByIDResults map[string]PlaceholderRecord
-type FindByIDResults map[string]interface{}
+		for k, id := range l {
+			ph_l[k] = &PlaceholderRecord{
+				Id: id,
+			}
+		}
 
-// func (s *FindByIDResults) Results() []PlaceholderRecord {
-func (s *FindByIDResults) Results() []interface{} {
+		ph_lineage = append(ph_lineage, ph_l)
+	}
 
-	// results := make([]PlaceholderRecord, 0)
-	results := make([]interface{}, 0)
+	ph_record := &PlaceholderRecord{
+		Id:                r.Id,
+		Name:              r.Name,
+		Placetype:         r.Placetype,
+		Abbreviation:      r.Abbreviation,
+		Rank:              r.Rank,
+		Population:        r.Population,
+		LanguageDefaulted: r.LanguageDefaulted,
+		Names:             r.Names,
+		Geometry:          r.Geometry,
+		Lineage:           ph_lineage,
+	}
 
-	for _, v := range *s {
-		results = append(results, v)
+	return ph_record
+}
+
+func (s *FindByIDResults) Results() []*PlaceholderRecord {
+
+	results := make([]*PlaceholderRecord, 0)
+
+	for _, r := range *s {
+		results = append(results, r)
 	}
 
 	return results
@@ -54,8 +71,30 @@ func (s *FindByIDResults) Results() []interface{} {
 
 func NewFindByIDResults(body []byte) (*FindByIDResults, error) {
 
+	var id_results_raw *FindByIDResultsRaw
+	err := json.Unmarshal(body, &id_results_raw)
+
+	if err != nil {
+		return nil, err
+	}
+
+	id_results_map := make(map[string]*PlaceholderRecord)
+
+	for k, r := range *id_results_raw {
+		id_results_map[k] = r.AsPlaceholderRecord()
+	}
+
+	// the following hoop-jumping is to account for these errors - if there's a way around them I don't know what it is...
+	// results/findbyid.go:81:14: invalid operation: id_results[k] (type *FindByIDResults does not support indexing)
+
+	enc, err := json.Marshal(id_results_map)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var id_results *FindByIDResults
-	err := json.Unmarshal(body, &id_results)
+	err = json.Unmarshal(enc, &id_results)
 
 	if err != nil {
 		return nil, err

@@ -16,16 +16,16 @@ type Rank struct {
 }
 
 type PlaceholderRecord struct {
-	Id                int64                          `json:"id"`
-	Name              string                         `json:"name"`
-	Abbreviation      string                         `json:"abbr,omitempty"`
-	Placetype         string                         `json:"placetype"`
-	Rank              Rank                           `json:"rank,omitempty"`
-	Population        int                            `json:"population,omitempty"`
-	LanguageDefaulted bool                           `json:"languageDefaulted"`
-	Lineage           []map[string]PlaceholderRecord `json:"lineage,omitempty"` // this is different if it's a search result versus a findbyid result
-	Names             map[string][]string            `json:"names,omitempty"`
-	Geometry          Geometry                       `json:"geom,omitempty"`
+	Id                int64                           `json:"id"`
+	Name              string                          `json:"name"`
+	Abbreviation      string                          `json:"abbr,omitempty"`
+	Placetype         string                          `json:"placetype"`
+	Rank              Rank                            `json:"rank,omitempty"`
+	Population        int                             `json:"population,omitempty"`
+	LanguageDefaulted bool                            `json:"languageDefaulted"`
+	Lineage           []map[string]*PlaceholderRecord `json:"lineage,omitempty"`
+	Names             map[string][]string             `json:"names,omitempty"`
+	Geometry          Geometry                        `json:"geom,omitempty"`
 }
 
 func (r *PlaceholderRecord) String() string {
