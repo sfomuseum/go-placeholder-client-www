@@ -30,16 +30,15 @@ placeholder.client.maps = (function(){
 	    if (maps[map_id]){
 		return maps[map_id];
 	    }
-
-	    // make this work...
-	    var attribution = self.getAttribution();
-	    L.control.attribition = attribution;
 	    
 	    var tangram_opts = self.getTangramOptions(args);	   
 	    var tangramLayer = Tangram.leafletLayer(tangram_opts);
 
 	    var map = L.map("map");	    
 	    tangramLayer.addTo(map);
+
+	    var attribution = self.getAttribution();
+	    map.attributionControl.addAttribution(attribution);
 	    
 	    return map;
 	},
