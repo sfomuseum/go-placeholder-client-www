@@ -1,5 +1,5 @@
 version: '3'
-
+  
 services:
   placeholder:
     image: placeholder
@@ -14,4 +14,4 @@ services:
       - "8080:8080"
     environment:
       PLACEHOLDER_PLACEHOLDER_ENDPOINT: http://placeholder:3000
-    command: /usr/local/bin/placeholder-client-www -host 0.0.0.0 -nextzen-apikey FOO
+    command: /usr/local/bin/placeholder-client-www -host 0.0.0.0 -nextzen-apikey ${NEXTZEN_APIKEY}    
