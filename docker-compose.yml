@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  placeholder:
+    image: placeholder
+    restart: always
+    command: npm start --prefix /usr/local/pelias/placeholder      
+  client:
+    image: placeholder-client-www
+    restart: always
+    depends_on:
+      - placeholder
+    ports:
+      - "8080:8080"
+    environment:
+      PLACEHOLDER_PLACEHOLDER_ENDPOINT: http://placeholder:3000
+    command: /usr/local/bin/placeholder-client-www -host 0.0.0.0 -nextzen-apikey FOO
