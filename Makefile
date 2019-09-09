@@ -28,6 +28,9 @@ docker:
 	@make bake
 	docker build -t placeholder-client-www .
 
+up:
+	docker-compose up --abort-on-container-exit
+
 lambda:
 	# go mod vendor
 	@make bake
