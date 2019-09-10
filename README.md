@@ -1,8 +1,12 @@
 # go-placeholder-client-www
 
-![](docs/images/canada.png)
+![](docs/images/brooklyn.png)
 
-Too soon. Move along.
+## Important
+
+This is work in progress. It works but the documentation is not complete.
+
+There are also [a number of known-known UI/UX issues](https://github.com/sfomuseum/go-placeholder-client-www/issues?q=is%3Aissue+is%3Aopen+label%3Aui%2Fux) that remain to be addressed.
 
 ## Tools
 
@@ -51,6 +55,10 @@ go run -mod vendor cmd/server/main.go \
 ## AWS
 
 ![](docs/images/arch.jpg)
+
+This diagram represents the earliest attempts to get this working in AWS. It does work but requires a non-trivial setup and still has a number of AWS-related issues (described below) that make the whole thing a bit of a nuisance.
+
+There is a working implementation of both the Placeholder server and the Placeholder client web application running inside a single ECS Task definition on a long running EC2 ECS instance. This still needs to be documented here.
 
 ### Lambda
 
