@@ -43,7 +43,7 @@ func main() {
 	proxy_tiles_url := flag.String("proxy-tiles-url", "/tiles/", "...")
 	proxy_tiles_dsn := flag.String("proxy-tiles-dsn", "cache=gocache", "...")
 	proxy_tiles_timeout := flag.Int("proxy-tiles-timeout", 30, "The maximum number of seconds to allow for fetching a tile from the proxy.")
-	
+
 	flag.Parse()
 
 	err := flags.SetFlagsFromEnvVars("PLACEHOLDER")
@@ -140,7 +140,7 @@ func main() {
 			if !ok {
 				log.Fatal("Missing blob DSN property")
 			}
-			
+
 			blob_cache, err := blob.NewBlobCacheWithDSN(blob_dsn)
 
 			if err != nil {
@@ -190,9 +190,9 @@ func main() {
 		}
 
 		timeout := time.Duration(*proxy_tiles_timeout) * time.Second
-		
+
 		proxy_opts := &tzhttp.TilezenProxyHandlerOptions{
-			Cache: multi_cache,
+			Cache:   multi_cache,
 			Timeout: timeout,
 		}
 
@@ -203,14 +203,14 @@ func main() {
 		}
 
 		if *static_prefix != "" {
-			
+
 			*proxy_tiles_url = filepath.Join(*static_prefix, *proxy_tiles_url)
 
-			if !strings.HasSuffix(*proxy_tiles_url, "/"){
+			if !strings.HasSuffix(*proxy_tiles_url, "/") {
 				*proxy_tiles_url = fmt.Sprintf("%s/", *proxy_tiles_url)
 			}
 		}
-		
+
 		mux.Handle(*proxy_tiles_url, proxy_handler)
 
 		*nextzen_tile_url = fmt.Sprintf("%s{z}/{x}/{y}.mvt", *proxy_tiles_url)

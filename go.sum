@@ -45,6 +45,8 @@ github.com/aaronland/go-http-tangramjs v0.0.2 h1:ayKvw5nD6yYlurKbtNBcw9J34nL0LZt
 github.com/aaronland/go-http-tangramjs v0.0.2/go.mod h1:1LuOmRRx+5P4uCHVe0ZwzNs3gBI7f3lYv7fFz9yik9w=
 github.com/aaronland/go-http-tangramjs v0.0.3 h1:HDZP+9p9RkgLZCee/sr/5b7moe0aI8mQhakWzQG/Poc=
 github.com/aaronland/go-http-tangramjs v0.0.3/go.mod h1:1LuOmRRx+5P4uCHVe0ZwzNs3gBI7f3lYv7fFz9yik9w=
+github.com/aaronland/go-http-tangramjs v0.0.4 h1:qcopY0Y2pywL7fOpmynZq/brBG6MBASHcgxMP/CRkno=
+github.com/aaronland/go-http-tangramjs v0.0.4/go.mod h1:1LuOmRRx+5P4uCHVe0ZwzNs3gBI7f3lYv7fFz9yik9w=
 github.com/aaronland/go-string v0.1.0/go.mod h1:2aMIWdTqk63jZsaLLy+p9dsB1MDRqx4sHYoLtkwyYUo=
 github.com/aaronland/go-string v0.1.1 h1:btdr18owWCBN14ojKx3p+PBCKfm9qIggYEguPLUb2wE=
 github.com/aaronland/go-string v0.1.1/go.mod h1:2aMIWdTqk63jZsaLLy+p9dsB1MDRqx4sHYoLtkwyYUo=

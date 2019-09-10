@@ -11,8 +11,6 @@ window.addEventListener("load", function load(event){
     var style_url = document.body.getAttribute("data-nextzen-style-url");
     var tile_url = document.body.getAttribute("data-nextzen-tile-url");    
     
-    var url_prefix = document.body.getAttribute("data-url-prefix");
-    
     if (! api_key){
 	console.log("Missing API key");
 	return;
@@ -40,10 +38,6 @@ window.addEventListener("load", function load(event){
 	"style_url": style_url,
 	"tile_url": tile_url,
     };
-
-    if (url_prefix){
-	map_args["url_prefix"] = url_prefix;
-    }
 
     // we need to do this _before_ Tangram starts trying to draw things
     map_el.style.display = "block";
