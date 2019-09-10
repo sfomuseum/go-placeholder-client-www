@@ -8,9 +8,7 @@ The application will import and overlay Who's On First data for query results. A
 
 ## Important
 
-This is work in progress. It works but the documentation is not complete.
-
-There are also [a number of known-known UI/UX issues](https://github.com/sfomuseum/go-placeholder-client-www/issues?q=is%3Aissue+is%3Aopen+label%3Aui%2Fux) that remain to be addressed.
+This is work in progress. It works but the documentation is not complete. There are also [a number of known-known UI/UX issues](https://github.com/sfomuseum/go-placeholder-client-www/issues?q=is%3Aissue+is%3Aopen+label%3Aui%2Fux) that remain to be addressed.
 
 ## Tools
 
@@ -119,5 +117,8 @@ Note the `-host 0.0.0.0` part. This is important. Without it the health checks p
 * https://github.com/sfomuseum/docker-placeholder
 * https://github.com/pelias/placeholder/
 
-* https://github.com/sfomuseum/go-http-tilezen
+## See also-er
+
 * https://github.com/aaronland/go-http-tangramjs
+* https://github.com/aaronland/go-http-leaflet
+* https://github.com/sfomuseum/go-http-tilezen
