@@ -2,7 +2,7 @@
 
 ![](docs/images/brooklyn.png)
 
-This is a Go package that provides a simple web application for querying a (Pelias) [Placemaker](https://github.com/pelias/placeholder/) server and uses Bootstrap, Leaflet, TangramJS and Nextzen tiles to render pages and maps. All (JavaScript and CSS) assets are bundled locally with the application and it is possible to configure the application to serve and cache local copies of Nextzen tiles.
+This is a Go package that provides a simple web application for querying a (Pelias) [Placeholder](https://github.com/pelias/placeholder/) server and uses Bootstrap, Leaflet, TangramJS and Nextzen tiles to render pages and maps. All (JavaScript and CSS) assets are bundled locally with the application and it is possible to configure the application to serve and cache local copies of Nextzen tiles.
 
 The application will import and overlay Who's On First data for query results. As of this writing those resources can not be cached or served locally.
 
