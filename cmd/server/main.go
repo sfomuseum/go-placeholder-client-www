@@ -202,6 +202,13 @@ func main() {
 			log.Fatal(err)
 		}
 
+		// the order here is important - we don't have a general-purpose "add to
+		// mux with prefix" function here, like we do in the tangram handler so
+		// we set the nextzen tile url with *proxy_tiles_url and then update it
+		// (*proxy_tiles_url) with a prefix if necessary (20190911/thisisaaronland)
+
+		*nextzen_tile_url = fmt.Sprintf("%s{z}/{x}/{y}.mvt", *proxy_tiles_url)
+
 		if *static_prefix != "" {
 
 			*proxy_tiles_url = filepath.Join(*static_prefix, *proxy_tiles_url)
@@ -212,8 +219,6 @@ func main() {
 		}
 
 		mux.Handle(*proxy_tiles_url, proxy_handler)
-
-		*nextzen_tile_url = fmt.Sprintf("%s{z}/{x}/{y}.mvt", *proxy_tiles_url)
 	}
 
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
