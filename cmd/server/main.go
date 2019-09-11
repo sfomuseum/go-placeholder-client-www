@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
@@ -43,6 +44,7 @@ func main() {
 	proxy_tiles_url := flag.String("proxy-tiles-url", "/tiles/", "...")
 	proxy_tiles_dsn := flag.String("proxy-tiles-dsn", "cache=gocache", "...")
 	proxy_tiles_timeout := flag.Int("proxy-tiles-timeout", 30, "The maximum number of seconds to allow for fetching a tile from the proxy.")
+	proxy_test_network := flag.Bool("proxy-test-network", false, "Ensure outbound network connectivity for proxy tiles")
 
 	flag.Parse()
 
@@ -200,6 +202,25 @@ func main() {
 
 		if err != nil {
 			log.Fatal(err)
+		}
+
+		if *proxy_test_network {
+
+			req, err := gohttp.NewRequest("GET", "tile.nextzen.org", nil)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			cl := new(gohttp.Client)
+
+			ctx, _ := context.WithTimeout(context.Background(), timeout)
+			_, err = cl.Do(req.WithContext(ctx))
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
 		}
 
 		// the order here is important - we don't have a general-purpose "add to
