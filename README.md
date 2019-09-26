@@ -62,7 +62,21 @@ go run -mod vendor cmd/server/main.go \
 
 This diagram represents the earliest attempts to get this working in AWS. It does work but requires a non-trivial setup and still has a number of AWS-related issues (described below) that make the whole thing a bit of a nuisance.
 
-There is a working implementation of both the Placeholder server and the Placeholder client web application running inside a single ECS Task definition on a long running EC2 ECS instance. This still needs to be documented here.
+It describes two different setups:
+
+### Lambda + API Gateway + CloudFront
+
+This setup runs the `server` tool as a Lambda function fronted by an API Gateway that is, in turn, fronted by a CloudFront distribution.
+
+The problem with this setup is that, pending patches to the way that `Tangram.js` issues `Fetch` requests (naming passing along an HTTP `Accept` header) there is no way to tell API Gateway to return zipped scene file (map styles) bundled in the `go-http-tangramjs` handler) as binary data which confuses the map renderer something fierce. The only option here is to use remote scenefiles hosted on the Nextzen website.
+
+### ECS Fargate + CloudFront
+
+This setup runs the `server` as a long-running process in an ECS (Fargate) container, fronted by a CloudFront distribution.
+
+The problem with this set up is that in order to cache (read or write) Nextzen tiles to a local S3 bucket you need to do some AWS VPC hoop-jumping to allow you to retrieve both local AWS resources (S3) _and_ things out on the internet (source tiles from Nextzen). It's possible but it requires a lot of button-pressing and I haven't figured it out yet...
+
+The documentation that follows is specific to the first scenario (Lambda + API Gateway + CloudFront). Documentation for the second scenario (ECS Fargate + CloudFront) still needs to be written.
 
 ### Lambda
 
