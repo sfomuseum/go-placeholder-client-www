@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"github.com/aaronland/go-http-sanitize"
 	"github.com/sfomuseum/go-placeholder-client"
+	"github.com/sfomuseum/go-placeholder-client/filters"
+	wof_sanitize "github.com/whosonfirst/go-sanitize"
 	_ "log"
 	gohttp "net/http"
 	"path/filepath"
@@ -66,9 +68,48 @@ func NewAPIHandler(cl *client.PlaceholderClient) (gohttp.Handler, error) {
 
 			if err != nil {
 				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+				return
 			}
 
-			api_results, api_err = cl.Search(term)
+			search_filters := make([]*filters.SearchFilter, 0)
+
+			sn_opts := wof_sanitize.DefaultOptions()
+			q := req.URL.Query()
+
+			for k, values := range q {
+
+				k_ok := false
+
+				switch k {
+				case "lang", "placetype":
+					k_ok = true
+				default:
+					// pass
+				}
+
+				if !k_ok {
+					continue
+				}
+
+				for _, v := range values {
+
+					sanitized_v, err := wof_sanitize.SanitizeString(v, sn_opts)
+
+					if err != nil {
+						gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+						return
+					}
+
+					f := &filters.SearchFilter{
+						Key:   k, // we assume k is safe because we are explicitly testing it above in 'switch k'
+						Value: sanitized_v,
+					}
+
+					search_filters = append(search_filters, f)
+				}
+			}
+
+			api_results, api_err = cl.Search(term, search_filters...)
 
 		case "tokenize":
 
@@ -76,6 +117,7 @@ func NewAPIHandler(cl *client.PlaceholderClient) (gohttp.Handler, error) {
 
 			if err != nil {
 				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+				return
 			}
 
 			api_results, api_err = cl.Tokenize(term)
