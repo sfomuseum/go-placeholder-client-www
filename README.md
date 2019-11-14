@@ -26,7 +26,7 @@ Usage of server:
   -cors
     	Enable CORS support for the API endpoint.
   -cors-origin value
-    	One or more hosts to restrict CORS support to on the API endpoint.
+    	One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.	
   -host string
     	The host to listen for requests on. (default "localhost")
   -nextzen-apikey string

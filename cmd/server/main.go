@@ -52,7 +52,7 @@ func main() {
 	enable_cors := flag.Bool("cors", false, "Enable CORS support for the API endpoint.")
 
 	var cors_origins flags.MultiString
-	flag.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint.")
+	flag.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.")
 
 	flag.Parse()
 
