@@ -46,6 +46,8 @@ func main() {
 	proxy_tiles_timeout := flag.Int("proxy-tiles-timeout", 30, "The maximum number of seconds to allow for fetching a tile from the proxy.")
 	proxy_test_network := flag.Bool("proxy-test-network", false, "Ensure outbound network connectivity for proxy tiles")
 
+	enable_api := flag.Bool("api", false, "...")
+
 	flag.Parse()
 
 	err := flags.SetFlagsFromEnvVars("PLACEHOLDER")
@@ -286,6 +288,18 @@ func main() {
 
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if *enable_api {
+
+		api_handler, err := http.NewAPIHandler(cl)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// something something something CORS
+		mux.Handle("/api/", api_handler)
 	}
 
 	// end of handlers

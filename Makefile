@@ -8,7 +8,7 @@ go-bindata:
 
 debug:
 	@make bake
-	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY)
+	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY) -api
 
 bake: bake-static bake-templates
 
