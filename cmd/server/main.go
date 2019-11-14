@@ -299,6 +299,8 @@ func main() {
 		}
 
 		// something something something CORS
+		// https://github.com/rs/cors/blob/master/cors.go
+		
 		mux.Handle("/api/", api_handler)
 	}
 
