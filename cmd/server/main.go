@@ -7,6 +7,7 @@ import (
 	"github.com/aaronland/go-http-bootstrap"
 	"github.com/aaronland/go-http-tangramjs"
 	"github.com/aaronland/go-string/dsn"
+	"github.com/rs/cors"
 	tzhttp "github.com/sfomuseum/go-http-tilezen/http"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
@@ -40,13 +41,18 @@ func main() {
 
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
-	proxy_tiles := flag.Bool("proxy-tiles", false, "...")
-	proxy_tiles_url := flag.String("proxy-tiles-url", "/tiles/", "...")
-	proxy_tiles_dsn := flag.String("proxy-tiles-dsn", "cache=gocache", "...")
+	proxy_tiles := flag.Bool("proxy-tiles", false, "Proxy (and cache) Nextzen tiles.")
+	proxy_tiles_url := flag.String("proxy-tiles-url", "/tiles/", "The URL (a relative path) for proxied tiles.")
+	proxy_tiles_dsn := flag.String("proxy-tiles-dsn", "cache=gocache", "A valid tile proxy DSN string.")
 	proxy_tiles_timeout := flag.Int("proxy-tiles-timeout", 30, "The maximum number of seconds to allow for fetching a tile from the proxy.")
 	proxy_test_network := flag.Bool("proxy-test-network", false, "Ensure outbound network connectivity for proxy tiles")
 
-	enable_api := flag.Bool("api", false, "...")
+	enable_api := flag.Bool("api", false, "Enable an API endpoint for Placeholder functionality.")
+	api_url := flag.String("api-url", "/api/", "The URL (a relative path) for the API endpoint.")
+	enable_cors := flag.Bool("cors", false, "Enable CORS support for the API endpoint.")
+
+	var cors_origins flags.MultiString
+	flag.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint.")
 
 	flag.Parse()
 
@@ -298,10 +304,15 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// something something something CORS
-		// https://github.com/rs/cors/blob/master/cors.go
-		
-		mux.Handle("/api/", api_handler)
+		if *enable_cors {
+			cors_wrapper := cors.New(cors.Options{
+				AllowedOrigins: cors_origins,
+			})
+
+			api_handler = cors_wrapper.Handler(api_handler)
+		}
+
+		mux.Handle(*api_url, api_handler)
 	}
 
 	// end of handlers

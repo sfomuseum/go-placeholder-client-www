@@ -85,6 +85,8 @@ github.com/paulmach/orb/geojson
 github.com/paulmach/orb/maptile
 github.com/paulmach/orb
 github.com/paulmach/orb/internal/mercator
+# github.com/rs/cors v1.7.0
+github.com/rs/cors
 # github.com/sfomuseum/go-http-tilezen v0.0.2
 github.com/sfomuseum/go-http-tilezen/http
 # github.com/sfomuseum/go-placeholder-client v0.0.1

@@ -27,7 +27,7 @@ func getString(req *gohttp.Request, param string) (string, error) {
 	return value, nil
 }
 
-func NewAPIHandler(cl *client.PlaceholderClient) (gohttp.HandlerFunc, error) {
+func NewAPIHandler(cl *client.PlaceholderClient) (gohttp.Handler, error) {
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
 

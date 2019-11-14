@@ -19,6 +19,14 @@ This is work in progress. It works but the documentation is not complete. There 
 ```
 $> server -h
 Usage of server:
+  -api
+    	Enable an API endpoint for Placeholder functionality.
+  -api-url string
+    	The URL (a relative path) for the API endpoint. (default "/api/")
+  -cors
+    	Enable CORS support for the API endpoint.
+  -cors-origin value
+    	One or more hosts to restrict CORS support to on the API endpoint.
   -host string
     	The host to listen for requests on. (default "localhost")
   -nextzen-apikey string
@@ -33,14 +41,16 @@ Usage of server:
     	The port to listen for requests on. (default 8080)
   -protocol string
     	The protocol for placeholder-client server to listen on. Valid protocols are: http, lambda. (default "http")
+  -proxy-test-network
+    	Ensure outbound network connectivity for proxy tiles
   -proxy-tiles
-    	...
+    	Proxy (and cache) Nextzen tiles.
   -proxy-tiles-dsn string
-    	... (default "cache=gocache")
+    	A valid tile proxy DSN string. (default "cache=gocache")
   -proxy-tiles-timeout int
     	The maximum number of seconds to allow for fetching a tile from the proxy. (default 30)
   -proxy-tiles-url string
-    	... (default "/tiles/")
+    	The URL (a relative path) for proxied tiles. (default "/tiles/")
   -static-prefix string
     	Prepend this prefix to URLs for static assets.
   -templates string
