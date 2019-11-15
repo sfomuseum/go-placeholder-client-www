@@ -146,6 +146,8 @@ github.com/sfomuseum/go-placeholder-client v0.0.2 h1:sZOqXBy1n4bVvawp6iqIIwXsOJ9
 github.com/sfomuseum/go-placeholder-client v0.0.2/go.mod h1:YpOxi2qgjCb7agCUMuuv0vZTShHS7n1EJ70bBRr5+hI=
 github.com/sfomuseum/go-placeholder-client v0.0.3 h1:xRiN4+mQlsVHRGrNTzfuhzaakVVF9OaBnvPkU9p6xvo=
 github.com/sfomuseum/go-placeholder-client v0.0.3/go.mod h1:YpOxi2qgjCb7agCUMuuv0vZTShHS7n1EJ70bBRr5+hI=
+github.com/sfomuseum/go-placeholder-client v0.0.4 h1:Xl4/EzN5EceIaioAmuyIJX4JeYVphsRU1PtUTl7oD+A=
+github.com/sfomuseum/go-placeholder-client v0.0.4/go.mod h1:YpOxi2qgjCb7agCUMuuv0vZTShHS7n1EJ70bBRr5+hI=
 github.com/sfomuseum/go-tilezen v0.0.0-20190829211934-79a20478511a h1:sOSEeT4HD1ZGdYyQTNE3rjdBqcXxY4IvMnb6brepBAQ=
 github.com/sfomuseum/go-tilezen v0.0.0-20190829211934-79a20478511a/go.mod h1:iQu5CGmTlyU25Xt2fdwaMmqLwiVm0+k/rL/5/WljDUo=
 github.com/sfomuseum/go-tilezen v0.0.1 h1:U8PoDuuFJmy+d9q1n4wzgcgyBzjMxlDNQkvkqr4PnqE=

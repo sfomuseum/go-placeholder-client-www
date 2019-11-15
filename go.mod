@@ -10,7 +10,7 @@ require (
 	github.com/aaronland/go-string v0.1.1
 	github.com/rs/cors v1.7.0
 	github.com/sfomuseum/go-http-tilezen v0.0.2
-	github.com/sfomuseum/go-placeholder-client v0.0.3
+	github.com/sfomuseum/go-placeholder-client v0.0.4
 	github.com/whosonfirst/algnhsa v0.1.0
 	github.com/whosonfirst/go-bindata v0.1.0
 	github.com/whosonfirst/go-bindata-assetfs v1.0.1

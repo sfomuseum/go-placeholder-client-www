@@ -5,7 +5,7 @@ import (
 	"github.com/sfomuseum/go-placeholder-client/filters"
 	"github.com/sfomuseum/go-placeholder-client/results"
 	"io/ioutil"
-	"log"
+	_ "log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -108,8 +108,6 @@ func (cl *PlaceholderClient) FindById(ids ...string) (*results.FindByIDResults, 
 }
 
 func (cl *PlaceholderClient) ExecuteMethod(path string, params map[string]string) ([]byte, error) {
-
-	log.Println(path, params)
 
 	rsp, err := cl.ExecuteMethodAsResponse(path, params)
 

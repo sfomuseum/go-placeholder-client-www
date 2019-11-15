@@ -26,7 +26,8 @@ func NewFindByIdFilter(key string, value string) (Filter, error) {
 	case "lang":
 		// pass
 	default:
-		return nil, errors.New("Invalid search filter")
+		msg := fmt.Sprintf("Invalid findbyid filter '%s'", key)
+		return nil, errors.New(msg)
 	}
 
 	ff := FindByIdFilter{
