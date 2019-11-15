@@ -48,6 +48,8 @@ func main() {
 	proxy_test_network := flag.Bool("proxy-test-network", false, "Ensure outbound network connectivity for proxy tiles")
 
 	enable_api := flag.Bool("api", false, "Enable an API endpoint for Placeholder functionality.")
+	enable_api_autocomplete := flag.Bool("api-autocomplete", false, "Enable autocomplete for the 'search' API endpoint.")
+
 	api_url := flag.String("api-url", "/api/", "The URL (a relative path) for the API endpoint.")
 	enable_cors := flag.Bool("cors", false, "Enable CORS support for the API endpoint.")
 
@@ -298,7 +300,10 @@ func main() {
 
 	if *enable_api {
 
-		api_handler, err := http.NewAPIHandler(cl)
+		api_opts := http.DefaultAPIHandlerOptions()
+		api_opts.EnableSearchAutoComplete = *enable_api_autocomplete
+
+		api_handler, err := http.NewAPIHandler(cl, api_opts)
 
 		if err != nil {
 			log.Fatal(err)

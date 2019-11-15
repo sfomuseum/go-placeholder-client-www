@@ -21,6 +21,8 @@ $> server -h
 Usage of server:
   -api
     	Enable an API endpoint for Placeholder functionality.
+  -api-autocomplete
+    	Enable autocomplete for the 'search' API endpoint.	
   -api-url string
     	The URL (a relative path) for the API endpoint. (default "/api/")
   -cors

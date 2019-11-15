@@ -29,7 +29,20 @@ func getString(req *gohttp.Request, param string) (string, error) {
 	return value, nil
 }
 
-func NewAPIHandler(cl *client.PlaceholderClient) (gohttp.Handler, error) {
+type APIHandlerOptions struct {
+	EnableSearchAutoComplete bool
+}
+
+func DefaultAPIHandlerOptions() *APIHandlerOptions {
+
+	opts := APIHandlerOptions{
+		EnableSearchAutoComplete: false,
+	}
+
+	return &opts
+}
+
+func NewAPIHandler(cl *client.PlaceholderClient, opts *APIHandlerOptions) (gohttp.Handler, error) {
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
 
@@ -81,7 +94,7 @@ func NewAPIHandler(cl *client.PlaceholderClient) (gohttp.Handler, error) {
 				if k == "term" {
 					continue
 				}
-				
+
 				sanitized_k, err := wof_sanitize.SanitizeString(k, sn_opts)
 
 				if err != nil {
@@ -90,6 +103,14 @@ func NewAPIHandler(cl *client.PlaceholderClient) (gohttp.Handler, error) {
 				}
 
 				for _, v := range values {
+
+					if k == "mode" && v == "live" {
+
+						if !opts.EnableSearchAutoComplete {
+							gohttp.Error(rsp, "Autocomplete is disabled.", gohttp.StatusServiceUnavailable)
+							return
+						}
+					}
 
 					sanitized_v, err := wof_sanitize.SanitizeString(v, sn_opts)
 
