@@ -71,24 +71,22 @@ func NewAPIHandler(cl *client.PlaceholderClient) (gohttp.Handler, error) {
 				return
 			}
 
-			search_filters := make([]*filters.SearchFilter, 0)
+			search_filters := make([]filters.Filter, 0)
 
 			sn_opts := wof_sanitize.DefaultOptions()
 			q := req.URL.Query()
 
 			for k, values := range q {
 
-				k_ok := false
-
-				switch k {
-				case "lang", "placetype":
-					k_ok = true
-				default:
-					// pass
-				}
-
-				if !k_ok {
+				if k == "term" {
 					continue
+				}
+				
+				sanitized_k, err := wof_sanitize.SanitizeString(k, sn_opts)
+
+				if err != nil {
+					gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+					return
 				}
 
 				for _, v := range values {
@@ -100,9 +98,11 @@ func NewAPIHandler(cl *client.PlaceholderClient) (gohttp.Handler, error) {
 						return
 					}
 
-					f := &filters.SearchFilter{
-						Key:   k, // we assume k is safe because we are explicitly testing it above in 'switch k'
-						Value: sanitized_v,
+					f, err := filters.NewSearchFilter(sanitized_k, sanitized_v)
+
+					if err != nil {
+						gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+						return
 					}
 
 					search_filters = append(search_filters, f)

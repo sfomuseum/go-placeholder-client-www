@@ -5,7 +5,7 @@ import (
 	"github.com/sfomuseum/go-placeholder-client/filters"
 	"github.com/sfomuseum/go-placeholder-client/results"
 	"io/ioutil"
-	_ "log"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -43,14 +43,14 @@ func NewPlaceholderClient(endpoint string) (*PlaceholderClient, error) {
 	return &cl, nil
 }
 
-func (cl *PlaceholderClient) Search(term string, search_filters ...*filters.SearchFilter) (*results.SearchResults, error) {
+func (cl *PlaceholderClient) Search(term string, search_filters ...filters.Filter) (*results.SearchResults, error) {
 
 	params := map[string]string{
 		"text": term,
 	}
 
 	for _, f := range search_filters {
-		params[f.Key] = f.Value
+		params[f.Key()] = f.Value()
 	}
 
 	body, err := cl.ExecuteMethod(PATH_SEARCH, params)
@@ -108,6 +108,8 @@ func (cl *PlaceholderClient) FindById(ids ...string) (*results.FindByIDResults, 
 }
 
 func (cl *PlaceholderClient) ExecuteMethod(path string, params map[string]string) ([]byte, error) {
+
+	log.Println(path, params)
 
 	rsp, err := cl.ExecuteMethodAsResponse(path, params)
 

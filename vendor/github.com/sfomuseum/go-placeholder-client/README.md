@@ -120,6 +120,7 @@ new south wales
 
 ### results.PlaceholderRecord
 
+```
 type PlaceholderRecord struct {
 	Id                int64                          `json:"id"`
 	Name              string                         `json:"name"`
@@ -132,21 +133,26 @@ type PlaceholderRecord struct {
 	Names             map[string][]string            `json:"names,omitempty"`
 	Geometry          Geometry                       `json:"geom,omitempty"`
 }
+```
 
 ### results.Geometry
 
+```
 type Geometry struct {
 	BoundingBox string  `json:"bbox"`
 	Latitude    float64 `json:"lat"`
 	Longitude   float64 `json:"lon"`
 }
+```
 
 ### results.Rank
 
+```
 type Rank struct {
 	Min uint `json:"min"`
 	Max uint `json:"max"`
 }
+```
 
 ## See also
 
