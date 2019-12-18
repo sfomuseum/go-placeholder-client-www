@@ -89,6 +89,7 @@ github.com/paulmach/orb/internal/mercator
 github.com/rs/cors
 # github.com/sfomuseum/go-http-opensearch v0.0.0-20191218211935-d8b24dd67e07
 github.com/sfomuseum/go-http-opensearch
+github.com/sfomuseum/go-http-opensearch/http
 # github.com/sfomuseum/go-http-tilezen v0.0.2
 github.com/sfomuseum/go-http-tilezen/http
 # github.com/sfomuseum/go-placeholder-client v0.0.4

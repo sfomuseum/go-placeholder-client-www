@@ -58,6 +58,10 @@ func main() {
 	api_url := flag.String("api-url", "/api/", "The URL (a relative path) for the API endpoint.")
 	enable_cors := flag.Bool("cors", false, "Enable CORS support for the API endpoint.")
 
+	opensearch_url := flag.String("opensearch-plugin-url", "/opensearch/", "...")
+	opensearch_search_template := flag.String("opensearch-search-template", "", "...")
+	opensearch_search_form := flag.String("opensearch-search-form", "", "...")
+
 	var cors_origins flags.MultiString
 	flag.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.")
 
@@ -68,6 +72,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	address := fmt.Sprintf("http://%s:%d", *host, *port)
+	search_path := "/"
 
 	cl, err := client.NewPlaceholderClient(*placeholder_endpoint)
 
@@ -289,12 +296,18 @@ func main() {
 
 	if *enable_opensearch {
 
-		os_path := "/opensearch/"
+		if *opensearch_search_template == "" {
+			*opensearch_search_template = filepath.Join(address, search_path)
+		}
+
+		if *opensearch_search_form == "" {
+			*opensearch_search_form = filepath.Join(address, search_path)
+		}
 
 		os_desc_opts := &opensearch.QueryDescriptionOptions{
-			QueryParameter: "q",
-			SearchTemplate: "",
-			SearchForm:     "",
+			QueryParameter: "text",
+			SearchTemplate: *opensearch_search_template,
+			SearchForm:     *opensearch_search_form,
 			ImageURI:       "",
 			Name:           "Placeholder",
 			Description:    "Search Placeholder",
@@ -316,10 +329,10 @@ func main() {
 			log.Fatal(err)
 		}
 
-		mux.Handle(os_path, os_handler)
+		mux.Handle(*opensearch_url, os_handler)
 
 		os_plugins := map[string]*os.OpenSearchDescription{
-			"/opensearch/": os_desc,
+			*opensearch_url: os_desc,
 		}
 
 		os_plugins_opts := &oshttp.AppendPluginsOptions{
@@ -330,8 +343,6 @@ func main() {
 	}
 
 	// auth-y bits go here...
-
-	search_path := "/"
 
 	mux.Handle(search_path, search_handler)
 
@@ -370,8 +381,6 @@ func main() {
 	}
 
 	// end of handlers
-
-	address := fmt.Sprintf("http://%s:%d", *host, *port)
 
 	u, err := gourl.Parse(address)
 
