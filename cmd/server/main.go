@@ -8,10 +8,13 @@ import (
 	"github.com/aaronland/go-http-tangramjs"
 	"github.com/aaronland/go-string/dsn"
 	"github.com/rs/cors"
+	os "github.com/sfomuseum/go-http-opensearch"
+	oshttp "github.com/sfomuseum/go-http-opensearch/http"
 	tzhttp "github.com/sfomuseum/go-http-tilezen/http"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
 	"github.com/sfomuseum/go-placeholder-client-www/http"
+	"github.com/sfomuseum/go-placeholder-client-www/opensearch"
 	"github.com/sfomuseum/go-placeholder-client-www/server"
 	"github.com/whosonfirst/go-cache"
 	"github.com/whosonfirst/go-cache-blob"
@@ -49,6 +52,8 @@ func main() {
 
 	enable_api := flag.Bool("api", false, "Enable an API endpoint for Placeholder functionality.")
 	enable_api_autocomplete := flag.Bool("api-autocomplete", false, "Enable autocomplete for the 'search' API endpoint.")
+
+	enable_opensearch := flag.Bool("opensearch", true, "...")
 
 	api_url := flag.String("api-url", "/api/", "The URL (a relative path) for the API endpoint.")
 	enable_cors := flag.Bool("cors", false, "Enable CORS support for the API endpoint.")
@@ -226,7 +231,7 @@ func main() {
 
 			ctx, cancel := context.WithTimeout(context.Background(), timeout)
 			defer cancel()
-			
+
 			_, err = cl.Do(req.WithContext(ctx))
 
 			if err != nil {
@@ -281,6 +286,48 @@ func main() {
 
 	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, *static_prefix)
 	search_handler = tangramjs.AppendResourcesHandlerWithPrefix(search_handler, tangramjs_opts, *static_prefix)
+
+	if *enable_opensearch {
+
+		os_path := "/opensearch/"
+
+		os_desc_opts := &opensearch.QueryDescriptionOptions{
+			QueryParameter: "q",
+			SearchTemplate: "",
+			SearchForm:     "",
+			ImageURI:       "",
+			Name:           "Placeholder",
+			Description:    "Search Placeholder",
+		}
+
+		os_desc, err := opensearch.QueryDescription(os_desc_opts)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		os_handler_opts := &oshttp.OpenSearchHandlerOptions{
+			Description: os_desc,
+		}
+
+		os_handler, err := oshttp.OpenSearchHandler(os_handler_opts)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		mux.Handle(os_path, os_handler)
+
+		os_plugins := map[string]*os.OpenSearchDescription{
+			"/opensearch/": os_desc,
+		}
+
+		os_plugins_opts := &oshttp.AppendPluginsOptions{
+			Plugins: os_plugins,
+		}
+
+		search_handler = oshttp.AppendPluginsHandler(search_handler, os_plugins_opts)
+	}
 
 	// auth-y bits go here...
 

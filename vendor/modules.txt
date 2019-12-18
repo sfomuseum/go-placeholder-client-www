@@ -87,6 +87,8 @@ github.com/paulmach/orb
 github.com/paulmach/orb/internal/mercator
 # github.com/rs/cors v1.7.0
 github.com/rs/cors
+# github.com/sfomuseum/go-http-opensearch v0.0.0-20191218211935-d8b24dd67e07
+github.com/sfomuseum/go-http-opensearch
 # github.com/sfomuseum/go-http-tilezen v0.0.2
 github.com/sfomuseum/go-http-tilezen/http
 # github.com/sfomuseum/go-placeholder-client v0.0.4
@@ -144,7 +146,7 @@ gocloud.dev/internal/openurl
 gocloud.dev/internal/escape
 gocloud.dev/aws
 gocloud.dev/internal/retry
-# golang.org/x/net v0.0.0-20190628185345-da137c7871d7
+# golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/trace

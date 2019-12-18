@@ -9,6 +9,7 @@ require (
 	github.com/aaronland/go-http-tangramjs v0.0.4
 	github.com/aaronland/go-string v0.1.1
 	github.com/rs/cors v1.7.0
+	github.com/sfomuseum/go-http-opensearch v0.0.0-20191218211935-d8b24dd67e07
 	github.com/sfomuseum/go-http-tilezen v0.0.2
 	github.com/sfomuseum/go-placeholder-client v0.0.4
 	github.com/whosonfirst/algnhsa v0.1.0
