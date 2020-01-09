@@ -248,7 +248,7 @@ func main() {
 			QueryParameter: "text",
 			SearchTemplate: *opensearch_search_template,
 			SearchForm:     *opensearch_search_form,
-			ImageURI:       "",
+			ImageURI:       os.DEFAULT_IMAGE_URI,
 			Name:           "Placeholder",
 			Description:    "Search Placeholder",
 		}
