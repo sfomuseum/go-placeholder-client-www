@@ -8,7 +8,7 @@ require (
 	github.com/aaronland/go-http-sanitize v0.0.4
 	github.com/aaronland/go-http-tangramjs v0.0.5
 	github.com/rs/cors v1.7.0
-	github.com/sfomuseum/go-http-opensearch v0.0.0-20191218223940-995f57740083
+	github.com/sfomuseum/go-http-opensearch v0.0.0-20200109220756-f5100b2efab0
 	github.com/sfomuseum/go-http-tilezen v0.0.2
 	github.com/sfomuseum/go-placeholder-client v0.0.4
 	github.com/whosonfirst/algnhsa v0.1.0

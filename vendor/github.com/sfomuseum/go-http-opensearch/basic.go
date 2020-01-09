@@ -2,8 +2,8 @@ package opensearch
 
 type BasicDescriptionOptions struct {
 	Name           string
-	Description    string	
-	QueryParameter string	
+	Description    string
+	QueryParameter string
 	SearchTemplate string
 	SearchForm     string
 	ImageURI       string

@@ -145,6 +145,8 @@ github.com/sfomuseum/go-http-opensearch v0.0.0-20191218211935-d8b24dd67e07 h1:Jz
 github.com/sfomuseum/go-http-opensearch v0.0.0-20191218211935-d8b24dd67e07/go.mod h1:A8uv8iAyHHmMSGsCEe8aRFcKkRbxzk5+vBGExnufdk8=
 github.com/sfomuseum/go-http-opensearch v0.0.0-20191218223940-995f57740083 h1:lUnRxWN1u02+n5l3hw0+JdYj57e6AykpCd3KXd7eWH4=
 github.com/sfomuseum/go-http-opensearch v0.0.0-20191218223940-995f57740083/go.mod h1:XqQ73fKzL1vdO9baJtIwr3n7Wpj+1mbJqLk5vVVSC7A=
+github.com/sfomuseum/go-http-opensearch v0.0.0-20200109220756-f5100b2efab0 h1:2IxZ8BSBZB0XATCk++/nxvcP8hAlUAGkuXMCSXSGmew=
+github.com/sfomuseum/go-http-opensearch v0.0.0-20200109220756-f5100b2efab0/go.mod h1:XqQ73fKzL1vdO9baJtIwr3n7Wpj+1mbJqLk5vVVSC7A=
 github.com/sfomuseum/go-http-tilezen v0.0.0-20190829212433-f56daccfb2e1 h1:iInc8GHycuOqJuyhQXIREE9EHTl8947S1JgzAs6SJII=
 github.com/sfomuseum/go-http-tilezen v0.0.0-20190829212433-f56daccfb2e1/go.mod h1:wwKe45KeDRrMaH1h8jaJWugwqvI8GShTx5i9P/s/zpc=
 github.com/sfomuseum/go-http-tilezen v0.0.1 h1:WMBBz9a0Oo92U0S3UoOr7BF3t/KzlJLVxTl+WEmdllA=

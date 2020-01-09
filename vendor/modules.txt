@@ -41,7 +41,7 @@ github.com/paulmach/orb
 github.com/paulmach/orb/internal/mercator
 # github.com/rs/cors v1.7.0
 github.com/rs/cors
-# github.com/sfomuseum/go-http-opensearch v0.0.0-20191218223940-995f57740083
+# github.com/sfomuseum/go-http-opensearch v0.0.0-20200109220756-f5100b2efab0
 github.com/sfomuseum/go-http-opensearch
 github.com/sfomuseum/go-http-opensearch/http
 # github.com/sfomuseum/go-http-tilezen v0.0.2
