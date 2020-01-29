@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"github.com/aaronland/go-http-sanitize"
 	"github.com/sfomuseum/go-placeholder-client"
-	"github.com/sfomuseum/go-placeholder-client/filters"
-	wof_sanitize "github.com/whosonfirst/go-sanitize"
 	_ "log"
 	gohttp "net/http"
 	"path/filepath"
@@ -43,8 +41,6 @@ func DefaultAPIHandlerOptions() *APIHandlerOptions {
 }
 
 func NewAPIHandler(cl *client.PlaceholderClient, opts *APIHandlerOptions) (gohttp.Handler, error) {
-
-	sn_opts := wof_sanitize.DefaultOptions()
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
 
@@ -86,51 +82,20 @@ func NewAPIHandler(cl *client.PlaceholderClient, opts *APIHandlerOptions) (gohtt
 				return
 			}
 
-			search_filters := make([]filters.Filter, 0)
+			search_filters, err := SearchFiltersWithRequest(req)
+
+			if err != nil {
+				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
+				return
+			}
 
 			q := req.URL.Query()
 
-			for k, values := range q {
-
-				if k == "term" {
-					continue
-				}
-
-				sanitized_k, err := wof_sanitize.SanitizeString(k, sn_opts)
-
-				if err != nil {
-					gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
-					return
-				}
-
-				for _, v := range values {
-
-					if k == "mode" && v == "live" {
-
-						if !opts.EnableSearchAutoComplete {
-							gohttp.Error(rsp, "Autocomplete is disabled.", gohttp.StatusServiceUnavailable)
-							return
-						}
-					}
-
-					sanitized_v, err := wof_sanitize.SanitizeString(v, sn_opts)
-
-					if err != nil {
-						gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
-						return
-					}
-
-					f, err := filters.NewSearchFilter(sanitized_k, sanitized_v)
-
-					if err != nil {
-						gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
-						return
-					}
-
-					search_filters = append(search_filters, f)
-				}
+			if q.Get("mode") == "live" && !opts.EnableSearchAutoComplete {
+				gohttp.Error(rsp, "Autocomplete is disabled.", gohttp.StatusServiceUnavailable)
+				return
 			}
-
+			
 			api_results, api_err = cl.Search(term, search_filters...)
 
 		case "tokenize":

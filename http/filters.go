@@ -11,6 +11,9 @@ func SearchFiltersWithRequest(req *gohttp.Request) ([]filters.Filter, error) {
 
 	var search_filters []filters.Filter
 
+	// this should really come from go-placeholder-client/filters
+	// (20200129/thisisaaronland)
+	
 	possible_filters := []string{
 		"lang",
 		"placetype",
