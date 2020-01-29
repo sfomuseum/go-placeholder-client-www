@@ -226,7 +226,7 @@ func main() {
 
 			ctx, cancel := context.WithTimeout(context.Background(), timeout)
 			defer cancel()
-			
+
 			_, err = cl.Do(req.WithContext(ctx))
 
 			if err != nil {

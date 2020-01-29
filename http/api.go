@@ -44,6 +44,8 @@ func DefaultAPIHandlerOptions() *APIHandlerOptions {
 
 func NewAPIHandler(cl *client.PlaceholderClient, opts *APIHandlerOptions) (gohttp.Handler, error) {
 
+	sn_opts := wof_sanitize.DefaultOptions()
+
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
 
 		var api_results interface{}
@@ -86,7 +88,6 @@ func NewAPIHandler(cl *client.PlaceholderClient, opts *APIHandlerOptions) (gohtt
 
 			search_filters := make([]filters.Filter, 0)
 
-			sn_opts := wof_sanitize.DefaultOptions()
 			q := req.URL.Query()
 
 			for k, values := range q {
