@@ -65,17 +65,17 @@ func NewAPIHandler(cl *client.PlaceholderClient, opts *APIHandlerOptions) (gohtt
 
 		case "query":
 
-			term, err := getString(req, "term")
+			text, err := getString(req, "text")
 
 			if err != nil {
 				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
 			}
 
-			api_results, api_err = cl.Query(term)
+			api_results, api_err = cl.Query(text)
 
 		case "search":
 
-			term, err := getString(req, "term")
+			text, err := getString(req, "text")
 
 			if err != nil {
 				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
@@ -96,18 +96,18 @@ func NewAPIHandler(cl *client.PlaceholderClient, opts *APIHandlerOptions) (gohtt
 				return
 			}
 			
-			api_results, api_err = cl.Search(term, search_filters...)
+			api_results, api_err = cl.Search(text, search_filters...)
 
 		case "tokenize":
 
-			term, err := getString(req, "term")
+			text, err := getString(req, "text")
 
 			if err != nil {
 				gohttp.Error(rsp, err.Error(), gohttp.StatusBadRequest)
 				return
 			}
 
-			api_results, api_err = cl.Tokenize(term)
+			api_results, api_err = cl.Tokenize(text)
 
 		default:
 			api_err = errors.New("Invalid API endpoint")
