@@ -95,7 +95,7 @@ func NewAPIHandler(cl *client.PlaceholderClient, opts *APIHandlerOptions) (gohtt
 				gohttp.Error(rsp, "Autocomplete is disabled.", gohttp.StatusServiceUnavailable)
 				return
 			}
-			
+
 			api_results, api_err = cl.Search(text, search_filters...)
 
 		case "tokenize":

@@ -1,64 +1,22 @@
-# github.com/aaronland/go-aws-session v0.0.3
-github.com/aaronland/go-aws-session
 # github.com/aaronland/go-http-bootstrap v0.0.5
 github.com/aaronland/go-http-bootstrap
 github.com/aaronland/go-http-bootstrap/resources
-# github.com/aaronland/go-http-leaflet v0.0.1
+# github.com/aaronland/go-http-leaflet v0.0.2
 github.com/aaronland/go-http-leaflet
 # github.com/aaronland/go-http-rewrite v0.0.4
 github.com/aaronland/go-http-rewrite
 # github.com/aaronland/go-http-sanitize v0.0.4
 github.com/aaronland/go-http-sanitize
-# github.com/aaronland/go-http-tangramjs v0.0.4
+# github.com/aaronland/go-http-tangramjs v0.0.5
 github.com/aaronland/go-http-tangramjs
-# github.com/aaronland/go-string v0.1.1
-github.com/aaronland/go-string/dsn
-# github.com/aaronland/gocloud-blob-bucket v0.0.1
-github.com/aaronland/gocloud-blob-bucket
+# github.com/aaronland/go-roster v0.0.1
+github.com/aaronland/go-roster
 # github.com/aws/aws-lambda-go v1.10.0
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
 github.com/aws/aws-lambda-go/lambda/messages
 github.com/aws/aws-lambda-go/lambdacontext
-# github.com/aws/aws-sdk-go v1.20.6
-github.com/aws/aws-sdk-go/aws
-github.com/aws/aws-sdk-go/aws/credentials
-github.com/aws/aws-sdk-go/aws/session
-github.com/aws/aws-sdk-go/aws/awserr
-github.com/aws/aws-sdk-go/aws/client
-github.com/aws/aws-sdk-go/service/s3
-github.com/aws/aws-sdk-go/service/s3/s3manager
-github.com/aws/aws-sdk-go/aws/endpoints
-github.com/aws/aws-sdk-go/internal/sdkio
-github.com/aws/aws-sdk-go/internal/ini
-github.com/aws/aws-sdk-go/internal/shareddefaults
-github.com/aws/aws-sdk-go/aws/corehandlers
-github.com/aws/aws-sdk-go/aws/credentials/processcreds
-github.com/aws/aws-sdk-go/aws/credentials/stscreds
-github.com/aws/aws-sdk-go/aws/csm
-github.com/aws/aws-sdk-go/aws/defaults
-github.com/aws/aws-sdk-go/aws/request
-github.com/aws/aws-sdk-go/aws/client/metadata
-github.com/aws/aws-sdk-go/internal/sdkrand
-github.com/aws/aws-sdk-go/aws/awsutil
-github.com/aws/aws-sdk-go/aws/signer/v4
-github.com/aws/aws-sdk-go/internal/s3err
-github.com/aws/aws-sdk-go/private/protocol
-github.com/aws/aws-sdk-go/private/protocol/eventstream
-github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi
-github.com/aws/aws-sdk-go/private/protocol/rest
-github.com/aws/aws-sdk-go/private/protocol/restxml
-github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil
-github.com/aws/aws-sdk-go/service/s3/s3iface
-github.com/aws/aws-sdk-go/service/sts
-github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds
-github.com/aws/aws-sdk-go/aws/credentials/endpointcreds
-github.com/aws/aws-sdk-go/aws/ec2metadata
-github.com/aws/aws-sdk-go/private/protocol/query
-github.com/aws/aws-sdk-go/internal/sdkuri
-github.com/aws/aws-sdk-go/private/protocol/json/jsonutil
-github.com/aws/aws-sdk-go/private/protocol/query/queryutil
 # github.com/go-ini/ini v1.42.0
 github.com/go-ini/ini
 # github.com/golang/protobuf v1.3.1
@@ -67,14 +25,10 @@ github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
-# github.com/google/wire v0.3.0
-github.com/google/wire
 # github.com/googleapis/gax-go v2.0.2+incompatible
 github.com/googleapis/gax-go
 # github.com/hashicorp/golang-lru v0.5.1
 github.com/hashicorp/golang-lru/simplelru
-# github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
-github.com/jmespath/go-jmespath
 # github.com/jtacoma/uritemplates v1.0.0
 github.com/jtacoma/uritemplates
 # github.com/patrickmn/go-cache v2.1.0+incompatible
@@ -87,6 +41,9 @@ github.com/paulmach/orb
 github.com/paulmach/orb/internal/mercator
 # github.com/rs/cors v1.7.0
 github.com/rs/cors
+# github.com/sfomuseum/go-http-opensearch v0.0.0-20200109220756-f5100b2efab0
+github.com/sfomuseum/go-http-opensearch
+github.com/sfomuseum/go-http-opensearch/http
 # github.com/sfomuseum/go-http-tilezen v0.0.2
 github.com/sfomuseum/go-http-tilezen/http
 # github.com/sfomuseum/go-placeholder-client v0.0.4
@@ -107,9 +64,9 @@ github.com/whosonfirst/algnhsa
 github.com/whosonfirst/go-bindata
 # github.com/whosonfirst/go-bindata-assetfs v1.0.1
 github.com/whosonfirst/go-bindata-assetfs
-# github.com/whosonfirst/go-cache v0.0.1
+# github.com/whosonfirst/go-cache v0.0.2
 github.com/whosonfirst/go-cache
-# github.com/whosonfirst/go-cache-blob v0.0.1
+# github.com/whosonfirst/go-cache-blob v0.0.2
 github.com/whosonfirst/go-cache-blob
 # github.com/whosonfirst/go-sanitize v0.1.0
 github.com/whosonfirst/go-sanitize
@@ -131,20 +88,15 @@ go.opencensus.io/internal
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/tracestate
 go.opencensus.io
-# gocloud.dev v0.16.0
+# gocloud.dev v0.18.0
 gocloud.dev/blob
-gocloud.dev/blob/fileblob
-gocloud.dev/blob/memblob
-gocloud.dev/blob/s3blob
 gocloud.dev/blob/driver
 gocloud.dev/gcerrors
 gocloud.dev/internal/gcerr
 gocloud.dev/internal/oc
 gocloud.dev/internal/openurl
-gocloud.dev/internal/escape
-gocloud.dev/aws
 gocloud.dev/internal/retry
-# golang.org/x/net v0.0.0-20190628185345-da137c7871d7
+# golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/trace
@@ -160,7 +112,7 @@ golang.org/x/text/secure/bidirule
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/transform
-# golang.org/x/xerrors v0.0.0-20190513163551-3ee3066db522
+# golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
 # google.golang.org/genproto v0.0.0-20190620144150-6af8c5fc6601

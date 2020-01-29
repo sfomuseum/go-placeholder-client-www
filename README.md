@@ -37,6 +37,14 @@ Usage of server:
     	... (default "/tangram/refill-style.zip")
   -nextzen-tile-url string
     	... (default "https://{s}.tile.nextzen.org/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt")
+  -opensearch
+    	... (default true)
+  -opensearch-plugin-url string
+    	... (default "/opensearch/")
+  -opensearch-search-form string
+    	...
+  -opensearch-search-template string
+    	...
   -placeholder-endpoint string
     	The address of the Placeholder endpoint to query. (default "http://localhost:3000")
   -port int
@@ -121,6 +129,9 @@ _Please write me._
 | PLACEHOLDER_NEXTZEN_STYLE_URL | string | no |
 | PLACEHOLDER_PROXY_TILES | boolean | no |
 | PLACEHOLDER_PROXY_TILES_DSN | string | no |
+| PLACEHOLDER_OPENSEARCH_PLUGIN_URL | string | no, but probably |
+| PLACEHOLDER_OPENSEARCH_SEARCH_FORM | string | no, but probably |
+| PLACEHOLDER_OPENSEARCH_SEARCH_TEMPLATE | string | no, but probably |
 
 #### Nextzen style URLs in a Lambda context
 
@@ -155,3 +166,4 @@ Note the `-host 0.0.0.0` part. This is important. Without it the health checks p
 * https://github.com/aaronland/go-http-tangramjs
 * https://github.com/aaronland/go-http-leaflet
 * https://github.com/sfomuseum/go-http-tilezen
+* https://github.com/sfomuseum/go-http-opensearch

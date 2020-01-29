@@ -6,15 +6,16 @@ import (
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
 	"github.com/aaronland/go-http-tangramjs"
-	"github.com/aaronland/go-string/dsn"
 	"github.com/rs/cors"
+	os "github.com/sfomuseum/go-http-opensearch"
+	oshttp "github.com/sfomuseum/go-http-opensearch/http"
 	tzhttp "github.com/sfomuseum/go-http-tilezen/http"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
 	"github.com/sfomuseum/go-placeholder-client-www/http"
 	"github.com/sfomuseum/go-placeholder-client-www/server"
 	"github.com/whosonfirst/go-cache"
-	"github.com/whosonfirst/go-cache-blob"
+	_ "github.com/whosonfirst/go-cache-blob"
 	"github.com/whosonfirst/go-whosonfirst-cli/flags"
 	"html/template"
 	"log"
@@ -43,15 +44,21 @@ func main() {
 
 	proxy_tiles := flag.Bool("proxy-tiles", false, "Proxy (and cache) Nextzen tiles.")
 	proxy_tiles_url := flag.String("proxy-tiles-url", "/tiles/", "The URL (a relative path) for proxied tiles.")
-	proxy_tiles_dsn := flag.String("proxy-tiles-dsn", "cache=gocache", "A valid tile proxy DSN string.")
+	proxy_tiles_cache := flag.String("proxy-tiles-dsn", "gocache://", "A valid tile proxy DSN string.")
 	proxy_tiles_timeout := flag.Int("proxy-tiles-timeout", 30, "The maximum number of seconds to allow for fetching a tile from the proxy.")
 	proxy_test_network := flag.Bool("proxy-test-network", false, "Ensure outbound network connectivity for proxy tiles")
 
 	enable_api := flag.Bool("api", false, "Enable an API endpoint for Placeholder functionality.")
 	enable_api_autocomplete := flag.Bool("api-autocomplete", false, "Enable autocomplete for the 'search' API endpoint.")
 
+	enable_opensearch := flag.Bool("opensearch", true, "...")
+
 	api_url := flag.String("api-url", "/api/", "The URL (a relative path) for the API endpoint.")
 	enable_cors := flag.Bool("cors", false, "Enable CORS support for the API endpoint.")
+
+	opensearch_url := flag.String("opensearch-plugin-url", "/opensearch/", "...")
+	opensearch_search_template := flag.String("opensearch-search-template", "", "...")
+	opensearch_search_form := flag.String("opensearch-search-form", "", "...")
 
 	var cors_origins flags.MultiString
 	flag.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.")
@@ -63,6 +70,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	address := fmt.Sprintf("http://%s:%d", *host, *port)
+	search_path := "/"
 
 	cl, err := client.NewPlaceholderClient(*placeholder_endpoint)
 
@@ -136,66 +146,8 @@ func main() {
 
 	if *proxy_tiles {
 
-		caches := make([]cache.Cache, 0)
-
-		dsn_map, err := dsn.StringToDSNWithKeys(*proxy_tiles_dsn, "cache")
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		switch dsn_map["cache"] {
-		case "blob":
-
-			blob_dsn, ok := dsn_map["blob"]
-
-			if !ok {
-				log.Fatal("Missing blob DSN property")
-			}
-
-			blob_cache, err := blob.NewBlobCacheWithDSN(blob_dsn)
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			caches = append(caches, blob_cache)
-
-		case "gocache":
-
-			cache_opts, err := cache.DefaultGoCacheOptions()
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			go_cache, err := cache.NewGoCache(cache_opts)
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			caches = append(caches, go_cache)
-
-		case "null":
-
-			null_cache, err := cache.NewNullCache()
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			caches = append(caches, null_cache)
-
-		default:
-			log.Fatal("Invalid cache")
-		}
-
-		if len(caches) == 0 {
-			log.Fatal("No proxy caches defined")
-		}
-
-		multi_cache, err := cache.NewMultiCache(caches)
+		ctx := context.Background()
+		tile_cache, err := cache.NewCache(ctx, *proxy_tiles_cache)
 
 		if err != nil {
 			log.Fatal(err)
@@ -204,7 +156,7 @@ func main() {
 		timeout := time.Duration(*proxy_tiles_timeout) * time.Second
 
 		proxy_opts := &tzhttp.TilezenProxyHandlerOptions{
-			Cache:   multi_cache,
+			Cache:   tile_cache,
 			Timeout: timeout,
 		}
 
@@ -216,6 +168,9 @@ func main() {
 
 		if *proxy_test_network {
 
+			test_ctx, cancel := context.WithTimeout(ctx, timeout)
+			defer cancel()
+
 			req, err := gohttp.NewRequest("GET", "tile.nextzen.org", nil)
 
 			if err != nil {
@@ -224,10 +179,7 @@ func main() {
 
 			cl := new(gohttp.Client)
 
-			ctx, cancel := context.WithTimeout(context.Background(), timeout)
-			defer cancel()
-
-			_, err = cl.Do(req.WithContext(ctx))
+			_, err = cl.Do(req.WithContext(test_ctx))
 
 			if err != nil {
 				log.Fatal(err)
@@ -282,9 +234,55 @@ func main() {
 	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, *static_prefix)
 	search_handler = tangramjs.AppendResourcesHandlerWithPrefix(search_handler, tangramjs_opts, *static_prefix)
 
-	// auth-y bits go here...
+	if *enable_opensearch {
 
-	search_path := "/"
+		if *opensearch_search_template == "" {
+			*opensearch_search_template = filepath.Join(address, search_path)
+		}
+
+		if *opensearch_search_form == "" {
+			*opensearch_search_form = filepath.Join(address, search_path)
+		}
+
+		os_desc_opts := &os.BasicDescriptionOptions{
+			QueryParameter: "text",
+			SearchTemplate: *opensearch_search_template,
+			SearchForm:     *opensearch_search_form,
+			ImageURI:       os.DEFAULT_IMAGE_URI,
+			Name:           "Placeholder",
+			Description:    "Search Placeholder",
+		}
+
+		os_desc, err := os.BasicDescription(os_desc_opts)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		os_handler_opts := &oshttp.OpenSearchHandlerOptions{
+			Description: os_desc,
+		}
+
+		os_handler, err := oshttp.OpenSearchHandler(os_handler_opts)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		mux.Handle(*opensearch_url, os_handler)
+
+		os_plugins := map[string]*os.OpenSearchDescription{
+			*opensearch_url: os_desc,
+		}
+
+		os_plugins_opts := &oshttp.AppendPluginsOptions{
+			Plugins: os_plugins,
+		}
+
+		search_handler = oshttp.AppendPluginsHandler(search_handler, os_plugins_opts)
+	}
+
+	// auth-y bits go here...
 
 	mux.Handle(search_path, search_handler)
 
@@ -323,8 +321,6 @@ func main() {
 	}
 
 	// end of handlers
-
-	address := fmt.Sprintf("http://%s:%d", *host, *port)
 
 	u, err := gourl.Parse(address)
 

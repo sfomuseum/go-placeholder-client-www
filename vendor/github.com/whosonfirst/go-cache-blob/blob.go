@@ -1,11 +1,10 @@
-package blob
+package cache
 
 import (
 	"bufio"
 	"bytes"
 	"context"
-	"github.com/aaronland/gocloud-blob-bucket"	
-	"github.com/whosonfirst/go-cache"
+	wof_cache "github.com/whosonfirst/go-cache"
 	"gocloud.dev/blob"
 	"io"
 	"io/ioutil"
@@ -13,8 +12,8 @@ import (
 )
 
 type BlobCache struct {
-	cache.Cache
-	TTL int64
+	wof_cache.Cache
+	TTL       int64
 	bucket    *blob.Bucket
 	hits      int64
 	misses    int64
@@ -22,31 +21,41 @@ type BlobCache struct {
 	evictions int64
 }
 
-func NewBlobCacheWithDSN(bucket_dsn string) (cache.Cache, error) {
-
+func init() {
 	ctx := context.Background()
+	c := NewBlobCache()
 
-	bucket, err := bucket.OpenBucket(ctx, bucket_dsn)
-
-	if err != nil {
-		return nil, err
+	for _, scheme := range blob.DefaultURLMux().BucketSchemes() {
+		wof_cache.RegisterCache(ctx, scheme, c)
 	}
-
-	return NewBlobCacheWithBucket(bucket)
 }
 
-func NewBlobCacheWithBucket(bucket *blob.Bucket) (cache.Cache, error) {
+func NewBlobCache() wof_cache.Cache {
 
-	c := BlobCache{
-		TTL:            0,		
-		bucket: bucket,
-		hits:   0,
-		misses: 0,
-		sets:   0,
+	c := &BlobCache{
+		TTL:       0,
+		misses:    0,
+		sets:      0,
 		evictions: 0,
 	}
 
-	return &c, nil
+	return c
+}
+
+func (c *BlobCache) Open(ctx context.Context, uri string) error {
+
+	bucket, err := blob.OpenBucket(ctx, uri)
+
+	if err != nil {
+		return err
+	}
+
+	c.bucket = bucket
+	return nil
+}
+
+func (c *BlobCache) Close(ctx context.Context) error {
+	return nil
 }
 
 func (c *BlobCache) Name() string {
@@ -143,12 +152,12 @@ func (c *BlobCache) SizeWithContext(ctx context.Context) int64 {
 	for {
 
 		select {
-		case <- ctx.Done():
+		case <-ctx.Done():
 			return -1
 		default:
 			//
 		}
-		
+
 		obj, err := iter.Next(ctx)
 
 		if err == io.EOF {
