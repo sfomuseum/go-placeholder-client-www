@@ -2,25 +2,24 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
+	"github.com/aaronland/go-http-server"
 	"github.com/aaronland/go-http-tangramjs"
 	"github.com/rs/cors"
+	"github.com/sfomuseum/go-flags/flagset"
+	"github.com/sfomuseum/go-flags/multi"
 	os "github.com/sfomuseum/go-http-opensearch"
 	oshttp "github.com/sfomuseum/go-http-opensearch/http"
 	tzhttp "github.com/sfomuseum/go-http-tilezen/http"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
 	"github.com/sfomuseum/go-placeholder-client-www/http"
-	"github.com/sfomuseum/go-placeholder-client-www/server"
 	"github.com/whosonfirst/go-cache"
 	_ "github.com/whosonfirst/go-cache-blob"
-	"github.com/whosonfirst/go-whosonfirst-cli/flags"
 	"html/template"
 	"log"
 	gohttp "net/http"
-	gourl "net/url"
 	"path/filepath"
 	"strings"
 	"time"
@@ -28,50 +27,52 @@ import (
 
 func main() {
 
-	placeholder_endpoint := flag.String("placeholder-endpoint", client.DEFAULT_ENDPOINT, "The address of the Placeholder endpoint to query.")
+	fs := flagset.NewFlagSet("placeholder-client")
 
-	var proto = flag.String("protocol", "http", "The protocol for placeholder-client server to listen on. Valid protocols are: http, lambda.")
-	host := flag.String("host", "localhost", "The host to listen for requests on.")
-	port := flag.Int("port", 8080, "The port to listen for requests on.")
+	placeholder_endpoint := fs.String("placeholder-endpoint", client.DEFAULT_ENDPOINT, "The address of the Placeholder endpoint to query.")
 
-	static_prefix := flag.String("static-prefix", "", "Prepend this prefix to URLs for static assets.")
+	server_uri := fs.String("server_uri", "http://localhost:8080", "...")
 
-	nextzen_apikey := flag.String("nextzen-apikey", "", "A valid Nextzen API key")
-	nextzen_style_url := flag.String("nextzen-style-url", "/tangram/refill-style.zip", "...")
-	nextzen_tile_url := flag.String("nextzen-tile-url", tangramjs.NEXTZEN_MVT_ENDPOINT, "...")
+	static_prefix := fs.String("static-prefix", "", "Prepend this prefix to URLs for static assets.")
 
-	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
+	nextzen_apikey := fs.String("nextzen-apikey", "", "A valid Nextzen API key")
+	nextzen_style_url := fs.String("nextzen-style-url", "/tangram/refill-style.zip", "...")
+	nextzen_tile_url := fs.String("nextzen-tile-url", tangramjs.NEXTZEN_MVT_ENDPOINT, "...")
 
-	proxy_tiles := flag.Bool("proxy-tiles", false, "Proxy (and cache) Nextzen tiles.")
-	proxy_tiles_url := flag.String("proxy-tiles-url", "/tiles/", "The URL (a relative path) for proxied tiles.")
-	proxy_tiles_cache := flag.String("proxy-tiles-dsn", "gocache://", "A valid tile proxy DSN string.")
-	proxy_tiles_timeout := flag.Int("proxy-tiles-timeout", 30, "The maximum number of seconds to allow for fetching a tile from the proxy.")
-	proxy_test_network := flag.Bool("proxy-test-network", false, "Ensure outbound network connectivity for proxy tiles")
+	path_templates := fs.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
-	enable_api := flag.Bool("api", false, "Enable an API endpoint for Placeholder functionality.")
-	enable_api_autocomplete := flag.Bool("api-autocomplete", false, "Enable autocomplete for the 'search' API endpoint.")
+	proxy_tiles := fs.Bool("proxy-tiles", false, "Proxy (and cache) Nextzen tiles.")
+	proxy_tiles_url := fs.String("proxy-tiles-url", "/tiles/", "The URL (a relative path) for proxied tiles.")
+	proxy_tiles_cache := fs.String("proxy-tiles-dsn", "gocache://", "A valid tile proxy DSN string.")
+	proxy_tiles_timeout := fs.Int("proxy-tiles-timeout", 30, "The maximum number of seconds to allow for fetching a tile from the proxy.")
+	proxy_test_network := fs.Bool("proxy-test-network", false, "Ensure outbound network connectivity for proxy tiles")
 
-	enable_opensearch := flag.Bool("opensearch", true, "...")
+	enable_api := fs.Bool("api", false, "Enable an API endpoint for Placeholder functionality.")
+	enable_api_autocomplete := fs.Bool("api-autocomplete", false, "Enable autocomplete for the 'search' API endpoint.")
 
-	api_url := flag.String("api-url", "/api/", "The URL (a relative path) for the API endpoint.")
-	enable_cors := flag.Bool("cors", false, "Enable CORS support for the API endpoint.")
+	enable_opensearch := fs.Bool("opensearch", true, "...")
 
-	opensearch_url := flag.String("opensearch-plugin-url", "/opensearch/", "...")
-	opensearch_search_template := flag.String("opensearch-search-template", "", "...")
-	opensearch_search_form := flag.String("opensearch-search-form", "", "...")
+	api_url := fs.String("api-url", "/api/", "The URL (a relative path) for the API endpoint.")
+	enable_cors := fs.Bool("cors", false, "Enable CORS support for the API endpoint.")
 
-	var cors_origins flags.MultiString
-	flag.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.")
+	opensearch_url := fs.String("opensearch-plugin-url", "/opensearch/", "...")
+	opensearch_search_template := fs.String("opensearch-search-template", "", "...")
+	opensearch_search_form := fs.String("opensearch-search-form", "", "...")
 
-	flag.Parse()
+	var cors_origins multi.MultiString
 
-	err := flags.SetFlagsFromEnvVars("PLACEHOLDER")
+	fs.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.")
+
+	flagset.Parse(fs)
+
+	ctx := context.Background()
+
+	err := flagset.SetFlagsFromEnvVarsWithFeedback(fs, "PLACEHOLDER", true)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	address := fmt.Sprintf("http://%s:%d", *host, *port)
 	search_path := "/"
 
 	cl, err := client.NewPlaceholderClient(*placeholder_endpoint)
@@ -237,11 +238,11 @@ func main() {
 	if *enable_opensearch {
 
 		if *opensearch_search_template == "" {
-			*opensearch_search_template = filepath.Join(address, search_path)
+			*opensearch_search_template = filepath.Join(*server_uri, search_path)
 		}
 
 		if *opensearch_search_form == "" {
-			*opensearch_search_form = filepath.Join(address, search_path)
+			*opensearch_search_form = filepath.Join(*server_uri, search_path)
 		}
 
 		os_desc_opts := &os.BasicDescriptionOptions{
@@ -322,13 +323,7 @@ func main() {
 
 	// end of handlers
 
-	u, err := gourl.Parse(address)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	s, err := server.NewStaticServer(*proto, u)
+	s, err := server.NewServer(ctx, *server_uri)
 
 	if err != nil {
 		log.Fatal(err)
@@ -336,7 +331,7 @@ func main() {
 
 	log.Printf("Listening on %s\n", s.Address())
 
-	err = s.ListenAndServe(mux)
+	err = s.ListenAndServe(ctx, mux)
 
 	if err != nil {
 		log.Fatal(err)

@@ -43,6 +43,8 @@ github.com/aaronland/go-http-rewrite v0.0.4 h1:lI8cDF/nINjuSPrYpwvlJLa1cC32h1nvm
 github.com/aaronland/go-http-rewrite v0.0.4/go.mod h1:g62jjXpsArD0lzJLs9bVLR9Locdt3f4OmqFkkJL2rQU=
 github.com/aaronland/go-http-sanitize v0.0.4 h1:oAYe5DbtbDS6x5Rygv5II6fDHzATGIAyY4/ZDZ63G2w=
 github.com/aaronland/go-http-sanitize v0.0.4/go.mod h1:qUi4rzUPcpMntpUFnHK00yQI5vd/Q7x9MFYwX91/ygI=
+github.com/aaronland/go-http-server v0.0.3 h1:VyiOxUqgJccamLQNOx7p0D3qE9K5RUe3TKe8vy3gZa4=
+github.com/aaronland/go-http-server v0.0.3/go.mod h1:i7CG6Q9iRKZX4qonIYr73GtJpVHV8T31eZ4Ug44zOTU=
 github.com/aaronland/go-http-tangramjs v0.0.1 h1:uTNZyPN3PfmdzeU47p4Wptdr4J+BY9aMPbAeZVXtnz4=
 github.com/aaronland/go-http-tangramjs v0.0.1/go.mod h1:1LuOmRRx+5P4uCHVe0ZwzNs3gBI7f3lYv7fFz9yik9w=
 github.com/aaronland/go-http-tangramjs v0.0.2 h1:ayKvw5nD6yYlurKbtNBcw9J34nL0LZte1NDHTuuqtRw=
@@ -141,6 +143,8 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af/go.mod h1:XWv6SoW27p1b0cqNHllgS5HIMJraePCO15w5zCzIWYg=
 github.com/rs/cors v1.7.0 h1:+88SsELBHx5r+hZ8TCkggzSstaWNbDvThkVK8H6f9ik=
 github.com/rs/cors v1.7.0/go.mod h1:gFx+x8UowdsKA9AchylcLynDq+nNFfI8FkUZdN/jGCU=
+github.com/sfomuseum/go-flags v0.3.1 h1:6QZwQz1Dgy6t8ty+S7aR3iBSq8+0UR5/R3SNXHC8xxI=
+github.com/sfomuseum/go-flags v0.3.1/go.mod h1:54KCZIGmvZkIOrSCHSNMvgSTKH2gJRJyISH+AiI+55w=
 github.com/sfomuseum/go-http-opensearch v0.0.0-20191218211935-d8b24dd67e07 h1:JzC75VXeiCM4GoYdSiYdltwBgDgUc8ztvQLBea8izsw=
 github.com/sfomuseum/go-http-opensearch v0.0.0-20191218211935-d8b24dd67e07/go.mod h1:A8uv8iAyHHmMSGsCEe8aRFcKkRbxzk5+vBGExnufdk8=
 github.com/sfomuseum/go-http-opensearch v0.0.0-20191218223940-995f57740083 h1:lUnRxWN1u02+n5l3hw0+JdYj57e6AykpCd3KXd7eWH4=
