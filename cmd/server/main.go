@@ -31,7 +31,7 @@ func main() {
 
 	placeholder_endpoint := fs.String("placeholder-endpoint", client.DEFAULT_ENDPOINT, "The address of the Placeholder endpoint to query.")
 
-	server_uri := fs.String("server_uri", "http://localhost:8080", "...")
+	server_uri := fs.String("server-uri", "http://localhost:8080", "...")
 
 	static_prefix := fs.String("static-prefix", "", "Prepend this prefix to URLs for static assets.")
 

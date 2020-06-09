@@ -111,7 +111,7 @@ func staticJavascriptPlaceholderClientInitJs() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "static/javascript/placeholder.client.init.js", size: 1533, mode: os.FileMode(420), modTime: time.Unix(1568143754, 0)}
+	info := bindataFileInfo{name: "static/javascript/placeholder.client.init.js", size: 1533, mode: os.FileMode(420), modTime: time.Unix(1585674687, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

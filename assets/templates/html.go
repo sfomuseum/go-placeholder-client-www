@@ -125,7 +125,7 @@ func templatesHtmlSearchHtml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "templates/html/search.html", size: 4779, mode: os.FileMode(420), modTime: time.Unix(1567803075, 0)}
+	info := bindataFileInfo{name: "templates/html/search.html", size: 4779, mode: os.FileMode(420), modTime: time.Unix(1585356503, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
