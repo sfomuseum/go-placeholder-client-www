@@ -2,7 +2,6 @@ debug:
 	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY) -api
 
 docker:
-	@make bake
 	docker build -t placeholder-client-www .
 
 up:
