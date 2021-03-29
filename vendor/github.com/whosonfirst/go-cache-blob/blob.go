@@ -11,6 +11,8 @@ import (
 	"sync/atomic"
 )
 
+type BlobCacheOptionsKey string
+
 type BlobCache struct {
 	wof_cache.Cache
 	TTL       int64
@@ -23,35 +25,28 @@ type BlobCache struct {
 
 func init() {
 	ctx := context.Background()
-	c := NewBlobCache()
-
 	for _, scheme := range blob.DefaultURLMux().BucketSchemes() {
-		wof_cache.RegisterCache(ctx, scheme, c)
+		wof_cache.RegisterCache(ctx, scheme, NewBlobCache)
 	}
 }
 
-func NewBlobCache() wof_cache.Cache {
+func NewBlobCache(ctx context.Context, uri string) (wof_cache.Cache, error) {
+
+	bucket, err := blob.OpenBucket(ctx, uri)
+
+	if err != nil {
+		return nil, err
+	}
 
 	c := &BlobCache{
 		TTL:       0,
 		misses:    0,
 		sets:      0,
 		evictions: 0,
+		bucket:    bucket,
 	}
 
-	return c
-}
-
-func (c *BlobCache) Open(ctx context.Context, uri string) error {
-
-	bucket, err := blob.OpenBucket(ctx, uri)
-
-	if err != nil {
-		return err
-	}
-
-	c.bucket = bucket
-	return nil
+	return c, nil
 }
 
 func (c *BlobCache) Close(ctx context.Context) error {
@@ -77,7 +72,15 @@ func (c *BlobCache) Get(ctx context.Context, key string) (io.ReadCloser, error) 
 
 func (c *BlobCache) Set(ctx context.Context, key string, fh io.ReadCloser) (io.ReadCloser, error) {
 
-	bucket_wr, err := c.bucket.NewWriter(ctx, key, nil)
+	var wr_opts *blob.WriterOptions
+
+	v := ctx.Value(BlobCacheOptionsKey("options"))
+
+	if v != nil {
+		wr_opts = v.(*blob.WriterOptions)
+	}
+	
+	bucket_wr, err := c.bucket.NewWriter(ctx, key, wr_opts)
 
 	if err != nil {
 		return nil, err
