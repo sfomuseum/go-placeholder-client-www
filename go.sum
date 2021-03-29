@@ -188,6 +188,8 @@ github.com/sfomuseum/go-http-opensearch v0.0.0-20191218223940-995f57740083 h1:lU
 github.com/sfomuseum/go-http-opensearch v0.0.0-20191218223940-995f57740083/go.mod h1:XqQ73fKzL1vdO9baJtIwr3n7Wpj+1mbJqLk5vVVSC7A=
 github.com/sfomuseum/go-http-opensearch v0.0.0-20200109220756-f5100b2efab0 h1:2IxZ8BSBZB0XATCk++/nxvcP8hAlUAGkuXMCSXSGmew=
 github.com/sfomuseum/go-http-opensearch v0.0.0-20200109220756-f5100b2efab0/go.mod h1:XqQ73fKzL1vdO9baJtIwr3n7Wpj+1mbJqLk5vVVSC7A=
+github.com/sfomuseum/go-http-opensearch v0.0.1 h1:gd15HAc/+Uye4CZMfrDMrBIo/olw8jl/hEAw3qkNKHY=
+github.com/sfomuseum/go-http-opensearch v0.0.1/go.mod h1:G9pAvEaT3cSOcbfD7LXODwOqoh0KMv95CSUnJm3MNDE=
 github.com/sfomuseum/go-http-tilezen v0.0.0-20190829212433-f56daccfb2e1 h1:iInc8GHycuOqJuyhQXIREE9EHTl8947S1JgzAs6SJII=
 github.com/sfomuseum/go-http-tilezen v0.0.0-20190829212433-f56daccfb2e1/go.mod h1:wwKe45KeDRrMaH1h8jaJWugwqvI8GShTx5i9P/s/zpc=
 github.com/sfomuseum/go-http-tilezen v0.0.1 h1:WMBBz9a0Oo92U0S3UoOr7BF3t/KzlJLVxTl+WEmdllA=
@@ -306,6 +308,8 @@ golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553/go.mod h1:z5CRVTTTmAJ677TzLL
 golang.org/x/net v0.0.0-20201002202402-0a1ea396d57c/go.mod h1:iQL9McJNjoIa5mjH6nYTCTZXUN6RP+XW3eib7Ya3XcI=
 golang.org/x/net v0.0.0-20210316092652-d523dce5a7f4 h1:b0LrWgu8+q7z4J+0Y3Umo5q1dL7NXBkKBWkaVkAq17E=
 golang.org/x/net v0.0.0-20210316092652-d523dce5a7f4/go.mod h1:RBQZq4jEuRlivfhVLdyRGr576XBO4/greRjx4P4O3yc=
+golang.org/x/net v0.0.0-20210329181859-df645c7b52b1 h1:GDp1VG8WvY8lq4ic4L7GzKC3fNRlOa3UqUEpib8aBQE=
+golang.org/x/net v0.0.0-20210329181859-df645c7b52b1/go.mod h1:uSPa2vr4CLtc/ILN5odXGNXS6mhrKVzTaCXzk9m6W3k=
 golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
 golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
 golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
@@ -331,6 +335,8 @@ golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20210315160823-c6e025ad8005 h1:pDMpM2zh2MT0kHy037cKlSby2nEhD50SYqwQk76Nm40=
 golang.org/x/sys v0.0.0-20210315160823-c6e025ad8005/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20210324051608-47abb6519492 h1:Paq34FxTluEPvVyayQqMPgHm+vTOrIifmcYxFBx9TLg=
+golang.org/x/sys v0.0.0-20210324051608-47abb6519492/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=

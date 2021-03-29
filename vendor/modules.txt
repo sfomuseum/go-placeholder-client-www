@@ -10,7 +10,6 @@ github.com/aaronland/go-http-leaflet/static
 ## explicit
 github.com/aaronland/go-http-ping
 # github.com/aaronland/go-http-rewrite v0.0.6
-## explicit
 github.com/aaronland/go-http-rewrite
 # github.com/aaronland/go-http-sanitize v0.0.5
 ## explicit
@@ -57,7 +56,7 @@ github.com/rs/cors
 ## explicit
 github.com/sfomuseum/go-flags/flagset
 github.com/sfomuseum/go-flags/multi
-# github.com/sfomuseum/go-http-opensearch v0.0.0-20200109220756-f5100b2efab0
+# github.com/sfomuseum/go-http-opensearch v0.0.1
 ## explicit
 github.com/sfomuseum/go-http-opensearch
 github.com/sfomuseum/go-http-opensearch/http
@@ -79,10 +78,6 @@ github.com/tidwall/match
 github.com/tidwall/pretty
 # github.com/whosonfirst/algnhsa v0.1.0
 github.com/whosonfirst/algnhsa
-# github.com/whosonfirst/go-bindata v0.1.0
-## explicit
-# github.com/whosonfirst/go-bindata-assetfs v1.0.1
-## explicit
 # github.com/whosonfirst/go-cache v0.2.0
 ## explicit
 github.com/whosonfirst/go-cache
@@ -116,7 +111,7 @@ gocloud.dev/internal/gcerr
 gocloud.dev/internal/oc
 gocloud.dev/internal/openurl
 gocloud.dev/internal/retry
-# golang.org/x/net v0.0.0-20210316092652-d523dce5a7f4
+# golang.org/x/net v0.0.0-20210329181859-df645c7b52b1
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/http/httpguts
@@ -125,7 +120,7 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
-# golang.org/x/sys v0.0.0-20210315160823-c6e025ad8005
+# golang.org/x/sys v0.0.0-20210324051608-47abb6519492
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.3
