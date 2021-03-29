@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
+	"github.com/aaronland/go-http-ping"
 	"github.com/aaronland/go-http-server"
 	"github.com/aaronland/go-http-tangramjs"
 	"github.com/rs/cors"
@@ -13,8 +14,8 @@ import (
 	oshttp "github.com/sfomuseum/go-http-opensearch/http"
 	tzhttp "github.com/sfomuseum/go-http-tilezen/http"
 	"github.com/sfomuseum/go-placeholder-client"
-	"github.com/sfomuseum/go-placeholder-client-www/assets/templates"
 	"github.com/sfomuseum/go-placeholder-client-www/http"
+	"github.com/sfomuseum/go-placeholder-client-www/templates/html"
 	"github.com/whosonfirst/go-cache"
 	_ "github.com/whosonfirst/go-cache-blob"
 	"html/template"
@@ -38,8 +39,6 @@ func main() {
 	nextzen_apikey := fs.String("nextzen-apikey", "", "A valid Nextzen API key")
 	nextzen_style_url := fs.String("nextzen-style-url", "/tangram/refill-style.zip", "...")
 	nextzen_tile_url := fs.String("nextzen-tile-url", tangramjs.NEXTZEN_MVT_ENDPOINT, "...")
-
-	path_templates := fs.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
 	proxy_tiles := fs.Bool("proxy-tiles", false, "Proxy (and cache) Nextzen tiles.")
 	proxy_tiles_url := fs.String("proxy-tiles-url", "/tiles/", "The URL (a relative path) for proxied tiles.")
@@ -98,30 +97,10 @@ func main() {
 		},
 	})
 
-	if *path_templates != "" {
+	t, err = t.ParseFS(html.FS, "*.html")
 
-		t, err = t.ParseGlob(*path_templates)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-	} else {
-
-		for _, name := range templates.AssetNames() {
-
-			body, err := templates.Asset(name)
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			t, err = t.Parse(string(body))
-
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	if *static_prefix != "" {
@@ -137,7 +116,7 @@ func main() {
 
 	mux := gohttp.NewServeMux()
 
-	ping_handler, err := http.PingHandler()
+	ping_handler, err := ping.PingHandler()
 
 	if err != nil {
 		log.Fatal(err)

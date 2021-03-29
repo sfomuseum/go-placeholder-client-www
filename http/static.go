@@ -1,21 +1,17 @@
 package http
 
 import (
-	"github.com/aaronland/go-http-rewrite"
+	"fmt"
+	"github.com/sfomuseum/go-placeholder-client-www/static"
+	"io/fs"
 	gohttp "net/http"
 	"path/filepath"
 	"strings"
 )
 
-func StaticFileSystem() (gohttp.FileSystem, error) {
-	fs := assetFS()
-	return fs, nil
-}
-
 func StaticAssetsHandler() (gohttp.Handler, error) {
-
-	fs := assetFS()
-	return gohttp.FileServer(fs), nil
+	http_fs := gohttp.FS(static.FS)
+	return gohttp.FileServer(http_fs), nil
 }
 
 func StaticAssetsHandlerWithPrefix(prefix string) (gohttp.Handler, error) {
@@ -26,19 +22,8 @@ func StaticAssetsHandlerWithPrefix(prefix string) (gohttp.Handler, error) {
 		return nil, err
 	}
 
-	prefix = strings.TrimRight(prefix, "/")
-
-	if prefix == "" {
-		return fs_handler, nil
-	}
-
-	rewrite_func := func(req *gohttp.Request) (*gohttp.Request, error) {
-		req.URL.Path = strings.Replace(req.URL.Path, prefix, "", 1)
-		return req, nil
-	}
-
-	rewrite_handler := rewrite.RewriteRequestHandler(fs_handler, rewrite_func)
-	return rewrite_handler, nil
+	fs_handler = gohttp.StripPrefix(prefix, fs_handler)
+	return fs_handler, nil
 }
 
 func AppendStaticAssetHandlers(mux *gohttp.ServeMux) error {
@@ -53,18 +38,31 @@ func AppendStaticAssetHandlersWithPrefix(mux *gohttp.ServeMux, prefix string) er
 		return nil
 	}
 
-	for _, path := range AssetNames() {
+	walk_func := func(path string, info fs.DirEntry, err error) error {
 
-		path := strings.Replace(path, "static", "", 1)
+		if path == "." {
+			return nil
+		}
+
+		if info.IsDir() {
+			return nil
+		}
 
 		if prefix != "" {
 			path = appendPrefix(prefix, path)
 		}
 
+		if !strings.HasPrefix(path, "/") {
+			path = fmt.Sprintf("/%s", path)
+		}
+
+		// log.Println("APPEND", path)
+
 		mux.Handle(path, asset_handler)
+		return nil
 	}
 
-	return nil
+	return fs.WalkDir(static.FS, ".", walk_func)
 }
 
 func appendPrefix(prefix string, path string) string {

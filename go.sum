@@ -43,6 +43,8 @@ github.com/aaronland/go-http-leaflet v0.0.2 h1:UWRCfHCnknsDkd8jXmMkBcRV40qb0EkGY
 github.com/aaronland/go-http-leaflet v0.0.2/go.mod h1:jUzEnGKezjceuNtQJIZWy2nXMhuteRSK0BPIjSSniBw=
 github.com/aaronland/go-http-leaflet v0.0.6 h1:8pLfLudvmids0v+B86Y3tL2Q3EUJjidjV/diJqrJdyg=
 github.com/aaronland/go-http-leaflet v0.0.6/go.mod h1:M6Brt/UMWXsT+3qK5idwxr3y6kELHHi7OhgoiecMt6U=
+github.com/aaronland/go-http-ping v1.0.0 h1:ayR9n9YNnuGOhkaZhcy5Z/qSUOo0NUCu6gJ428omyXs=
+github.com/aaronland/go-http-ping v1.0.0/go.mod h1:zU9CSFLh2XzPlrFgoyCysNED+DoLRioCKaa2Kl+O6DA=
 github.com/aaronland/go-http-rewrite v0.0.1 h1:nQ4qqtOC0QHpEhQeFpRRwdXAEwuhHhgsxQaV3hDT8iw=
 github.com/aaronland/go-http-rewrite v0.0.1/go.mod h1:g62jjXpsArD0lzJLs9bVLR9Locdt3f4OmqFkkJL2rQU=
 github.com/aaronland/go-http-rewrite v0.0.2 h1:H9uW+mL6V//BS927a9rFBSkOKDL3bGIlaPiVIC6UN3I=

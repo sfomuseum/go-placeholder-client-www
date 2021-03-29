@@ -6,6 +6,9 @@ github.com/aaronland/go-http-bootstrap/static
 # github.com/aaronland/go-http-leaflet v0.0.6
 github.com/aaronland/go-http-leaflet
 github.com/aaronland/go-http-leaflet/static
+# github.com/aaronland/go-http-ping v1.0.0
+## explicit
+github.com/aaronland/go-http-ping
 # github.com/aaronland/go-http-rewrite v0.0.6
 ## explicit
 github.com/aaronland/go-http-rewrite
@@ -78,10 +81,8 @@ github.com/tidwall/pretty
 github.com/whosonfirst/algnhsa
 # github.com/whosonfirst/go-bindata v0.1.0
 ## explicit
-github.com/whosonfirst/go-bindata
 # github.com/whosonfirst/go-bindata-assetfs v1.0.1
 ## explicit
-github.com/whosonfirst/go-bindata-assetfs
 # github.com/whosonfirst/go-cache v0.2.0
 ## explicit
 github.com/whosonfirst/go-cache
