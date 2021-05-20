@@ -203,6 +203,14 @@ func main() {
 		log.Fatal(err)
 	}
 
+	ready_handler, err := http.PlaceholderReadyHandler(*placeholder_endpoint)
+
+	if err != nil {
+		log.Fatalf("Failed to create Placeholder ready handler, %v", err)
+	}
+
+	mux.Handle("/ready", ready_handler)
+
 	search_opts := &http.SearchHandlerOptions{
 		PlaceholderClient: cl,
 		Templates:         t,
