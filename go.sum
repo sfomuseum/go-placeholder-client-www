@@ -37,12 +37,16 @@ github.com/aaronland/go-http-bootstrap v0.0.5 h1:g6PehLzQcQjUiXQdYPrl3ZQuNRYTsR6
 github.com/aaronland/go-http-bootstrap v0.0.5/go.mod h1:r8XhNGVceWoc7iwamnU0IIw5RyNyfMmGvcxLA/lQfek=
 github.com/aaronland/go-http-bootstrap v0.0.10 h1:+gIJRVGegIQlEA4qDyoxxyWrjyHF0R8x3da1NnjRRZg=
 github.com/aaronland/go-http-bootstrap v0.0.10/go.mod h1:c4TEIXKCMI9gq8VxDmQL+o960u84j0Jxn0vCd0qJhc0=
+github.com/aaronland/go-http-bootstrap v0.1.0 h1:ayVCu88SDUyptVN/scPMtC8jUor0h2lcoN/3ulfuwwo=
+github.com/aaronland/go-http-bootstrap v0.1.0/go.mod h1:LBQ4TNCD74+4KKEmBIIzrMxeAksRp/wQ7FPA8VZ/v4E=
 github.com/aaronland/go-http-leaflet v0.0.1 h1:2DVlwwvZ6r75sJ7zKCuIwpZD0Z9HRBaOTmPnHXqjS7o=
 github.com/aaronland/go-http-leaflet v0.0.1/go.mod h1:jUzEnGKezjceuNtQJIZWy2nXMhuteRSK0BPIjSSniBw=
 github.com/aaronland/go-http-leaflet v0.0.2 h1:UWRCfHCnknsDkd8jXmMkBcRV40qb0EkGYXn9ReqT+NU=
 github.com/aaronland/go-http-leaflet v0.0.2/go.mod h1:jUzEnGKezjceuNtQJIZWy2nXMhuteRSK0BPIjSSniBw=
 github.com/aaronland/go-http-leaflet v0.0.6 h1:8pLfLudvmids0v+B86Y3tL2Q3EUJjidjV/diJqrJdyg=
 github.com/aaronland/go-http-leaflet v0.0.6/go.mod h1:M6Brt/UMWXsT+3qK5idwxr3y6kELHHi7OhgoiecMt6U=
+github.com/aaronland/go-http-leaflet v0.1.0 h1:F9ofV2yRZdP9NCSW8GXfDNNbiQD5na0oylKLbbwG9u4=
+github.com/aaronland/go-http-leaflet v0.1.0/go.mod h1:M6Brt/UMWXsT+3qK5idwxr3y6kELHHi7OhgoiecMt6U=
 github.com/aaronland/go-http-ping v1.0.0 h1:ayR9n9YNnuGOhkaZhcy5Z/qSUOo0NUCu6gJ428omyXs=
 github.com/aaronland/go-http-ping v1.0.0/go.mod h1:zU9CSFLh2XzPlrFgoyCysNED+DoLRioCKaa2Kl+O6DA=
 github.com/aaronland/go-http-rewrite v0.0.1 h1:nQ4qqtOC0QHpEhQeFpRRwdXAEwuhHhgsxQaV3hDT8iw=
@@ -63,6 +67,8 @@ github.com/aaronland/go-http-server v0.0.3 h1:VyiOxUqgJccamLQNOx7p0D3qE9K5RUe3TK
 github.com/aaronland/go-http-server v0.0.3/go.mod h1:i7CG6Q9iRKZX4qonIYr73GtJpVHV8T31eZ4Ug44zOTU=
 github.com/aaronland/go-http-server v0.0.5 h1:DxQKt2tcoq27gjqMJ9/wKyTu0briY9lPuKwBTXXh90o=
 github.com/aaronland/go-http-server v0.0.5/go.mod h1:6dtsZDrQG0XvUOCL0eaHsUw+7gw3Xa/Nm+XofvkSw2w=
+github.com/aaronland/go-http-server v0.0.6 h1:KR6zm17QB+Mal0kpn/7vZHzj18W2O5ytGKIF7D1cN/4=
+github.com/aaronland/go-http-server v0.0.6/go.mod h1:6dtsZDrQG0XvUOCL0eaHsUw+7gw3Xa/Nm+XofvkSw2w=
 github.com/aaronland/go-http-tangramjs v0.0.1 h1:uTNZyPN3PfmdzeU47p4Wptdr4J+BY9aMPbAeZVXtnz4=
 github.com/aaronland/go-http-tangramjs v0.0.1/go.mod h1:1LuOmRRx+5P4uCHVe0ZwzNs3gBI7f3lYv7fFz9yik9w=
 github.com/aaronland/go-http-tangramjs v0.0.2 h1:ayKvw5nD6yYlurKbtNBcw9J34nL0LZte1NDHTuuqtRw=
@@ -75,6 +81,8 @@ github.com/aaronland/go-http-tangramjs v0.0.5 h1:SXRuPD2qgPQ9goCz4dezY3imq1zOZZy
 github.com/aaronland/go-http-tangramjs v0.0.5/go.mod h1:fXj2CVcGLomqOOj+Kz/IEyrBnRK9F0l68m3aedn+NJw=
 github.com/aaronland/go-http-tangramjs v0.0.9 h1:eFFTL6EQ+L430r5X4/blbQtYRr4HKpQdhAvYGEg+S5I=
 github.com/aaronland/go-http-tangramjs v0.0.9/go.mod h1:OiKvYX9HV8165IEIqQ/xnZVFPuEedOOG5Wke6tuwZAc=
+github.com/aaronland/go-http-tangramjs v0.1.0 h1:cCEUObJVWG2ewNYW1zfdcvS+fNqYTsAR2+JT7gPsI6g=
+github.com/aaronland/go-http-tangramjs v0.1.0/go.mod h1:WgtxBvBN6LR65g5OpjUiu0LPvj+/+S69bBdpOZ14l4M=
 github.com/aaronland/go-roster v0.0.1 h1:r1l4n1HfWvEtOXZvhfXX0Won9Xf6QJsigdUdzOtuy/M=
 github.com/aaronland/go-roster v0.0.1/go.mod h1:AcovpxlG1XxJxX2Fjqlm63fEIBhCjEIBV4lP87FZDmI=
 github.com/aaronland/go-roster v0.0.2 h1:2Fu7v4VQLRLRL/Zgr6R9S5JxsW75Ab/K88QtMVX532s=
