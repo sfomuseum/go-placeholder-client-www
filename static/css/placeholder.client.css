@@ -9,7 +9,11 @@
 	max-height: 30vh;
 	y-overflow: scroll;
 }
-	
+
+#navbarSupportedContent {
+	justify-content:right;
+}
+
 .card-header small {
 	display: block;
 	font-size:.8rem;
@@ -26,4 +30,11 @@
 #text {
 	width: 60% !important;
 	margin-right:.5rem;
+}
+
+@media (max-width: 480px) {
+	#navbarSupportedContent {
+		margin-top:1rem;
+		margin-bottom:1rem;
+	}
 }

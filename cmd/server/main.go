@@ -188,6 +188,10 @@ func main() {
 
 	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
+	bootstrap_opts.JS = []string{
+		"/javascript/bootstrap.min.js",
+	}
+
 	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
 	tangramjs_opts.NextzenOptions.APIKey = *nextzen_apikey
 	tangramjs_opts.NextzenOptions.StyleURL = *nextzen_style_url

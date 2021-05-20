@@ -1,7 +1,10 @@
 {{ define "header" }}
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-	<title></title>
+	<title>Placeholder</title>
+	<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">	
 	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/localforage.min.js" }}"></script>
 	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/whosonfirst.uri.js" }}"></script>
 	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/whosonfirst.net.js" }}"></script>
@@ -14,15 +17,18 @@
     <body data-url-prefix="{{ .URLPrefix }}">
 	<div class="container">
 
-	    <nav class="navbar navbar-light">
-
-		<a class="navbar-brand">Placeholder</a>
-
-		<form class="form-inline">
-		    <input class="form-control mr-sm-2" type="search" name="text" id="text" placeholder="Enter a place name to search for" value="{{ .Query }}" aria-label="Search">
-		    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-		</form>
-		
+	    <nav class="navbar navbar-expand-lg navbar-light bg-light-x">
+		<div class="container-fluid">
+		    <a class="navbar-brand" href="#">Placeholder</a>
+		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		    </button>
+		    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<form class="d-flex">
+			    <input class="form-control me-2" type="search" name="text" id="text" placeholder="Search for a location" aria-label="Search" value="{{ .Query }}" />
+			    <button class="btn btn-outline-success" type="submit">Search</button>
+			</form>
+		    </div>
+		</div>
 	    </nav>
-	
 {{ end }}
