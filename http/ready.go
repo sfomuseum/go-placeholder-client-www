@@ -31,7 +31,7 @@ func PlaceholderReadyHandler(placeholder_endpoint string, ttl time.Time) (gohttp
 				return
 			case <-ticker.C:
 
-				log.Println("Check Placeholder status (%s)", placeholder_endpoint)
+				log.Printf("Check Placeholder status (%s)\n", placeholder_endpoint)
 
 				rsp, err := gohttp.Get(placeholder_endpoint)
 
