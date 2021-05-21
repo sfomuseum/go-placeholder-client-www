@@ -58,6 +58,10 @@ func main() {
 	opensearch_search_template := fs.String("opensearch-search-template", "", "...")
 	opensearch_search_form := fs.String("opensearch-search-form", "", "...")
 
+	enable_ready := fs.Bool("ready-check", true, "Enable the Placeholder \"ready\" check handler.")
+	ready_ttl := fs.Int("ready-check-ttl", 60, "The time to live, in seconds, for the Placeholder \"check\".")
+	ready_url := fs.String("ready-check-url", "/ready/", "The URL (a relative path) for the Placeholder \"ready\" check handler.")
+
 	var cors_origins multi.MultiString
 
 	fs.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.")
@@ -203,18 +207,28 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ready_handler, err := http.PlaceholderReadyHandler(*placeholder_endpoint)
+	if *enable_ready {
 
-	if err != nil {
-		log.Fatalf("Failed to create Placeholder ready handler, %v", err)
+		ready_t := time.Now().Add(time.Duration(*ready_ttl) * time.Second)
+		ready_handler, err := http.PlaceholderReadyHandler(*placeholder_endpoint, ready_t)
+
+		if err != nil {
+			log.Fatalf("Failed to create Placeholder ready handler, %v", err)
+		}
+
+		ready_path := *ready_url
+		mux.Handle(ready_path, ready_handler)
 	}
-
-	mux.Handle("/ready", ready_handler)
 
 	search_opts := &http.SearchHandlerOptions{
 		PlaceholderClient: cl,
 		Templates:         t,
 		URLPrefix:         *static_prefix,
+	}
+
+	if *enable_ready {
+		search_opts.EnableReadyCheck = true
+		search_opts.ReadyCheckURL = *ready_url
 	}
 
 	search_handler, err := http.NewSearchHandler(search_opts)

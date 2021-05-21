@@ -11,11 +11,13 @@ import (
 )
 
 type SearchVars struct {
-	URLPrefix    string
-	IsAPIGateway bool
-	Query        string
-	Results      *results.SearchResults
-	Error        error
+	URLPrefix        string
+	IsAPIGateway     bool
+	Query            string
+	Results          *results.SearchResults
+	Error            error
+	EnableReadyCheck bool
+	ReadyCheckURL    string
 }
 
 type SearchHandlerOptions struct {
@@ -23,6 +25,8 @@ type SearchHandlerOptions struct {
 	IsAPIGateway      bool
 	Templates         *template.Template
 	URLPrefix         string
+	EnableReadyCheck  bool
+	ReadyCheckURL     string
 }
 
 func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
@@ -56,6 +60,8 @@ func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
 		var search_vars SearchVars
 		search_vars.URLPrefix = opts.URLPrefix
 		search_vars.IsAPIGateway = opts.IsAPIGateway
+		search_vars.EnableReadyCheck = opts.EnableReadyCheck
+		search_vars.ReadyCheckURL = opts.ReadyCheckURL
 
 		if text != "" {
 

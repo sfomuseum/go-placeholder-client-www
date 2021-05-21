@@ -22,15 +22,13 @@ Usage of server:
   -api
     	Enable an API endpoint for Placeholder functionality.
   -api-autocomplete
-    	Enable autocomplete for the 'search' API endpoint.	
+    	Enable autocomplete for the 'search' API endpoint.
   -api-url string
     	The URL (a relative path) for the API endpoint. (default "/api/")
   -cors
     	Enable CORS support for the API endpoint.
   -cors-origin value
-    	One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.	
-  -host string
-    	The host to listen for requests on. (default "localhost")
+    	One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.
   -nextzen-apikey string
     	A valid Nextzen API key
   -nextzen-style-url string
@@ -47,24 +45,26 @@ Usage of server:
     	...
   -placeholder-endpoint string
     	The address of the Placeholder endpoint to query. (default "http://localhost:3000")
-  -port int
-    	The port to listen for requests on. (default 8080)
-  -protocol string
-    	The protocol for placeholder-client server to listen on. Valid protocols are: http, lambda. (default "http")
   -proxy-test-network
     	Ensure outbound network connectivity for proxy tiles
   -proxy-tiles
     	Proxy (and cache) Nextzen tiles.
   -proxy-tiles-dsn string
-    	A valid tile proxy DSN string. (default "cache=gocache")
+    	A valid tile proxy DSN string. (default "gocache://")
   -proxy-tiles-timeout int
     	The maximum number of seconds to allow for fetching a tile from the proxy. (default 30)
   -proxy-tiles-url string
     	The URL (a relative path) for proxied tiles. (default "/tiles/")
+  -ready-check
+    	Enable the Placeholder "ready" check handler. (default true)
+  -ready-check-ttl int
+    	The time to live, in seconds, for the Placeholder "check". (default 60)
+  -ready-check-url string
+    	The URL (a relative path) for the Placeholder "ready" check handler. (default "/ready/")
+  -server-uri string
+    	... (default "http://localhost:8080")
   -static-prefix string
     	Prepend this prefix to URLs for static assets.
-  -templates string
-    	An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.
 ```
 
 For example

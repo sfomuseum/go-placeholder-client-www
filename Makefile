@@ -1,5 +1,5 @@
 debug:
-	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY) -api
+	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY) -api -ready-check=false
 
 docker:
 	docker build -t placeholder-client-www .

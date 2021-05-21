@@ -14,7 +14,7 @@
 	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/placeholder.client.init.js" }}"></script>
 	<link type="text/css" rel="stylesheet" href="{{ Join .URLPrefix "/css/placeholder.client.css" }}" />
     </head>
-    <body data-url-prefix="{{ .URLPrefix }}">
+    <body data-url-prefix="{{ .URLPrefix }}" {{ if .EnableReadyCheck }}data-enable-ready-check="{{ .EnableReadyCheck }}" data-ready-check-url="{{ Join .URLPrefix .ReadyCheckURL }}"{{ end }}>
 	<div class="container">
 
 	    <nav class="navbar navbar-expand-lg navbar-light bg-light-x">
@@ -26,7 +26,11 @@
 		    <div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<form class="d-flex">
 			    <input class="form-control me-2" type="search" name="text" id="text" placeholder="Search for a location" aria-label="Search" value="{{ .Query }}" />
-			    <button class="btn btn-outline-success" type="submit">Search</button>
+			    {{ if .EnableReadyCheck }}
+			    <button class="btn btn-outline-success" type="submit" id="search-button" disabled>Loading...</button>
+			    {{ else }}
+			    <button class="btn btn-outline-success" type="submit" id="search-button">Search</button>
+			    {{ end }}
 			</form>
 		    </div>
 		</div>

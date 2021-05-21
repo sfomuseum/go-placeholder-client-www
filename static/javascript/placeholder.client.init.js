@@ -1,5 +1,45 @@
 window.addEventListener("load", function load(event){
 
+    var search_button = document.getElementById("search-button");
+    
+    var ready_check = document.body.getAttribute("data-enable-ready-check");
+    var ready_check_url = document.body.getAttribute("data-ready-check-url");    
+
+    if (ready_check == "true"){
+
+	var placeholder_ready_cb = function(e){
+	    
+	    var rsp = e.target;
+	    var status = rsp.status;
+	    
+	    // console.log("STATUS", status);
+	    
+	    if (status == 200){
+		console.log("Placeholder is running and accepting connections");
+		search_button.innerText = "Search";
+		search_button.removeAttribute("disabled");
+		return;
+	    }
+	    
+	    if (status == 503){
+		setTimeout(placeholder_ready, 2500);
+		return;
+	    }
+	    
+	    console.log("Unable to determine Placeholder status", rsp);
+	    return false;
+	};
+	
+	var placeholder_ready = function(){
+	    var req = new XMLHttpRequest();
+	    req.addEventListener("load", placeholder_ready_cb);
+	    req.open("GET", ready_check_url, true);
+	    req.send();
+	};
+	
+	placeholder_ready();
+    }
+    
     var rows = document.getElementsByClassName("result");
     var count = rows.length;
 
