@@ -39,6 +39,7 @@
 //  - Attributes
 //  - Copy
 //  - Delete
+//  - ListPage
 //  - NewRangeReader, from creation until the call to Close. (NewReader and ReadAll
 //    are included because they call NewRangeReader.)
 //  - NewWriter, from creation until the call to Close.
@@ -92,19 +93,20 @@ import (
 // It implements io.ReadCloser, and must be closed after
 // reads are finished.
 type Reader struct {
-	b        driver.Bucket
-	r        driver.Reader
-	key      string
-	end      func(error) // called at Close to finish trace and metric collection
-	provider string      // for metric collection; refers to driver package
-	closed   bool
+	b   driver.Bucket
+	r   driver.Reader
+	key string
+	end func(error) // called at Close to finish trace and metric collection
+	// for metric collection;
+	statsTagMutators []tag.Mutator
+	bytesRead        int
+	closed           bool
 }
 
 // Read implements io.Reader (https://golang.org/pkg/io/#Reader).
 func (r *Reader) Read(p []byte) (int, error) {
 	n, err := r.r.Read(p)
-	stats.RecordWithTags(context.Background(), []tag.Mutator{tag.Upsert(oc.ProviderKey, r.provider)},
-		bytesReadMeasure.M(int64(n)))
+	r.bytesRead += n
 	return n, wrapError(r.b, err, r.key)
 }
 
@@ -113,6 +115,11 @@ func (r *Reader) Close() error {
 	r.closed = true
 	err := wrapError(r.b, r.r.Close(), r.key)
 	r.end(err)
+	// Emit only on close to avoid an allocation on each call to Read().
+	stats.RecordWithTags(
+		context.Background(),
+		r.statsTagMutators,
+		bytesReadMeasure.M(int64(r.bytesRead)))
 	return err
 }
 
@@ -202,12 +209,17 @@ type Attributes struct {
 	// case-insensitive keys (e.g., "foo" and "FOO"), only one value
 	// will be kept, and it is undefined which one.
 	Metadata map[string]string
+	// CreateTime is the time the blob was created, if available. If not available,
+	// CreateTime will be the zero time.
+	CreateTime time.Time
 	// ModTime is the time the blob was last modified.
 	ModTime time.Time
 	// Size is the size of the blob's content in bytes.
 	Size int64
 	// MD5 is an MD5 hash of the blob contents or nil if not available.
 	MD5 []byte
+	// ETag for the blob; see https://en.wikipedia.org/wiki/HTTP_ETag.
+	ETag string
 
 	asFunc func(interface{}) bool
 }
@@ -228,15 +240,16 @@ func (a *Attributes) As(i interface{}) bool {
 // It implements io.WriteCloser (https://golang.org/pkg/io/#Closer), and must be
 // closed after all writes are done.
 type Writer struct {
-	b          driver.Bucket
-	w          driver.Writer
-	key        string
-	end        func(error) // called at Close to finish trace and metric collection
-	cancel     func()      // cancels the ctx provided to NewTypedWriter if contentMD5 verification fails
-	contentMD5 []byte
-	md5hash    hash.Hash
-	provider   string // for metric collection, refers to driver package name
-	closed     bool
+	b                driver.Bucket
+	w                driver.Writer
+	key              string
+	end              func(error) // called at Close to finish trace and metric collection
+	cancel           func()      // cancels the ctx provided to NewTypedWriter if contentMD5 verification fails
+	contentMD5       []byte
+	md5hash          hash.Hash
+	statsTagMutators []tag.Mutator // for metric collection
+	bytesWritten     int
+	closed           bool
 
 	// These fields are non-zero values only when w is nil (not yet created).
 	//
@@ -300,7 +313,14 @@ func (w *Writer) Write(p []byte) (int, error) {
 // canceled or reaches its deadline.
 func (w *Writer) Close() (err error) {
 	w.closed = true
-	defer func() { w.end(err) }()
+	defer func() {
+		w.end(err)
+		// Emit only on close to avoid an allocation on each call to Write().
+		stats.RecordWithTags(
+			context.Background(),
+			w.statsTagMutators,
+			bytesWrittenMeasure.M(int64(w.bytesWritten)))
+	}()
 	if len(w.contentMD5) > 0 {
 		// Verify the MD5 hash of what was written matches the ContentMD5 provided
 		// by the user.
@@ -344,8 +364,7 @@ func (w *Writer) open(p []byte) (int, error) {
 
 func (w *Writer) write(p []byte) (int, error) {
 	n, err := w.w.Write(p)
-	stats.RecordWithTags(context.Background(), []tag.Mutator{tag.Upsert(oc.ProviderKey, w.provider)},
-		bytesWrittenMeasure.M(int64(n)))
+	w.bytesWritten += n
 	return n, wrapError(w.b, err, w.key)
 }
 
@@ -578,6 +597,114 @@ func (b *Bucket) List(opts *ListOptions) *ListIterator {
 	return &ListIterator{b: b, opts: dopts}
 }
 
+// FirstPageToken is the pageToken to pass to ListPage to retrieve the first page of results.
+var FirstPageToken = []byte("first page")
+
+// ListPage returns a page of ListObject results for blobs in a bucket, in lexicographical
+// order of UTF-8 encoded keys.
+//
+// To fetch the first page, pass FirstPageToken as the pageToken. For subsequent pages, pass
+// the pageToken returned from a previous call to ListPage.
+// It is not possible to "skip ahead" pages.
+//
+// Each call will return pageSize results, unless there are not enough blobs to fill the
+// page, in which case it will return fewer results (possibly 0).
+//
+// If there are no more blobs available, ListPage will return an empty pageToken. Note that
+// this may happen regardless of the number of returned results -- the last page might have
+// 0 results (i.e., if the last item was deleted), pageSize results, or anything in between.
+//
+// Calling ListPage with an empty pageToken will immediately return io.EOF. When looping
+// over pages, callers can either check for an empty pageToken, or they can make one more
+// call and check for io.EOF.
+//
+// The underlying implementation fetches results in pages, but one call to ListPage may
+// require multiple page fetches (and therefore, multiple calls to the BeforeList callback).
+//
+// A nil ListOptions is treated the same as the zero value.
+//
+// ListPage is not guaranteed to include all recently-written blobs;
+// some services are only eventually consistent.
+func (b *Bucket) ListPage(ctx context.Context, pageToken []byte, pageSize int, opts *ListOptions) (retval []*ListObject, nextPageToken []byte, err error) {
+	if opts == nil {
+		opts = &ListOptions{}
+	}
+	if pageSize <= 0 {
+		return nil, nil, gcerr.Newf(gcerr.InvalidArgument, nil, "blob: pageSize must be > 0")
+	}
+
+	// Nil pageToken means no more results.
+	if len(pageToken) == 0 {
+		return nil, nil, io.EOF
+	}
+
+	// FirstPageToken fetches the first page. Drivers use nil.
+	// The public API doesn't use nil for the first page because it would be too easy to
+	// keep fetching forever (since the last page return nil for the next pageToken).
+	if bytes.Equal(pageToken, FirstPageToken) {
+		pageToken = nil
+	}
+	b.mu.RLock()
+	defer b.mu.RUnlock()
+	if b.closed {
+		return nil, nil, errClosed
+	}
+
+	ctx = b.tracer.Start(ctx, "ListPage")
+	defer func() { b.tracer.End(ctx, err) }()
+
+	dopts := &driver.ListOptions{
+		Prefix:     opts.Prefix,
+		Delimiter:  opts.Delimiter,
+		BeforeList: opts.BeforeList,
+		PageToken:  pageToken,
+		PageSize:   pageSize,
+	}
+	retval = make([]*ListObject, 0, pageSize)
+	for len(retval) < pageSize {
+		p, err := b.b.ListPaged(ctx, dopts)
+		if err != nil {
+			return nil, nil, wrapError(b.b, err, "")
+		}
+		for _, dobj := range p.Objects {
+			retval = append(retval, &ListObject{
+				Key:     dobj.Key,
+				ModTime: dobj.ModTime,
+				Size:    dobj.Size,
+				MD5:     dobj.MD5,
+				IsDir:   dobj.IsDir,
+				asFunc:  dobj.AsFunc,
+			})
+		}
+		// ListPaged may return fewer results than pageSize. If there are more results
+		// available, signalled by non-empty p.NextPageToken, try to fetch the remainder
+		// of the page.
+		// It does not work to ask for more results than we need, because then we'd have
+		// a NextPageToken on a non-page boundary.
+		dopts.PageSize = pageSize - len(retval)
+		dopts.PageToken = p.NextPageToken
+		if len(dopts.PageToken) == 0 {
+			dopts.PageToken = nil
+			break
+		}
+	}
+	return retval, dopts.PageToken, nil
+}
+
+// IsAccessible returns true if the bucket is accessible, false otherwise.
+// It is a shortcut for calling ListPage and checking if it returns an error
+// with code gcerrors.NotFound.
+func (b *Bucket) IsAccessible(ctx context.Context) (bool, error) {
+	_, _, err := b.ListPage(ctx, FirstPageToken, 1, nil)
+	if err == nil {
+		return true, nil
+	}
+	if gcerrors.Code(err) == gcerrors.NotFound {
+		return false, nil
+	}
+	return false, err
+}
+
 // Exists returns true if a blob exists at key, false if it does not exist, or
 // an error.
 // It is a shortcut for calling Attributes and checking if it returns an error
@@ -631,9 +758,11 @@ func (b *Bucket) Attributes(ctx context.Context, key string) (_ *Attributes, err
 		ContentLanguage:    a.ContentLanguage,
 		ContentType:        a.ContentType,
 		Metadata:           md,
+		CreateTime:         a.CreateTime,
 		ModTime:            a.ModTime,
 		Size:               a.Size,
 		MD5:                a.MD5,
+		ETag:               a.ETag,
 		asFunc:             a.AsFunc,
 	}, nil
 }
@@ -689,7 +818,13 @@ func (b *Bucket) newRangeReader(ctx context.Context, key string, offset, length 
 		return nil, wrapError(b.b, err, key)
 	}
 	end := func(err error) { b.tracer.End(tctx, err) }
-	r := &Reader{b: b.b, r: dr, key: key, end: end, provider: b.tracer.Provider}
+	r := &Reader{
+		b:                b.b,
+		r:                dr,
+		key:              key,
+		end:              end,
+		statsTagMutators: []tag.Mutator{tag.Upsert(oc.ProviderKey, b.tracer.Provider)},
+	}
 	_, file, lineno, ok := runtime.Caller(2)
 	runtime.SetFinalizer(r, func(r *Reader) {
 		if !r.closed {
@@ -796,13 +931,13 @@ func (b *Bucket) NewWriter(ctx context.Context, key string, opts *WriterOptions)
 	}()
 
 	w := &Writer{
-		b:          b.b,
-		end:        end,
-		cancel:     cancel,
-		key:        key,
-		contentMD5: opts.ContentMD5,
-		md5hash:    md5.New(),
-		provider:   b.tracer.Provider,
+		b:                b.b,
+		end:              end,
+		cancel:           cancel,
+		key:              key,
+		contentMD5:       opts.ContentMD5,
+		md5hash:          md5.New(),
+		statsTagMutators: []tag.Mutator{tag.Upsert(oc.ProviderKey, b.tracer.Provider)},
 	}
 	if opts.ContentType != "" {
 		t, p, err := mime.ParseMediaType(opts.ContentType)
@@ -926,6 +1061,7 @@ func (b *Bucket) SignedURL(ctx context.Context, key string, opts *SignedURLOptio
 	}
 	dopts.ContentType = opts.ContentType
 	dopts.EnforceAbsentContentType = opts.EnforceAbsentContentType
+	dopts.BeforeSign = opts.BeforeSign
 	b.mu.RLock()
 	defer b.mu.RUnlock()
 	if b.closed {
@@ -980,6 +1116,12 @@ type SignedURLOptions struct {
 	//
 	// Must be false for non-PUT requests.
 	EnforceAbsentContentType bool
+
+	// BeforeSign is a callback that will be called before each call to the
+	// the underlying service's sign functionality.
+	// asFunc converts its argument to driver-specific types.
+	// See https://gocloud.dev/concepts/as/ for background information.
+	BeforeSign func(asFunc func(interface{}) bool) error
 }
 
 // ReaderOptions sets options for NewReader and NewRangeReader.
@@ -1170,7 +1312,11 @@ func wrapError(b driver.Bucket, err error, key string) error {
 	if key != "" {
 		msg += fmt.Sprintf(" (key %q)", key)
 	}
-	return gcerr.New(b.ErrorCode(err), err, 2, msg)
+	code := gcerrors.Code(err)
+	if code == gcerrors.Unknown {
+		code = b.ErrorCode(err)
+	}
+	return gcerr.New(code, err, 2, msg)
 }
 
 var errClosed = gcerr.Newf(gcerr.FailedPrecondition, nil, "blob: Bucket has been closed")
