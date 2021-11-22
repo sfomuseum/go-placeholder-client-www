@@ -128,10 +128,14 @@ github.com/aaronland/go-http-rewrite v0.0.4 h1:lI8cDF/nINjuSPrYpwvlJLa1cC32h1nvm
 github.com/aaronland/go-http-rewrite v0.0.4/go.mod h1:g62jjXpsArD0lzJLs9bVLR9Locdt3f4OmqFkkJL2rQU=
 github.com/aaronland/go-http-rewrite v0.0.6 h1:IGmNgC+VIkOPw9h9kdhqZT48oaUbeaRgGMvy7k3HfPc=
 github.com/aaronland/go-http-rewrite v0.0.6/go.mod h1:+Ehclg6SIiQPEJlSv3LR+8rojSSYPLGQuDf2z9bChpY=
+github.com/aaronland/go-http-rewrite v0.0.7 h1:CBE5vYfI5bqp7ksMmgFIn0dGF5EcVZgiUlGOeg0xAws=
+github.com/aaronland/go-http-rewrite v0.0.7/go.mod h1:uK56Yz/ZezCbIepPhSWv0wji4ykabrcbp+of+YMDLiM=
 github.com/aaronland/go-http-sanitize v0.0.4 h1:oAYe5DbtbDS6x5Rygv5II6fDHzATGIAyY4/ZDZ63G2w=
 github.com/aaronland/go-http-sanitize v0.0.4/go.mod h1:qUi4rzUPcpMntpUFnHK00yQI5vd/Q7x9MFYwX91/ygI=
 github.com/aaronland/go-http-sanitize v0.0.5 h1:6I1WXwON6B6D0Ezjscef18O6x4DMFyaSQqbFB4dzc3Q=
 github.com/aaronland/go-http-sanitize v0.0.5/go.mod h1:qUi4rzUPcpMntpUFnHK00yQI5vd/Q7x9MFYwX91/ygI=
+github.com/aaronland/go-http-sanitize v0.0.6 h1:tlyIm16zOFrn+PfJlBCmTgFV9URwCho2/YlB9iAj8Eg=
+github.com/aaronland/go-http-sanitize v0.0.6/go.mod h1:qUi4rzUPcpMntpUFnHK00yQI5vd/Q7x9MFYwX91/ygI=
 github.com/aaronland/go-http-server v0.0.3 h1:VyiOxUqgJccamLQNOx7p0D3qE9K5RUe3TKe8vy3gZa4=
 github.com/aaronland/go-http-server v0.0.3/go.mod h1:i7CG6Q9iRKZX4qonIYr73GtJpVHV8T31eZ4Ug44zOTU=
 github.com/aaronland/go-http-server v0.0.5 h1:DxQKt2tcoq27gjqMJ9/wKyTu0briY9lPuKwBTXXh90o=
@@ -156,6 +160,8 @@ github.com/aaronland/go-http-tangramjs v0.1.0 h1:cCEUObJVWG2ewNYW1zfdcvS+fNqYTsA
 github.com/aaronland/go-http-tangramjs v0.1.0/go.mod h1:WgtxBvBN6LR65g5OpjUiu0LPvj+/+S69bBdpOZ14l4M=
 github.com/aaronland/go-http-tangramjs v0.1.1 h1:iMFoAWaI2ALfHDNDE6VKynhvX2Cny+SE8wujOhBtG9s=
 github.com/aaronland/go-http-tangramjs v0.1.1/go.mod h1:WgtxBvBN6LR65g5OpjUiu0LPvj+/+S69bBdpOZ14l4M=
+github.com/aaronland/go-http-tangramjs v0.1.2 h1:viETpLhuiECDtE6vN0cW8tGpluzpC5kFX5hcxXr1tmQ=
+github.com/aaronland/go-http-tangramjs v0.1.2/go.mod h1:eY6CNHXs/SN79xIG1w1VVsaIgbOqPE/dH1WXsv8MNko=
 github.com/aaronland/go-roster v0.0.1 h1:r1l4n1HfWvEtOXZvhfXX0Won9Xf6QJsigdUdzOtuy/M=
 github.com/aaronland/go-roster v0.0.1/go.mod h1:AcovpxlG1XxJxX2Fjqlm63fEIBhCjEIBV4lP87FZDmI=
 github.com/aaronland/go-roster v0.0.2 h1:2Fu7v4VQLRLRL/Zgr6R9S5JxsW75Ab/K88QtMVX532s=
@@ -613,6 +619,8 @@ golang.org/x/net v0.0.0-20210420210106-798c2154c571/go.mod h1:72T/g9IO56b78aLF+1
 golang.org/x/net v0.0.0-20210503060351-7fd8e65b6420/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/net v0.0.0-20210505214959-0714010a04ed h1:V9kAVxLvz1lkufatrpHuUVyJ/5tR3Ms7rk951P4mI98=
 golang.org/x/net v0.0.0-20210505214959-0714010a04ed/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
+golang.org/x/net v0.0.0-20210525063256-abc453219eb5 h1:wjuX4b5yYQnEQHzd+CBcrcC6OVR2J1CN6mUy0oSxIPo=
+golang.org/x/net v0.0.0-20210525063256-abc453219eb5/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
 golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
 golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=

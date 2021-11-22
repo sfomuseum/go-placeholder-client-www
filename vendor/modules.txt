@@ -8,15 +8,15 @@ github.com/aaronland/go-http-leaflet/static
 # github.com/aaronland/go-http-ping v1.0.0
 ## explicit
 github.com/aaronland/go-http-ping
-# github.com/aaronland/go-http-rewrite v0.0.6
+# github.com/aaronland/go-http-rewrite v0.0.7
 github.com/aaronland/go-http-rewrite
-# github.com/aaronland/go-http-sanitize v0.0.5
+# github.com/aaronland/go-http-sanitize v0.0.6
 ## explicit
 github.com/aaronland/go-http-sanitize
 # github.com/aaronland/go-http-server v0.0.7
 ## explicit
 github.com/aaronland/go-http-server
-# github.com/aaronland/go-http-tangramjs v0.1.1
+# github.com/aaronland/go-http-tangramjs v0.1.2
 ## explicit
 github.com/aaronland/go-http-tangramjs
 github.com/aaronland/go-http-tangramjs/static
@@ -112,7 +112,7 @@ gocloud.dev/internal/gcerr
 gocloud.dev/internal/oc
 gocloud.dev/internal/openurl
 gocloud.dev/internal/retry
-# golang.org/x/net v0.0.0-20210505214959-0714010a04ed
+# golang.org/x/net v0.0.0-20210525063256-abc453219eb5
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/http/httpguts
