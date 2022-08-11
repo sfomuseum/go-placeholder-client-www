@@ -35,7 +35,7 @@ func main() {
 
 	server_uri := fs.String("server-uri", "http://localhost:8080", "...")
 
-	prefix := fs.String("prefix", "", "Prepend this prefix to URLs.")
+	prefix := fs.String("prefix", "", "Prepend this prefix to application URLs.")
 	static_prefix := fs.String("static-prefix", "", "Prepend this prefix to URLs for static assets.")
 
 	nextzen_apikey := fs.String("nextzen-apikey", "", "A valid Nextzen API key")

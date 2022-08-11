@@ -17,8 +17,7 @@ This is work in progress. It works but the documentation is not complete. There 
 ### server
 
 ```
-$> server -h
-Usage of server:
+$> ./bin/server -h
   -api
     	Enable an API endpoint for Placeholder functionality.
   -api-autocomplete
@@ -34,7 +33,7 @@ Usage of server:
   -nextzen-style-url string
     	... (default "/tangram/refill-style.zip")
   -nextzen-tile-url string
-    	... (default "https://{s}.tile.nextzen.org/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt")
+    	... (default "https://tile.nextzen.org/tilezen/vector/v1/512/all/{z}/{x}/{y}.mvt")
   -opensearch
     	... (default true)
   -opensearch-plugin-url string
@@ -45,6 +44,8 @@ Usage of server:
     	...
   -placeholder-endpoint string
     	The address of the Placeholder endpoint to query. (default "http://localhost:3000")
+  -prefix string
+    	Prepend this prefix to application URLs.
   -proxy-test-network
     	Ensure outbound network connectivity for proxy tiles
   -proxy-tiles
