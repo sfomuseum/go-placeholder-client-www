@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/aaronland/go-http-bootstrap"
-	"github.com/aaronland/go-http-ping"
+	"github.com/aaronland/go-http-ping/v2"
 	"github.com/aaronland/go-http-server"
 	"github.com/aaronland/go-http-tangramjs"
 	"github.com/rs/cors"
@@ -120,7 +120,7 @@ func main() {
 
 	mux := gohttp.NewServeMux()
 
-	ping_handler, err := ping.PingHandler()
+	ping_handler, err := ping.PingPongHandler()
 
 	if err != nil {
 		log.Fatal(err)

@@ -1,8 +1,6 @@
 package blob
 
 import (
-	"bufio"
-	"bytes"
 	"context"
 	wof_cache "github.com/whosonfirst/go-cache"
 	"github.com/whosonfirst/go-ioutil"
@@ -70,7 +68,7 @@ func (c *BlobCache) Get(ctx context.Context, key string) (io.ReadSeekCloser, err
 	return ioutil.NewReadSeekCloser(fh)
 }
 
-func (c *BlobCache) Set(ctx context.Context, key string, fh io.ReadSeekCloser) (io.ReadSeekCloser, error) {
+func (c *BlobCache) Set(ctx context.Context, key string, r io.ReadSeekCloser) (io.ReadSeekCloser, error) {
 
 	var wr_opts *blob.WriterOptions
 
@@ -86,19 +84,6 @@ func (c *BlobCache) Set(ctx context.Context, key string, fh io.ReadSeekCloser) (
 		return nil, err
 	}
 
-	// this is not awesome but until we update all the things (and
-	// in particular all the go-whosonfirst-readwrite stuff) to be
-	// ReadSeekCloser thingies it's what necessary...
-	// (20180617/thisisaaronland)
-
-	var b bytes.Buffer
-	wr := bufio.NewWriter(&b)
-
-	io.Copy(wr, fh)
-	wr.Flush()
-
-	r := bytes.NewReader(b.Bytes())
-
 	_, err = io.Copy(bucket_wr, r)
 
 	if err != nil {
@@ -113,8 +98,13 @@ func (c *BlobCache) Set(ctx context.Context, key string, fh io.ReadSeekCloser) (
 
 	atomic.AddInt64(&c.sets, 1)
 
-	r.Reset(b.Bytes())
-	return ioutil.NewReadSeekCloser(r)
+	_, err = r.Seek(0, 0)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return r, nil
 }
 
 func (c *BlobCache) Unset(ctx context.Context, key string) error {

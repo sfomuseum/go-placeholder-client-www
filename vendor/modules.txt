@@ -5,23 +5,25 @@ github.com/aaronland/go-http-bootstrap/static
 # github.com/aaronland/go-http-leaflet v0.1.0
 github.com/aaronland/go-http-leaflet
 github.com/aaronland/go-http-leaflet/static
-# github.com/aaronland/go-http-ping v1.0.0
+# github.com/aaronland/go-http-ping/v2 v2.0.0
 ## explicit
-github.com/aaronland/go-http-ping
+github.com/aaronland/go-http-ping/v2
 # github.com/aaronland/go-http-rewrite v0.0.7
 github.com/aaronland/go-http-rewrite
 # github.com/aaronland/go-http-sanitize v0.0.6
 ## explicit
 github.com/aaronland/go-http-sanitize
-# github.com/aaronland/go-http-server v0.0.7
+# github.com/aaronland/go-http-server v1.0.0
 ## explicit
 github.com/aaronland/go-http-server
 # github.com/aaronland/go-http-tangramjs v0.1.2
 ## explicit
 github.com/aaronland/go-http-tangramjs
 github.com/aaronland/go-http-tangramjs/static
-# github.com/aaronland/go-roster v0.0.2
+# github.com/aaronland/go-roster v1.0.0
 github.com/aaronland/go-roster
+# github.com/akrylysov/algnhsa v0.12.1
+github.com/akrylysov/algnhsa
 # github.com/aws/aws-lambda-go v1.10.0
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
@@ -36,8 +38,10 @@ github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
-# github.com/googleapis/gax-go/v2 v2.0.5
+# github.com/googleapis/gax-go/v2 v2.2.0
 github.com/googleapis/gax-go/v2
+github.com/googleapis/gax-go/v2/apierror
+github.com/googleapis/gax-go/v2/apierror/internal/proto
 # github.com/jtacoma/uritemplates v1.0.0
 github.com/jtacoma/uritemplates
 # github.com/patrickmn/go-cache v2.1.0+incompatible
@@ -48,10 +52,10 @@ github.com/paulmach/orb/clip
 github.com/paulmach/orb/geojson
 github.com/paulmach/orb/internal/mercator
 github.com/paulmach/orb/maptile
-# github.com/rs/cors v1.8.0
+# github.com/rs/cors v1.8.2
 ## explicit
 github.com/rs/cors
-# github.com/sfomuseum/go-flags v0.8.2
+# github.com/sfomuseum/go-flags v0.8.3
 ## explicit
 github.com/sfomuseum/go-flags/flagset
 github.com/sfomuseum/go-flags/multi
@@ -75,15 +79,13 @@ github.com/tidwall/gjson
 github.com/tidwall/match
 # github.com/tidwall/pretty v1.1.0
 github.com/tidwall/pretty
-# github.com/whosonfirst/algnhsa v0.1.0
-github.com/whosonfirst/algnhsa
-# github.com/whosonfirst/go-cache v0.5.0
+# github.com/whosonfirst/go-cache v0.5.1
 ## explicit
 github.com/whosonfirst/go-cache
-# github.com/whosonfirst/go-cache-blob v0.2.0
+# github.com/whosonfirst/go-cache-blob v0.2.1
 ## explicit
 github.com/whosonfirst/go-cache-blob
-# github.com/whosonfirst/go-ioutil v1.0.0
+# github.com/whosonfirst/go-ioutil v1.0.2
 github.com/whosonfirst/go-ioutil
 # github.com/whosonfirst/go-sanitize v0.1.0
 ## explicit
@@ -104,7 +106,7 @@ go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/propagation
 go.opencensus.io/trace/tracestate
-# gocloud.dev v0.23.0
+# gocloud.dev v0.26.0
 gocloud.dev/blob
 gocloud.dev/blob/driver
 gocloud.dev/gcerrors
@@ -112,7 +114,7 @@ gocloud.dev/internal/gcerr
 gocloud.dev/internal/oc
 gocloud.dev/internal/openurl
 gocloud.dev/internal/retry
-# golang.org/x/net v0.0.0-20210525063256-abc453219eb5
+# golang.org/x/net v0.0.0-20220401154927-543a649e0bdd
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/http/httpguts
@@ -121,10 +123,10 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
-# golang.org/x/sys v0.0.0-20210503173754-0981d6026fa6
+# golang.org/x/sys v0.0.0-20220330033206-e17cdc41300f
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
-# golang.org/x/text v0.3.6
+# golang.org/x/text v0.3.7
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
@@ -132,9 +134,14 @@ golang.org/x/text/unicode/norm
 # golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
-# google.golang.org/genproto v0.0.0-20210506142907-4a47615972c2
+# google.golang.org/api v0.74.0
+google.golang.org/api/googleapi
+google.golang.org/api/internal/third_party/uritemplates
+# google.golang.org/genproto v0.0.0-20220401170504-314d38edb7de
+google.golang.org/genproto/googleapis/rpc/code
+google.golang.org/genproto/googleapis/rpc/errdetails
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.37.0
+# google.golang.org/grpc v1.45.0
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
@@ -146,6 +153,7 @@ google.golang.org/grpc/binarylog/grpc_binarylog_v1
 google.golang.org/grpc/codes
 google.golang.org/grpc/connectivity
 google.golang.org/grpc/credentials
+google.golang.org/grpc/credentials/insecure
 google.golang.org/grpc/encoding
 google.golang.org/grpc/encoding/proto
 google.golang.org/grpc/grpclog
@@ -179,13 +187,15 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.26.0
+# google.golang.org/protobuf v1.28.0
+google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire
 google.golang.org/protobuf/internal/descfmt
 google.golang.org/protobuf/internal/descopts
 google.golang.org/protobuf/internal/detrand
 google.golang.org/protobuf/internal/encoding/defval
+google.golang.org/protobuf/internal/encoding/json
 google.golang.org/protobuf/internal/encoding/messageset
 google.golang.org/protobuf/internal/encoding/tag
 google.golang.org/protobuf/internal/encoding/text
