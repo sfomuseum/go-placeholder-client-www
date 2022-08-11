@@ -21,6 +21,7 @@ import (
 	"html/template"
 	"log"
 	gohttp "net/http"
+	"net/url"
 	"path/filepath"
 	"strings"
 	"time"
@@ -34,6 +35,7 @@ func main() {
 
 	server_uri := fs.String("server-uri", "http://localhost:8080", "...")
 
+	prefix := fs.String("prefix", "", "Prepend this prefix to URLs.")
 	static_prefix := fs.String("static-prefix", "", "Prepend this prefix to URLs for static assets.")
 
 	nextzen_apikey := fs.String("nextzen-apikey", "", "A valid Nextzen API key")
@@ -76,8 +78,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	search_path := "/"
+	search_url := "/"
 
+	if *prefix != "" {
+
+		search_url, _ = url.JoinPath(*prefix, search_url)
+
+		*api_url, _ = url.JoinPath(*prefix, *api_url)
+		*opensearch_url, _ = url.JoinPath(*prefix, *opensearch_url)
+		*ready_url, _ = url.JoinPath(*prefix, *ready_url)
+
+		*nextzen_tile_url, _  = url.JoinPath(*prefix, *nextzen_tile_url)
+		*proxy_tiles_url, _ = url.JoinPath(*prefix, *proxy_tiles_url)		
+	}
+
+	
 	cl, err := client.NewPlaceholderClient(*placeholder_endpoint)
 
 	if err != nil {
@@ -243,11 +258,11 @@ func main() {
 	if *enable_opensearch {
 
 		if *opensearch_search_template == "" {
-			*opensearch_search_template = filepath.Join(*server_uri, search_path)
+			*opensearch_search_template = filepath.Join(*server_uri, search_url)
 		}
 
 		if *opensearch_search_form == "" {
-			*opensearch_search_form = filepath.Join(*server_uri, search_path)
+			*opensearch_search_form = filepath.Join(*server_uri, search_url)
 		}
 
 		os_desc_opts := &os.BasicDescriptionOptions{
@@ -290,7 +305,7 @@ func main() {
 
 	// auth-y bits go here...
 
-	mux.Handle(search_path, search_handler)
+	mux.Handle(search_url, search_handler)
 
 	err = tangramjs.AppendAssetHandlersWithPrefix(mux, *static_prefix)
 
