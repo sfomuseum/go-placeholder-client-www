@@ -24,7 +24,7 @@ github.com/aaronland/go-http-tangramjs/static
 github.com/aaronland/go-roster
 # github.com/akrylysov/algnhsa v0.12.1
 github.com/akrylysov/algnhsa
-# github.com/aws/aws-lambda-go v1.10.0
+# github.com/aws/aws-lambda-go v1.9.0
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
@@ -46,7 +46,7 @@ github.com/googleapis/gax-go/v2/apierror/internal/proto
 github.com/jtacoma/uritemplates
 # github.com/patrickmn/go-cache v2.1.0+incompatible
 github.com/patrickmn/go-cache
-# github.com/paulmach/orb v0.2.2
+# github.com/paulmach/orb v0.7.1
 github.com/paulmach/orb
 github.com/paulmach/orb/clip
 github.com/paulmach/orb/geojson
@@ -63,7 +63,7 @@ github.com/sfomuseum/go-flags/multi
 ## explicit
 github.com/sfomuseum/go-http-opensearch
 github.com/sfomuseum/go-http-opensearch/http
-# github.com/sfomuseum/go-http-tilezen v0.0.6
+# github.com/sfomuseum/go-http-tilezen v0.0.7
 ## explicit
 github.com/sfomuseum/go-http-tilezen/http
 # github.com/sfomuseum/go-placeholder-client v0.0.4
@@ -71,13 +71,13 @@ github.com/sfomuseum/go-http-tilezen/http
 github.com/sfomuseum/go-placeholder-client
 github.com/sfomuseum/go-placeholder-client/filters
 github.com/sfomuseum/go-placeholder-client/results
-# github.com/sfomuseum/go-tilezen v0.0.4
+# github.com/sfomuseum/go-tilezen v0.0.6
 github.com/sfomuseum/go-tilezen
-# github.com/tidwall/gjson v1.8.0
+# github.com/tidwall/gjson v1.14.2
 github.com/tidwall/gjson
-# github.com/tidwall/match v1.0.3
+# github.com/tidwall/match v1.1.1
 github.com/tidwall/match
-# github.com/tidwall/pretty v1.1.0
+# github.com/tidwall/pretty v1.2.0
 github.com/tidwall/pretty
 # github.com/whosonfirst/go-cache v0.5.1
 ## explicit
