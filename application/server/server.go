@@ -10,6 +10,7 @@ import (
 	"github.com/aaronland/go-http-tangramjs"
 	"github.com/rs/cors"
 	"github.com/sfomuseum/go-flags/flagset"
+	"github.com/sfomuseum/go-http-auth"
 	os "github.com/sfomuseum/go-http-opensearch"
 	oshttp "github.com/sfomuseum/go-http-opensearch/http"
 	tzhttp "github.com/sfomuseum/go-http-tilezen/http"
@@ -65,6 +66,8 @@ func DefaultFlagSet() *flag.FlagSet {
 	fs.StringVar(&ready_url, "ready-check-url", "/ready/", "The URL (a relative path) for the Placeholder \"ready\" check handler.")
 
 	fs.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.")
+
+	fs.StringVar(&authenticator_uri, "authenticator-uri", "null://", "A valid sfomuseum/go-http-auth.Authenticator URI.")
 
 	return fs
 }
@@ -136,6 +139,35 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		}
 	}
 
+	/*
+
+		create a sfomuseum/go-http-auth instance for handling authentication
+		the default authenticator is null:// which allows all requests - if
+		you need something more resrictive you will need to create a custom
+		implementation of the auth.Authenticator interface and load it like
+		this (for example):
+
+		package main
+
+		import (
+			"context"
+			_ "github.com/{YOU}/{YOUR_AUTHENTICATOR_IMPLEMENTATION}"
+			"github.com/sfomuseum/go-placeholder-client-www/application/server"
+		)
+
+		func main() {
+			ctx := context.Background()
+			server.Run(ctx)
+		}
+
+	*/
+
+	authenticator, err := auth.NewAuthenticator(ctx, authenticator_uri)
+
+	if err != nil {
+		return fmt.Errorf("Failed to create authenticator, %w", err)
+	}
+
 	// handlers
 
 	mux := gohttp.NewServeMux()
@@ -143,7 +175,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 	ping_handler, err := ping.PingPongHandler()
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to create ping handler, %w", err)
 	}
 
 	mux.Handle("/ping", ping_handler)
@@ -154,7 +186,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		tile_cache, err := cache.NewCache(ctx, proxy_tiles_cache)
 
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			return fmt.Errorf("Failed to create proxy tile cache, %w", err)
 		}
 
 		timeout := time.Duration(proxy_tiles_timeout) * time.Second
@@ -167,7 +199,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		proxy_handler, err := tzhttp.TilezenProxyHandler(proxy_opts)
 
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			return fmt.Errorf("Failed to create proxy tile handler, %w", err)
 		}
 
 		if proxy_test_network {
@@ -178,7 +210,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 			req, err := gohttp.NewRequest("GET", "tile.nextzen.org", nil)
 
 			if err != nil {
-				return fmt.Errorf("%v", err)
+				return fmt.Errorf("Failed to create request for tile.nextzen.org, %w", err)
 			}
 
 			cl := new(gohttp.Client)
@@ -186,7 +218,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 			_, err = cl.Do(req.WithContext(test_ctx))
 
 			if err != nil {
-				return fmt.Errorf("%v", err)
+				return fmt.Errorf("Failed to contact tile.nextzen.org, %w", err)
 			}
 
 		}
@@ -224,7 +256,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 	err = bootstrap.AppendAssetHandlersWithPrefix(mux, static_prefix)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to append Bootstrap assets, %w", err)
 	}
 
 	if enable_ready {
@@ -254,7 +286,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 	search_handler, err := http.NewSearchHandler(search_opts)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to create search handler, %w", err)
 	}
 
 	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, static_prefix)
@@ -282,7 +314,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		os_desc, err := os.BasicDescription(os_desc_opts)
 
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			return fmt.Errorf("Failed to create opensearc description, %w", err)
 		}
 
 		os_handler_opts := &oshttp.OpenSearchHandlerOptions{
@@ -292,7 +324,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		os_handler, err := oshttp.OpenSearchHandler(os_handler_opts)
 
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			return fmt.Errorf("Failed to create opensearch handler, %w", err)
 		}
 
 		mux.Handle(opensearch_url, os_handler)
@@ -308,31 +340,31 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		search_handler = oshttp.AppendPluginsHandler(search_handler, os_plugins_opts)
 	}
 
-	// auth-y bits go here...
+	search_handler = authenticator.WrapHandler(search_handler)
 
 	mux.Handle(search_url, search_handler)
 
 	err = tangramjs.AppendAssetHandlersWithPrefix(mux, static_prefix)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to append Tangram assets, %w", err)
 	}
 
 	err = http.AppendStaticAssetHandlersWithPrefix(mux, static_prefix)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to append application assets, %w", err)
 	}
 
 	if enable_api {
 
 		api_opts := http.DefaultAPIHandlerOptions()
 		api_opts.EnableSearchAutoComplete = enable_api_autocomplete
-
+		
 		api_handler, err := http.NewAPIHandler(cl, api_opts)
 
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			return fmt.Errorf("Failed to create API handler, %w", err)
 		}
 
 		if enable_cors {
@@ -343,6 +375,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 			api_handler = cors_wrapper.Handler(api_handler)
 		}
 
+		api_handler = authenticator.WrapHandler(api_handler)
 		mux.Handle(api_url, api_handler)
 	}
 
@@ -351,7 +384,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 	s, err := server.NewServer(ctx, server_uri)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to create new server, %w", err)
 	}
 
 	log.Printf("Listening on %s\n", s.Address())
@@ -359,7 +392,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 	err = s.ListenAndServe(ctx, mux)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to serve requests, %w", err)
 	}
 
 	return nil

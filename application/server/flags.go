@@ -51,3 +51,5 @@ var ready_ttl int
 var ready_url string
 
 var cors_origins multi.MultiString
+
+var authenticator_uri string

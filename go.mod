@@ -10,6 +10,7 @@ require (
 	github.com/aaronland/go-http-tangramjs v0.1.2
 	github.com/rs/cors v1.8.2
 	github.com/sfomuseum/go-flags v0.8.3
+	github.com/sfomuseum/go-http-auth v0.0.2
 	github.com/sfomuseum/go-http-opensearch v0.0.1
 	github.com/sfomuseum/go-http-tilezen v0.0.7
 	github.com/sfomuseum/go-placeholder-client v0.0.4

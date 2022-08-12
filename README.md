@@ -17,13 +17,15 @@ This is work in progress. It works but the documentation is not complete. There 
 ### server
 
 ```
-$> ./bin/server -h
+> ./bin/server -h
   -api
     	Enable an API endpoint for Placeholder functionality.
   -api-autocomplete
     	Enable autocomplete for the 'search' API endpoint.
   -api-url string
     	The URL (a relative path) for the API endpoint. (default "/api/")
+  -authenticator-uri string
+    	A valid sfomuseum/go-http-auth.Authenticator URI. (default "null://")
   -cors
     	Enable CORS support for the API endpoint.
   -cors-origin value
@@ -75,6 +77,37 @@ go run -mod vendor cmd/server/main.go \
 	-nextzen-apikey {NEXTZEN_APIKEY} \
 	-proxy-tiles
 	-proxy-tiles-dsn 'cache=blob blob=s3://{S3_BUCKET}?region={S3_REGION}&credentials={AWS_CREDENTIALS'
+```
+
+### Authentication
+
+Authentication is performed using the [sfomuseum/go-http-auth](https://github.com/sfomuseum/go-http-auth) package. The default "authenticator" is that package's `NullAuthenticator` which allows all requests. For example:
+
+```
+	authenticator_uri := "null://"
+	authenticator, err := auth.NewAuthenticator(ctx, authenticator_uri)
+
+	search_handler, err := http.NewSearchHandler(search_opts)
+	search_handler = authenticator.WrapHandler(search_handler)
+
+	mux.Handle(search_url, search_handler)	
+```
+
+If you want to restrict access to the /search and /api endpoints you will need to implement the `auth.Authenticator` interface to limit access in the `WrapHandler` method and then load it something like this:
+
+```
+package main
+
+import (
+	"context"
+	_ "github.com/{YOU}/{YOUR_AUTHENTICATOR_IMPLEMENTATION}"
+	"github.com/sfomuseum/go-placeholder-client-www/application/server"
+)
+
+func main() {
+	ctx := context.Background()
+	server.Run(ctx)
+}
 ```
 
 ## AWS
