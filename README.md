@@ -46,8 +46,6 @@ This is work in progress. It works but the documentation is not complete. There 
     	...
   -placeholder-endpoint string
     	The address of the Placeholder endpoint to query. (default "http://localhost:3000")
-  -prefix string
-    	Prepend this prefix to application URLs.
   -proxy-test-network
     	Ensure outbound network connectivity for proxy tiles
   -proxy-tiles
@@ -68,6 +66,10 @@ This is work in progress. It works but the documentation is not complete. There 
     	... (default "http://localhost:8080")
   -static-prefix string
     	Prepend this prefix to URLs for static assets.
+  -url-prefix string
+    	Prepend this prefix to application URLs.
+  -www
+    	Enable a human-facing web endpoint for Placeholder functionality. (default true)
 ```
 
 For example
