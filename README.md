@@ -136,18 +136,11 @@ The documentation that follows is specific to the first scenario (Lambda + API G
 
 ### Lambda
 
-This assumes you are running `cmd/server/main.go` as a Lambda function and connecting to an instance of Placeholder running inside ECS Fargate instance.
-
 #### Roles
 
 You will need a `IAM` role with the following (AWS managed) policies:
 
 * `AWSLambdaBasicExecutionRole`
-* `AWSLambdaVPCAccessExecutionRole`
-
-#### VPC
-
-_Please write me._
 
 #### Environment variables
 
@@ -155,7 +148,8 @@ _Please write me._
 | --- | --- | --- |
 | PLACEHOLDER_PROTOCOL | `lambda` | yes |
 | PLACEHOLDER_PLACEHOLDER_ENDPOINT | string | yes |
-| PLACEHOLDER_NEXZEN_APIKEY | string | yes | 
+| PLACEHOLDER_NEXZEN_APIKEY | string | yes |
+| PLACEHOLDER_URL_PREFIX | string | no |
 | PLACEHOLDER_STATIC_PREFIX | string | no |
 | PLACEHOLDER_API | boolean | no |
 | PLACEHOLDER_API_AUTOCOMPLETE | boolean | no |
@@ -168,6 +162,24 @@ _Please write me._
 | PLACEHOLDER_OPENSEARCH_PLUGIN_URL | string | no, but probably |
 | PLACEHOLDER_OPENSEARCH_SEARCH_FORM | string | no, but probably |
 | PLACEHOLDER_OPENSEARCH_SEARCH_TEMPLATE | string | no, but probably |
+| PLACEHOLDER_AUTHENTICATOR_URI | string | no, default is `null://` which allows all connections |
+
+#### "Static" and "URL" prefixes
+
+`PLACEHOLDER_STATIC_PREFIX` is the prefix that gets appended to linked resources in HTML pages. `PLACEHOLDER_URL_PREFIX` is the prefix that gets appended to URLs ("routes") that the HTTP service serves.
+
+This gets weird and fussy in an API Gateway context because of the "stage" that gets appended. For example:
+
+| URL | PLACEHOLDER_STATIC_PREFIX | PLACEHOLDER_URL_PREFIX |
+| https://{EXAMPLE}.execute-api.us-west-2.amazonaws.com/prod/placeholder/?text=boston | /prod/placeholder | /placeholder |
+| https://{EXAMPLE}.com/placeholder/?text=dallas | /placeholder | /placeholder |
+
+Remember:
+
+1) The Placeholder Lambda function integration is hanging off a `/placeholder` resource (rather than `/`)
+2) The CloudFront origin (that references the API Gateway) has an origin path of `/prod` defined
+
+Good times...
 
 #### Nextzen style URLs in a Lambda context
 
@@ -203,3 +215,4 @@ Note the `-host 0.0.0.0` part. This is important. Without it the health checks p
 * https://github.com/aaronland/go-http-leaflet
 * https://github.com/sfomuseum/go-http-tilezen
 * https://github.com/sfomuseum/go-http-opensearch
+* https://github.com/sfomuseum/go-http-auth
