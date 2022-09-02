@@ -3,6 +3,7 @@ package http
 import (
 	"errors"
 	"github.com/aaronland/go-http-sanitize"
+	"github.com/sfomuseum/go-http-auth"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client/results"
 	"html/template"
@@ -27,6 +28,7 @@ type SearchHandlerOptions struct {
 	URLPrefix         string
 	EnableReadyCheck  bool
 	ReadyCheckURL     string
+	Authenticator     auth.Authenticator
 }
 
 func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
@@ -42,6 +44,13 @@ func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
 	})
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
+
+		_, err := opts.Authenticator.GetAccountForRequest(req)
+
+		if err != nil {
+			gohttp.Error(rsp, err.Error(), gohttp.StatusForbidden)
+			return
+		}
 
 		text, err := sanitize.GetString(req, "text")
 

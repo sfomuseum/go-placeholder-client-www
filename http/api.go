@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/aaronland/go-http-sanitize"
+	"github.com/sfomuseum/go-http-auth"
 	"github.com/sfomuseum/go-placeholder-client"
 	_ "log"
 	gohttp "net/http"
@@ -29,6 +30,7 @@ func getString(req *gohttp.Request, param string) (string, error) {
 
 type APIHandlerOptions struct {
 	EnableSearchAutoComplete bool
+	Authenticator            auth.Authenticator
 }
 
 func DefaultAPIHandlerOptions() *APIHandlerOptions {
@@ -43,6 +45,13 @@ func DefaultAPIHandlerOptions() *APIHandlerOptions {
 func NewAPIHandler(cl *client.PlaceholderClient, opts *APIHandlerOptions) (gohttp.Handler, error) {
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
+
+		_, err := opts.Authenticator.GetAccountForRequest(req)
+
+		if err != nil {
+			gohttp.Error(rsp, err.Error(), gohttp.StatusForbidden)
+			return
+		}
 
 		var api_results interface{}
 		var api_err error

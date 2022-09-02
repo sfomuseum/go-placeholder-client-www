@@ -162,6 +162,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 
 	*/
 
+	log.Println("AUTH", authenticator_uri)
 	authenticator, err := auth.NewAuthenticator(ctx, authenticator_uri)
 
 	if err != nil {
@@ -276,6 +277,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		PlaceholderClient: cl,
 		Templates:         t,
 		URLPrefix:         static_prefix,
+		Authenticator:     authenticator,
 	}
 
 	if enable_ready {
@@ -360,7 +362,8 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 
 		api_opts := http.DefaultAPIHandlerOptions()
 		api_opts.EnableSearchAutoComplete = enable_api_autocomplete
-		
+		api_opts.Authenticator = authenticator
+
 		api_handler, err := http.NewAPIHandler(cl, api_opts)
 
 		if err != nil {
