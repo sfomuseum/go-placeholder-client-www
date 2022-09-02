@@ -11,7 +11,6 @@ up:
 	docker-compose up --abort-on-container-exit
 
 lambda:
-	@make bake
 	if test -f main; then rm -f main; fi
 	if test -f deployment.zip; then rm -f deployment.zip; fi
 	GOOS=linux go build -mod vendor -o main cmd/server/main.go
