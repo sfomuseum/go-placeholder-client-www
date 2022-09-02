@@ -28,50 +28,6 @@ import (
 	"time"
 )
 
-func DefaultFlagSet() *flag.FlagSet {
-
-	fs := flagset.NewFlagSet("placeholder-client")
-
-	fs.StringVar(&placeholder_endpoint, "placeholder-endpoint", client.DEFAULT_ENDPOINT, "The address of the Placeholder endpoint to query.")
-
-	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "...")
-
-	fs.StringVar(&prefix, "prefix", "", "Prepend this prefix to application URLs.")
-	fs.StringVar(&static_prefix, "static-prefix", "", "Prepend this prefix to URLs for static assets.")
-
-	fs.StringVar(&nextzen_apikey, "nextzen-apikey", "", "A valid Nextzen API key")
-	fs.StringVar(&nextzen_style_url, "nextzen-style-url", "/tangram/refill-style.zip", "...")
-	fs.StringVar(&nextzen_tile_url, "nextzen-tile-url", tangramjs.NEXTZEN_MVT_ENDPOINT, "...")
-
-	fs.BoolVar(&proxy_tiles, "proxy-tiles", false, "Proxy (and cache) Nextzen tiles.")
-	fs.StringVar(&proxy_tiles_url, "proxy-tiles-url", "/tiles/", "The URL (a relative path) for proxied tiles.")
-	fs.StringVar(&proxy_tiles_url, "proxy-tiles-dsn", "gocache://", "A valid tile proxy DSN string.")
-	fs.IntVar(&proxy_tiles_timeout, "proxy-tiles-timeout", 30, "The maximum number of seconds to allow for fetching a tile from the proxy.")
-	fs.BoolVar(&proxy_test_network, "proxy-test-network", false, "Ensure outbound network connectivity for proxy tiles")
-
-	fs.BoolVar(&enable_api, "api", false, "Enable an API endpoint for Placeholder functionality.")
-	fs.BoolVar(&enable_api_autocomplete, "api-autocomplete", false, "Enable autocomplete for the 'search' API endpoint.")
-
-	fs.BoolVar(&enable_opensearch, "opensearch", true, "...")
-
-	fs.StringVar(&api_url, "api-url", "/api/", "The URL (a relative path) for the API endpoint.")
-	fs.BoolVar(&enable_cors, "cors", false, "Enable CORS support for the API endpoint.")
-
-	fs.StringVar(&opensearch_url, "opensearch-plugin-url", "/opensearch/", "...")
-	fs.StringVar(&opensearch_search_template, "opensearch-search-template", "", "...")
-	fs.StringVar(&opensearch_search_form, "opensearch-search-form", "", "...")
-
-	fs.BoolVar(&enable_ready, "ready-check", true, "Enable the Placeholder \"ready\" check handler.")
-	fs.IntVar(&ready_ttl, "ready-check-ttl", 60, "The time to live, in seconds, for the Placeholder \"check\".")
-	fs.StringVar(&ready_url, "ready-check-url", "/ready/", "The URL (a relative path) for the Placeholder \"ready\" check handler.")
-
-	fs.Var(&cors_origins, "cors-origin", "One or more hosts to restrict CORS support to on the API endpoint. If no origins are defined (and -cors is enabled) then the server will default to all hosts.")
-
-	fs.StringVar(&authenticator_uri, "authenticator-uri", "null://", "A valid sfomuseum/go-http-auth.Authenticator URI.")
-
-	return fs
-}
-
 func Run(ctx context.Context) error {
 	fs := DefaultFlagSet()
 	return RunWithFlagSet(ctx, fs)
@@ -81,7 +37,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 
 	flagset.Parse(fs)
 
-	err := flagset.SetFlagsFromEnvVarsWithFeedback(fs, "PLACEHOLDER", true)
+	err := flagset.SetFlagsFromEnvVars(fs, "PLACEHOLDER")
 
 	if err != nil {
 		return fmt.Errorf("%v", err)
@@ -162,7 +118,6 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 
 	*/
 
-	log.Println("AUTH", authenticator_uri)
 	authenticator, err := auth.NewAuthenticator(ctx, authenticator_uri)
 
 	if err != nil {
@@ -181,181 +136,184 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 
 	mux.Handle("/ping", ping_handler)
 
-	if proxy_tiles {
+	if enable_www {
 
-		ctx := context.Background()
-		tile_cache, err := cache.NewCache(ctx, proxy_tiles_cache)
+		if proxy_tiles {
 
-		if err != nil {
-			return fmt.Errorf("Failed to create proxy tile cache, %w", err)
-		}
-
-		timeout := time.Duration(proxy_tiles_timeout) * time.Second
-
-		proxy_opts := &tzhttp.TilezenProxyHandlerOptions{
-			Cache:   tile_cache,
-			Timeout: timeout,
-		}
-
-		proxy_handler, err := tzhttp.TilezenProxyHandler(proxy_opts)
-
-		if err != nil {
-			return fmt.Errorf("Failed to create proxy tile handler, %w", err)
-		}
-
-		if proxy_test_network {
-
-			test_ctx, cancel := context.WithTimeout(ctx, timeout)
-			defer cancel()
-
-			req, err := gohttp.NewRequest("GET", "tile.nextzen.org", nil)
+			ctx := context.Background()
+			tile_cache, err := cache.NewCache(ctx, proxy_tiles_cache)
 
 			if err != nil {
-				return fmt.Errorf("Failed to create request for tile.nextzen.org, %w", err)
+				return fmt.Errorf("Failed to create proxy tile cache, %w", err)
 			}
 
-			cl := new(gohttp.Client)
+			timeout := time.Duration(proxy_tiles_timeout) * time.Second
 
-			_, err = cl.Do(req.WithContext(test_ctx))
+			proxy_opts := &tzhttp.TilezenProxyHandlerOptions{
+				Cache:   tile_cache,
+				Timeout: timeout,
+			}
+
+			proxy_handler, err := tzhttp.TilezenProxyHandler(proxy_opts)
 
 			if err != nil {
-				return fmt.Errorf("Failed to contact tile.nextzen.org, %w", err)
+				return fmt.Errorf("Failed to create proxy tile handler, %w", err)
 			}
 
-		}
+			if proxy_test_network {
 
-		// the order here is important - we don't have a general-purpose "add to
-		// mux with prefix" function here, like we do in the tangram handler so
-		// we set the nextzen tile url with proxy_tiles_url and then update it
-		// (proxy_tiles_url) with a prefix if necessary (20190911/thisisaaronland)
+				test_ctx, cancel := context.WithTimeout(ctx, timeout)
+				defer cancel()
 
-		nextzen_tile_url = fmt.Sprintf("%s{z}/{x}/{y}.mvt", proxy_tiles_url)
+				req, err := gohttp.NewRequest("GET", "tile.nextzen.org", nil)
 
-		if static_prefix != "" {
+				if err != nil {
+					return fmt.Errorf("Failed to create request for tile.nextzen.org, %w", err)
+				}
 
-			proxy_tiles_url = filepath.Join(static_prefix, proxy_tiles_url)
+				cl := new(gohttp.Client)
 
-			if !strings.HasSuffix(proxy_tiles_url, "/") {
-				proxy_tiles_url = fmt.Sprintf("%s/", proxy_tiles_url)
+				_, err = cl.Do(req.WithContext(test_ctx))
+
+				if err != nil {
+					return fmt.Errorf("Failed to contact tile.nextzen.org, %w", err)
+				}
+
 			}
+
+			// the order here is important - we don't have a general-purpose "add to
+			// mux with prefix" function here, like we do in the tangram handler so
+			// we set the nextzen tile url with proxy_tiles_url and then update it
+			// (proxy_tiles_url) with a prefix if necessary (20190911/thisisaaronland)
+
+			nextzen_tile_url = fmt.Sprintf("%s{z}/{x}/{y}.mvt", proxy_tiles_url)
+
+			if static_prefix != "" {
+
+				proxy_tiles_url = filepath.Join(static_prefix, proxy_tiles_url)
+
+				if !strings.HasSuffix(proxy_tiles_url, "/") {
+					proxy_tiles_url = fmt.Sprintf("%s/", proxy_tiles_url)
+				}
+			}
+
+			mux.Handle(proxy_tiles_url, proxy_handler)
 		}
 
-		mux.Handle(proxy_tiles_url, proxy_handler)
-	}
+		bootstrap_opts := bootstrap.DefaultBootstrapOptions()
 
-	bootstrap_opts := bootstrap.DefaultBootstrapOptions()
+		bootstrap_opts.JS = []string{
+			"/javascript/bootstrap.min.js",
+		}
 
-	bootstrap_opts.JS = []string{
-		"/javascript/bootstrap.min.js",
-	}
+		tangramjs_opts := tangramjs.DefaultTangramJSOptions()
+		tangramjs_opts.NextzenOptions.APIKey = nextzen_apikey
+		tangramjs_opts.NextzenOptions.StyleURL = nextzen_style_url
+		tangramjs_opts.NextzenOptions.TileURL = nextzen_tile_url
 
-	tangramjs_opts := tangramjs.DefaultTangramJSOptions()
-	tangramjs_opts.NextzenOptions.APIKey = nextzen_apikey
-	tangramjs_opts.NextzenOptions.StyleURL = nextzen_style_url
-	tangramjs_opts.NextzenOptions.TileURL = nextzen_tile_url
-
-	err = bootstrap.AppendAssetHandlersWithPrefix(mux, static_prefix)
-
-	if err != nil {
-		return fmt.Errorf("Failed to append Bootstrap assets, %w", err)
-	}
-
-	if enable_ready {
-
-		ready_t := time.Now().Add(time.Duration(ready_ttl) * time.Second)
-		ready_handler, err := http.PlaceholderReadyHandler(placeholder_endpoint, ready_t)
+		err = bootstrap.AppendAssetHandlersWithPrefix(mux, static_prefix)
 
 		if err != nil {
-			return fmt.Errorf("Failed to create Placeholder ready handler, %v", err)
+			return fmt.Errorf("Failed to append Bootstrap assets, %w", err)
 		}
 
-		ready_path := ready_url
-		mux.Handle(ready_path, ready_handler)
-	}
+		if enable_ready {
 
-	search_opts := &http.SearchHandlerOptions{
-		PlaceholderClient: cl,
-		Templates:         t,
-		URLPrefix:         static_prefix,
-		Authenticator:     authenticator,
-	}
+			ready_t := time.Now().Add(time.Duration(ready_ttl) * time.Second)
+			ready_handler, err := http.PlaceholderReadyHandler(placeholder_endpoint, ready_t)
 
-	if enable_ready {
-		search_opts.EnableReadyCheck = true
-		search_opts.ReadyCheckURL = ready_url
-	}
+			if err != nil {
+				return fmt.Errorf("Failed to create Placeholder ready handler, %v", err)
+			}
 
-	search_handler, err := http.NewSearchHandler(search_opts)
-
-	if err != nil {
-		return fmt.Errorf("Failed to create search handler, %w", err)
-	}
-
-	search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, static_prefix)
-	search_handler = tangramjs.AppendResourcesHandlerWithPrefix(search_handler, tangramjs_opts, static_prefix)
-
-	if enable_opensearch {
-
-		if opensearch_search_template == "" {
-			opensearch_search_template = filepath.Join(server_uri, search_url)
+			ready_path := ready_url
+			mux.Handle(ready_path, ready_handler)
 		}
 
-		if opensearch_search_form == "" {
-			opensearch_search_form = filepath.Join(server_uri, search_url)
+		search_opts := &http.SearchHandlerOptions{
+			PlaceholderClient: cl,
+			Templates:         t,
+			URLPrefix:         static_prefix,
+			Authenticator:     authenticator,
 		}
 
-		os_desc_opts := &os.BasicDescriptionOptions{
-			QueryParameter: "text",
-			SearchTemplate: opensearch_search_template,
-			SearchForm:     opensearch_search_form,
-			ImageURI:       os.DEFAULT_IMAGE_URI,
-			Name:           "Placeholder",
-			Description:    "Search Placeholder",
+		if enable_ready {
+			search_opts.EnableReadyCheck = true
+			search_opts.ReadyCheckURL = ready_url
 		}
 
-		os_desc, err := os.BasicDescription(os_desc_opts)
+		search_handler, err := http.NewSearchHandler(search_opts)
 
 		if err != nil {
-			return fmt.Errorf("Failed to create opensearc description, %w", err)
+			return fmt.Errorf("Failed to create search handler, %w", err)
 		}
 
-		os_handler_opts := &oshttp.OpenSearchHandlerOptions{
-			Description: os_desc,
+		search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, static_prefix)
+		search_handler = tangramjs.AppendResourcesHandlerWithPrefix(search_handler, tangramjs_opts, static_prefix)
+
+		if enable_opensearch {
+
+			if opensearch_search_template == "" {
+				opensearch_search_template = filepath.Join(server_uri, search_url)
+			}
+
+			if opensearch_search_form == "" {
+				opensearch_search_form = filepath.Join(server_uri, search_url)
+			}
+
+			os_desc_opts := &os.BasicDescriptionOptions{
+				QueryParameter: "text",
+				SearchTemplate: opensearch_search_template,
+				SearchForm:     opensearch_search_form,
+				ImageURI:       os.DEFAULT_IMAGE_URI,
+				Name:           "Placeholder",
+				Description:    "Search Placeholder",
+			}
+
+			os_desc, err := os.BasicDescription(os_desc_opts)
+
+			if err != nil {
+				return fmt.Errorf("Failed to create opensearc description, %w", err)
+			}
+
+			os_handler_opts := &oshttp.OpenSearchHandlerOptions{
+				Description: os_desc,
+			}
+
+			os_handler, err := oshttp.OpenSearchHandler(os_handler_opts)
+
+			if err != nil {
+				return fmt.Errorf("Failed to create opensearch handler, %w", err)
+			}
+
+			mux.Handle(opensearch_url, os_handler)
+
+			os_plugins := map[string]*os.OpenSearchDescription{
+				opensearch_url: os_desc,
+			}
+
+			os_plugins_opts := &oshttp.AppendPluginsOptions{
+				Plugins: os_plugins,
+			}
+
+			search_handler = oshttp.AppendPluginsHandler(search_handler, os_plugins_opts)
 		}
 
-		os_handler, err := oshttp.OpenSearchHandler(os_handler_opts)
+		search_handler = authenticator.WrapHandler(search_handler)
+
+		mux.Handle(search_url, search_handler)
+
+		err = tangramjs.AppendAssetHandlersWithPrefix(mux, static_prefix)
 
 		if err != nil {
-			return fmt.Errorf("Failed to create opensearch handler, %w", err)
+			return fmt.Errorf("Failed to append Tangram assets, %w", err)
 		}
 
-		mux.Handle(opensearch_url, os_handler)
+		err = http.AppendStaticAssetHandlersWithPrefix(mux, static_prefix)
 
-		os_plugins := map[string]*os.OpenSearchDescription{
-			opensearch_url: os_desc,
+		if err != nil {
+			return fmt.Errorf("Failed to append application assets, %w", err)
 		}
-
-		os_plugins_opts := &oshttp.AppendPluginsOptions{
-			Plugins: os_plugins,
-		}
-
-		search_handler = oshttp.AppendPluginsHandler(search_handler, os_plugins_opts)
-	}
-
-	search_handler = authenticator.WrapHandler(search_handler)
-
-	mux.Handle(search_url, search_handler)
-
-	err = tangramjs.AppendAssetHandlersWithPrefix(mux, static_prefix)
-
-	if err != nil {
-		return fmt.Errorf("Failed to append Tangram assets, %w", err)
-	}
-
-	err = http.AppendStaticAssetHandlersWithPrefix(mux, static_prefix)
-
-	if err != nil {
-		return fmt.Errorf("Failed to append application assets, %w", err)
 	}
 
 	if enable_api {
