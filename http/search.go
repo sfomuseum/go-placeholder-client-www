@@ -12,7 +12,7 @@ import (
 )
 
 type SearchVars struct {
-	URLPrefix        string
+	StaticPrefix     string
 	IsAPIGateway     bool
 	Query            string
 	Results          *results.SearchResults
@@ -25,7 +25,7 @@ type SearchHandlerOptions struct {
 	PlaceholderClient *client.PlaceholderClient
 	IsAPIGateway      bool
 	Templates         *template.Template
-	URLPrefix         string
+	StaticPrefix      string
 	EnableReadyCheck  bool
 	ReadyCheckURL     string
 	Authenticator     auth.Authenticator
@@ -67,7 +67,7 @@ func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
 		}
 
 		var search_vars SearchVars
-		search_vars.URLPrefix = opts.URLPrefix
+		search_vars.StaticPrefix = opts.StaticPrefix
 		search_vars.IsAPIGateway = opts.IsAPIGateway
 		search_vars.EnableReadyCheck = opts.EnableReadyCheck
 		search_vars.ReadyCheckURL = opts.ReadyCheckURL

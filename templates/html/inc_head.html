@@ -5,16 +5,16 @@
 	<title>Placeholder</title>
 	<meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">	
-	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/localforage.min.js" }}"></script>
-	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/whosonfirst.uri.js" }}"></script>
-	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/whosonfirst.net.js" }}"></script>
-	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/whosonfirst.geojson.js" }}"></script>		
-	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/placeholder.client.maps.js" }}"></script>
-	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/placeholder.client.results.js" }}"></script>
-	<script type="text/javascript" src="{{ Join .URLPrefix "/javascript/placeholder.client.init.js" }}"></script>
-	<link type="text/css" rel="stylesheet" href="{{ Join .URLPrefix "/css/placeholder.client.css" }}" />
+	<script type="text/javascript" src="{{ Join .StaticPrefix "/javascript/localforage.min.js" }}"></script>
+	<script type="text/javascript" src="{{ Join .StaticPrefix "/javascript/whosonfirst.uri.js" }}"></script>
+	<script type="text/javascript" src="{{ Join .StaticPrefix "/javascript/whosonfirst.net.js" }}"></script>
+	<script type="text/javascript" src="{{ Join .StaticPrefix "/javascript/whosonfirst.geojson.js" }}"></script>		
+	<script type="text/javascript" src="{{ Join .StaticPrefix "/javascript/placeholder.client.maps.js" }}"></script>
+	<script type="text/javascript" src="{{ Join .StaticPrefix "/javascript/placeholder.client.results.js" }}"></script>
+	<script type="text/javascript" src="{{ Join .StaticPrefix "/javascript/placeholder.client.init.js" }}"></script>
+	<link type="text/css" rel="stylesheet" href="{{ Join .StaticPrefix "/css/placeholder.client.css" }}" />
     </head>
-    <body data-url-prefix="{{ .URLPrefix }}" {{ if .EnableReadyCheck }}data-enable-ready-check="{{ .EnableReadyCheck }}" data-ready-check-url="{{ Join .URLPrefix .ReadyCheckURL }}"{{ end }}>
+    <body data-url-prefix="{{ .StaticPrefix }}" {{ if .EnableReadyCheck }}data-enable-ready-check="{{ .EnableReadyCheck }}" data-ready-check-url="{{ Join .StaticPrefix .ReadyCheckURL }}"{{ end }}>
 	<div class="container">
 
 	    <nav class="navbar navbar-expand-lg navbar-light bg-light-x">

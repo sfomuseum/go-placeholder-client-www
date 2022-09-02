@@ -9,9 +9,11 @@ import (
 func main() {
 
 	ctx := context.Background()
-	err := server.Run(ctx)
+	logger := log.Default()
+
+	err := server.Run(ctx, logger)
 
 	if err != nil {
-		log.Fatalf("Failed to run server, %v", err)
+		logger.Fatalf("Failed to run server, %v", err)
 	}
 }

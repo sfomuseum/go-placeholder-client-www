@@ -5,7 +5,7 @@ import (
 	"github.com/sfomuseum/go-placeholder-client-www/static"
 	"io/fs"
 	gohttp "net/http"
-	"path/filepath"
+	"net/url"
 	"strings"
 )
 
@@ -71,7 +71,7 @@ func appendPrefix(prefix string, path string) string {
 
 	if prefix != "" {
 		path = strings.TrimLeft(path, "/")
-		path = filepath.Join(prefix, path)
+		path, _ = url.JoinPath(prefix, path)
 	}
 
 	return path

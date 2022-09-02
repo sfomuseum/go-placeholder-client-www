@@ -28,39 +28,41 @@ import (
 	"time"
 )
 
-func Run(ctx context.Context) error {
+func Run(ctx context.Context, logger *log.Logger) error {
 	fs := DefaultFlagSet()
-	return RunWithFlagSet(ctx, fs)
+	return RunWithFlagSet(ctx, fs, logger)
 }
 
-func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
+func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) error {
 
 	flagset.Parse(fs)
 
 	err := flagset.SetFlagsFromEnvVars(fs, "PLACEHOLDER")
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to set flags from environment variables, %w", err)
 	}
 
 	search_url := "/"
+	ping_url := "/ping"
 
-	if prefix != "" {
+	if url_prefix != "" {
 
-		search_url, _ = url.JoinPath(prefix, search_url)
+		search_url, _ = url.JoinPath(url_prefix, search_url)
+		ping_url, _ = url.JoinPath(url_prefix, ping_url)
 
-		api_url, _ = url.JoinPath(prefix, api_url)
-		opensearch_url, _ = url.JoinPath(prefix, opensearch_url)
-		ready_url, _ = url.JoinPath(prefix, ready_url)
+		api_url, _ = url.JoinPath(url_prefix, api_url)
+		opensearch_url, _ = url.JoinPath(url_prefix, opensearch_url)
+		ready_url, _ = url.JoinPath(url_prefix, ready_url)
 
-		nextzen_tile_url, _ = url.JoinPath(prefix, nextzen_tile_url)
-		proxy_tiles_url, _ = url.JoinPath(prefix, proxy_tiles_url)
+		nextzen_tile_url, _ = url.JoinPath(url_prefix, nextzen_tile_url)
+		proxy_tiles_url, _ = url.JoinPath(url_prefix, proxy_tiles_url)
 	}
 
 	cl, err := client.NewPlaceholderClient(placeholder_endpoint)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to create new Placeholder client, %w", err)
 	}
 
 	t := template.New("placeholder-client").Funcs(template.FuncMap{
@@ -134,7 +136,8 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		return fmt.Errorf("Failed to create ping handler, %w", err)
 	}
 
-	mux.Handle("/ping", ping_handler)
+	mux.Handle(ping_url, ping_handler)
+	logger.Printf("Installed ping handler on %s", ping_url)
 
 	if enable_www {
 
@@ -198,6 +201,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 			}
 
 			mux.Handle(proxy_tiles_url, proxy_handler)
+			logger.Printf("Installed proxy tiles URL on %s", proxy_tiles_url)
 		}
 
 		bootstrap_opts := bootstrap.DefaultBootstrapOptions()
@@ -211,7 +215,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		tangramjs_opts.NextzenOptions.StyleURL = nextzen_style_url
 		tangramjs_opts.NextzenOptions.TileURL = nextzen_tile_url
 
-		err = bootstrap.AppendAssetHandlersWithPrefix(mux, static_prefix)
+		err = bootstrap.AppendAssetHandlersWithPrefix(mux, url_prefix)
 
 		if err != nil {
 			return fmt.Errorf("Failed to append Bootstrap assets, %w", err)
@@ -226,20 +230,27 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 				return fmt.Errorf("Failed to create Placeholder ready handler, %v", err)
 			}
 
-			ready_path := ready_url
-			mux.Handle(ready_path, ready_handler)
+			mux.Handle(ready_url, ready_handler)
+			logger.Printf("Install ready handler on %s", ready_url)
 		}
 
 		search_opts := &http.SearchHandlerOptions{
 			PlaceholderClient: cl,
 			Templates:         t,
-			URLPrefix:         static_prefix,
+			StaticPrefix:      static_prefix,
 			Authenticator:     authenticator,
 		}
 
 		if enable_ready {
-			search_opts.EnableReadyCheck = true
-			search_opts.ReadyCheckURL = ready_url
+
+			static_ready_url := ready_url
+
+			if static_prefix != "" {
+				static_ready_url, _ = url.JoinPath(static_prefix, static_ready_url)
+			}
+
+			search_opts.EnableReadyCheck = enable_ready
+			search_opts.ReadyCheckURL = static_ready_url
 		}
 
 		search_handler, err := http.NewSearchHandler(search_opts)
@@ -288,6 +299,8 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 
 			mux.Handle(opensearch_url, os_handler)
 
+			logger.Printf("Install opensearch handler on %s", opensearch_url)
+
 			os_plugins := map[string]*os.OpenSearchDescription{
 				opensearch_url: os_desc,
 			}
@@ -302,8 +315,9 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		search_handler = authenticator.WrapHandler(search_handler)
 
 		mux.Handle(search_url, search_handler)
+		logger.Printf("Installed search handler on %s", search_handler)
 
-		err = tangramjs.AppendAssetHandlersWithPrefix(mux, static_prefix)
+		err = tangramjs.AppendAssetHandlersWithPrefix(mux, url_prefix)
 
 		if err != nil {
 			return fmt.Errorf("Failed to append Tangram assets, %w", err)
@@ -338,6 +352,8 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 
 		api_handler = authenticator.WrapHandler(api_handler)
 		mux.Handle(api_url, api_handler)
+
+		logger.Printf("Installed API handler on %s", api_url)
 	}
 
 	// end of handlers
@@ -348,7 +364,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet) error {
 		return fmt.Errorf("Failed to create new server, %w", err)
 	}
 
-	log.Printf("Listening on %s\n", s.Address())
+	logger.Printf("Listening on %s\n", s.Address())
 
 	err = s.ListenAndServe(ctx, mux)
 

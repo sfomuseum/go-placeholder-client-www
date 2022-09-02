@@ -10,10 +10,13 @@ import (
 
 var placeholder_endpoint string
 
+// A valid aaronland/go-http-server URI.
 var server_uri string
 
-var prefix string
+// Prefix for URL mux handlers.
+var url_prefix string
 
+// Prefix for HTML paths.
 var static_prefix string
 
 var nextzen_apikey string
@@ -68,7 +71,7 @@ func DefaultFlagSet() *flag.FlagSet {
 
 	fs.StringVar(&server_uri, "server-uri", "http://localhost:8080", "...")
 
-	fs.StringVar(&prefix, "prefix", "", "Prepend this prefix to application URLs.")
+	fs.StringVar(&url_prefix, "url-prefix", "", "Prepend this prefix to application URLs.")
 	fs.StringVar(&static_prefix, "static-prefix", "", "Prepend this prefix to URLs for static assets.")
 
 	fs.StringVar(&nextzen_apikey, "nextzen-apikey", "", "A valid Nextzen API key")
