@@ -137,7 +137,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 	}
 
 	mux.Handle(ping_url, ping_handler)
-	logger.Printf("Installed ping handler on %s", ping_url)
+	// logger.Printf("Installed ping handler on %s", ping_url)
 
 	if enable_www {
 
@@ -201,7 +201,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 			}
 
 			mux.Handle(proxy_tiles_url, proxy_handler)
-			logger.Printf("Installed proxy tiles URL on %s", proxy_tiles_url)
+			// logger.Printf("Installed proxy tiles URL on %s", proxy_tiles_url)
 		}
 
 		bootstrap_opts := bootstrap.DefaultBootstrapOptions()
@@ -231,7 +231,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 			}
 
 			mux.Handle(ready_url, ready_handler)
-			logger.Printf("Install ready handler on %s", ready_url)
+			// logger.Printf("Install ready handler on %s", ready_url)
 		}
 
 		search_opts := &http.SearchHandlerOptions{
@@ -298,8 +298,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 			}
 
 			mux.Handle(opensearch_url, os_handler)
-
-			logger.Printf("Install opensearch handler on %s", opensearch_url)
+			// logger.Printf("Install opensearch handler on %s", opensearch_url)
 
 			os_plugins := map[string]*os.OpenSearchDescription{
 				opensearch_url: os_desc,
@@ -315,7 +314,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		search_handler = authenticator.WrapHandler(search_handler)
 
 		mux.Handle(search_url, search_handler)
-		logger.Printf("Installed search handler on %s", search_handler)
+		// logger.Printf("Installed search handler on %s", search_url)
 
 		err = tangramjs.AppendAssetHandlersWithPrefix(mux, url_prefix)
 
@@ -353,7 +352,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		api_handler = authenticator.WrapHandler(api_handler)
 		mux.Handle(api_url, api_handler)
 
-		logger.Printf("Installed API handler on %s", api_url)
+		// logger.Printf("Installed API handler on %s", api_url)
 	}
 
 	// end of handlers
