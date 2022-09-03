@@ -55,8 +55,15 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		opensearch_url, _ = url.JoinPath(url_prefix, opensearch_url)
 		ready_url, _ = url.JoinPath(url_prefix, ready_url)
 
-		nextzen_tile_url, _ = url.JoinPath(url_prefix, nextzen_tile_url)
 		proxy_tiles_url, _ = url.JoinPath(url_prefix, proxy_tiles_url)
+
+		// We shouldn't have to do this but since it's not possible to serve local Nextzen
+		// styles in an AWS Lambda/API Gateway configuration we're just going to support
+		// remote URLs...
+
+		if !strings.HasPrefix(nextzen_tile_url, "http") {
+			nextzen_tile_url, _ = url.JoinPath(url_prefix, nextzen_tile_url)
+		}
 	}
 
 	cl, err := client.NewPlaceholderClient(placeholder_endpoint)
