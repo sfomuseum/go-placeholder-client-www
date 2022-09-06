@@ -1,9 +1,10 @@
 window.addEventListener("load", function load(event){
 
+    var placeholder_el = document.getElementById("placeholder");
     var search_button = document.getElementById("search-button");
     
-    var ready_check = document.body.getAttribute("data-enable-ready-check");
-    var ready_check_url = document.body.getAttribute("data-ready-check-url");    
+    var ready_check = placeholder_el.getAttribute("data-enable-ready-check");
+    var ready_check_url = placeholder_el.getAttribute("data-ready-check-url");    
 
     if (ready_check == "true"){
 

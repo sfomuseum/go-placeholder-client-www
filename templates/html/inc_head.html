@@ -14,8 +14,8 @@
 	<script type="text/javascript" src="{{ Join .StaticPrefix "/javascript/placeholder.client.init.js" }}"></script>
 	<link type="text/css" rel="stylesheet" href="{{ Join .StaticPrefix "/css/placeholder.client.css" }}" />
     </head>
-    <body data-url-prefix="{{ .StaticPrefix }}" {{ if .EnableReadyCheck }}data-enable-ready-check="{{ .EnableReadyCheck }}" data-ready-check-url="{{ Join .StaticPrefix .ReadyCheckURL }}"{{ end }}>
-	<div class="container">
+    <body>
+	<div class="container" id="placeholder" data-url-prefix="{{ .StaticPrefix }}" {{ if .EnableReadyCheck }}data-enable-ready-check="{{ .EnableReadyCheck }}" data-ready-check-url="{{ Join .StaticPrefix .ReadyCheckURL }}"{{ end }}>
 
 	    <nav class="navbar navbar-expand-lg navbar-light bg-light-x">
 		<div class="container-fluid">
