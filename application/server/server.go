@@ -20,6 +20,7 @@ import (
 	"github.com/whosonfirst/go-cache"
 	_ "github.com/whosonfirst/go-cache-blob"
 	"html/template"
+	"io/fs"
 	"log"
 	gohttp "net/http"
 	"net/url"
@@ -28,6 +29,12 @@ import (
 	"time"
 )
 
+type RunOptions struct {
+	Logger    *log.Logger
+	FlagSet   *flag.FlagSet
+	Templates fs.FS
+}
+
 func Run(ctx context.Context, logger *log.Logger) error {
 	fs := DefaultFlagSet()
 	return RunWithFlagSet(ctx, fs, logger)
@@ -35,9 +42,20 @@ func Run(ctx context.Context, logger *log.Logger) error {
 
 func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) error {
 
-	flagset.Parse(fs)
+	opts := &RunOptions{
+		Logger:    logger,
+		FlagSet:   fs,
+		Templates: html.FS,
+	}
 
-	err := flagset.SetFlagsFromEnvVars(fs, "PLACEHOLDER")
+	return RunWithOptions(ctx, opts)
+}
+
+func RunWithOptions(ctx context.Context, opts *RunOptions) error {
+
+	flagset.Parse(opts.FlagSet)
+
+	err := flagset.SetFlagsFromEnvVars(opts.FlagSet, "PLACEHOLDER")
 
 	if err != nil {
 		return fmt.Errorf("Failed to set flags from environment variables, %w", err)
@@ -89,10 +107,10 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		},
 	})
 
-	t, err = t.ParseFS(html.FS, "*.html")
+	t, err = t.ParseFS(opts.Templates, "*.html")
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Failed to parse templates, %w", err)
 	}
 
 	if static_prefix != "" {
@@ -370,7 +388,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		return fmt.Errorf("Failed to create new server, %w", err)
 	}
 
-	logger.Printf("Listening on %s\n", s.Address())
+	opts.Logger.Printf("Listening on %s\n", s.Address())
 
 	err = s.ListenAndServe(ctx, mux)
 

@@ -13,7 +13,9 @@ import (
 
 // type Authenticator is a simple interface for	enforcing authentication in HTTP handlers.
 type Authenticator interface {
+	// WrapHandler wraps a `http.Handler` with any implementation-specific middleware.
 	WrapHandler(http.Handler) http.Handler
+	// GetAccountForRequest returns an `Account` instance  for an HTTP request.
 	GetAccountForRequest(*http.Request) (*Account, error)
 }
 

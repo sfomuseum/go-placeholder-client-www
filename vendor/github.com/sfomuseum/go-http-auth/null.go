@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func init(){
+func init() {
 	ctx := context.Background()
 	RegisterAuthenticator(ctx, "null", NewNullAuthenticator)
 }
@@ -29,7 +29,13 @@ func (a *NullAuthenticator) WrapHandler(h http.Handler) http.Handler {
 	return h
 }
 
-// GetAccountForRequest returns an empty `Account` instance.
+// GetAccountForRequest returns a `NotLoggedIn` error.
 func (a *NullAuthenticator) GetAccountForRequest(req *http.Request) (*Account, error) {
-	return &Account{}, nil
+
+	acct := &Account{
+		Id:   0,
+		Name: "Null",
+	}
+
+	return acct, nil
 }

@@ -5,7 +5,7 @@ cli:
 	go build -mod vendor -o bin/server cmd/server/main.go
 
 debug:
-	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY) -api -ready-check=false -server-uri http://localhost:8081 -prefix /places
+	go run -mod vendor cmd/server/main.go -nextzen-apikey $(APIKEY) -api -ready-check=false -server-uri http://localhost:8081 
 
 docker:
 	docker build -t placeholder-client-www .

@@ -7,10 +7,10 @@ require (
 	github.com/aaronland/go-http-ping/v2 v2.0.0
 	github.com/aaronland/go-http-sanitize v0.0.6
 	github.com/aaronland/go-http-server v1.0.0
-	github.com/aaronland/go-http-tangramjs v0.1.2
+	github.com/aaronland/go-http-tangramjs v0.1.3
 	github.com/rs/cors v1.8.2
 	github.com/sfomuseum/go-flags v0.8.3
-	github.com/sfomuseum/go-http-auth v0.0.2
+	github.com/sfomuseum/go-http-auth v0.0.4
 	github.com/sfomuseum/go-http-opensearch v0.0.1
 	github.com/sfomuseum/go-http-tilezen v0.0.7
 	github.com/sfomuseum/go-placeholder-client v0.0.4
@@ -21,7 +21,7 @@ require (
 
 require (
 	github.com/aaronland/go-http-leaflet v0.1.0 // indirect
-	github.com/aaronland/go-http-rewrite v0.0.7 // indirect
+	github.com/aaronland/go-http-rewrite v1.0.0 // indirect
 	github.com/aaronland/go-roster v1.0.0 // indirect
 	github.com/akrylysov/algnhsa v0.12.1 // indirect
 	github.com/aws/aws-lambda-go v1.9.0 // indirect
@@ -38,7 +38,7 @@ require (
 	github.com/whosonfirst/go-ioutil v1.0.2 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	gocloud.dev v0.26.0 // indirect
-	golang.org/x/net v0.0.0-20220401154927-543a649e0bdd // indirect
+	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
 	golang.org/x/sys v0.0.0-20220330033206-e17cdc41300f // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
