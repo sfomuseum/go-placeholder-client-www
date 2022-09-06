@@ -29,10 +29,16 @@ import (
 	"time"
 )
 
+type AppendHandlersFunc func(context.Context, *gohttp.ServeMux) error
+
+type WrapHandlerFunc func(gohttp.Handler) gohttp.Handler
+
 type RunOptions struct {
-	Logger    *log.Logger
-	FlagSet   *flag.FlagSet
-	Templates fs.FS
+	Logger                *log.Logger
+	FlagSet               *flag.FlagSet
+	Templates             fs.FS
+	AppendHandlersFunc    AppendHandlersFunc
+	WrapSearchHandlerFunc WrapHandlerFunc
 }
 
 func Run(ctx context.Context, logger *log.Logger) error {
@@ -336,6 +342,10 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 			search_handler = oshttp.AppendPluginsHandler(search_handler, os_plugins_opts)
 		}
 
+		if opts.WrapSearchHandlerFunc != nil {
+			search_handler = opts.WrapSearchHandlerFunc(search_handler)
+		}
+
 		search_handler = authenticator.WrapHandler(search_handler)
 
 		mux.Handle(search_url, search_handler)
@@ -381,6 +391,15 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 	}
 
 	// end of handlers
+
+	if opts.AppendHandlersFunc != nil {
+
+		err := opts.AppendHandlersFunc(ctx, mux)
+
+		if err != nil {
+			return fmt.Errorf("Failed to append handlers, %w", err)
+		}
+	}
 
 	s, err := server.NewServer(ctx, server_uri)
 
