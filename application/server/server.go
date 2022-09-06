@@ -25,6 +25,7 @@ import (
 	gohttp "net/http"
 	"net/url"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"time"
 )
@@ -36,7 +37,7 @@ type WrapHandlerFunc func(gohttp.Handler) gohttp.Handler
 type RunOptions struct {
 	Logger                *log.Logger
 	FlagSet               *flag.FlagSet
-	Templates             fs.FS
+	Templates             []fs.FS
 	AppendHandlersFunc    AppendHandlersFunc
 	WrapSearchHandlerFunc WrapHandlerFunc
 }
@@ -46,12 +47,12 @@ func Run(ctx context.Context, logger *log.Logger) error {
 	return RunWithFlagSet(ctx, fs, logger)
 }
 
-func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) error {
+func RunWithFlagSet(ctx context.Context, flgst *flag.FlagSet, logger *log.Logger) error {
 
 	opts := &RunOptions{
 		Logger:    logger,
-		FlagSet:   fs,
-		Templates: html.FS,
+		FlagSet:   flgst,
+		Templates: []fs.FS{html.FS},
 	}
 
 	return RunWithOptions(ctx, opts)
@@ -111,12 +112,26 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 
 			return path
 		},
+		// For example: {{ if (IsAvailable "Account" .) }}
+		"IsAvailable": func(name string, data interface{}) bool {
+			v := reflect.ValueOf(data)
+			if v.Kind() == reflect.Ptr {
+				v = v.Elem()
+			}
+			if v.Kind() != reflect.Struct {
+				return false
+			}
+			return v.FieldByName(name).IsValid()
+		},
 	})
 
-	t, err = t.ParseFS(opts.Templates, "*.html")
+	for _, fs := range opts.Templates {
 
-	if err != nil {
-		return fmt.Errorf("Failed to parse templates, %w", err)
+		t, err = t.ParseFS(fs, "*.html")
+
+		if err != nil {
+			return fmt.Errorf("Failed to parse templates, %w", err)
+		}
 	}
 
 	if static_prefix != "" {
