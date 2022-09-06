@@ -19,6 +19,7 @@ type SearchVars struct {
 	Error            error
 	EnableReadyCheck bool
 	ReadyCheckURL    string
+	Account          *auth.Account
 }
 
 type SearchHandlerOptions struct {
@@ -45,7 +46,7 @@ func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
 
 	fn := func(rsp gohttp.ResponseWriter, req *gohttp.Request) {
 
-		_, err := opts.Authenticator.GetAccountForRequest(req)
+		acct, err := opts.Authenticator.GetAccountForRequest(req)
 
 		if err != nil {
 			gohttp.Error(rsp, err.Error(), gohttp.StatusForbidden)
@@ -71,6 +72,7 @@ func NewSearchHandler(opts *SearchHandlerOptions) (gohttp.Handler, error) {
 		search_vars.IsAPIGateway = opts.IsAPIGateway
 		search_vars.EnableReadyCheck = opts.EnableReadyCheck
 		search_vars.ReadyCheckURL = opts.ReadyCheckURL
+		search_vars.Account = acct
 
 		if text != "" {
 
