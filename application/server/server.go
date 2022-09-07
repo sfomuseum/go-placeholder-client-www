@@ -393,7 +393,8 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 
 		if enable_cors {
 			cors_wrapper := cors.New(cors.Options{
-				AllowedOrigins: cors_origins,
+				AllowedOrigins:   cors_origins,
+				AllowCredentials: cors_allow_credentials,
 			})
 
 			api_handler = cors_wrapper.Handler(api_handler)

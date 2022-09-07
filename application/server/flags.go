@@ -61,6 +61,8 @@ var ready_url string
 
 var cors_origins multi.MultiString
 
+var cors_allow_credentials bool
+
 var authenticator_uri string
 
 func DefaultFlagSet() *flag.FlagSet {
@@ -93,6 +95,8 @@ func DefaultFlagSet() *flag.FlagSet {
 
 	fs.StringVar(&api_url, "api-url", "/api/", "The URL (a relative path) for the API endpoint.")
 	fs.BoolVar(&enable_cors, "cors", false, "Enable CORS support for the API endpoint.")
+
+	fs.BoolVar(&cors_allow_credentials, "cors-allow-credentials", false, "Enable Access-Control-Allow-Credentials CORS header")
 
 	fs.StringVar(&opensearch_url, "opensearch-plugin-url", "/opensearch/", "...")
 	fs.StringVar(&opensearch_search_template, "opensearch-search-template", "", "...")
