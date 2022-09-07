@@ -59,7 +59,7 @@ var ready_ttl int
 
 var ready_url string
 
-var cors_origins multi.MultiString
+var cors_origins multi.MultiCSVString
 
 var cors_allow_credentials bool
 
