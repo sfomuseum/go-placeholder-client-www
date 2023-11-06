@@ -2,8 +2,6 @@ module github.com/sfomuseum/go-placeholder-client-www
 
 go 1.21
 
-toolchain go1.21.3
-
 require (
 	github.com/aaronland/go-http-bootstrap v0.4.0
 	github.com/aaronland/go-http-ping/v2 v2.0.0
