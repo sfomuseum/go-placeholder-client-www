@@ -4,6 +4,16 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"html/template"
+	"io/fs"
+	"log"
+	gohttp "net/http"
+	"net/url"
+	"path/filepath"
+	"reflect"
+	"strings"
+	"time"
+
 	"github.com/aaronland/go-http-bootstrap"
 	"github.com/aaronland/go-http-ping/v2"
 	"github.com/aaronland/go-http-server"
@@ -19,15 +29,6 @@ import (
 	"github.com/sfomuseum/go-placeholder-client-www/templates/html"
 	"github.com/whosonfirst/go-cache"
 	_ "github.com/whosonfirst/go-cache-blob"
-	"html/template"
-	"io/fs"
-	"log"
-	gohttp "net/http"
-	"net/url"
-	"path/filepath"
-	"reflect"
-	"strings"
-	"time"
 )
 
 type AppendHandlersFunc func(context.Context, *gohttp.ServeMux) error
@@ -187,6 +188,9 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 
 	if enable_www {
 
+		bootstrap_opts := bootstrap.DefaultBootstrapOptions()
+		bootstrap_opts.Prefix = url_prefix
+
 		if proxy_tiles {
 
 			ctx := context.Background()
@@ -250,8 +254,6 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 			// logger.Printf("Installed proxy tiles URL on %s", proxy_tiles_url)
 		}
 
-		bootstrap_opts := bootstrap.DefaultBootstrapOptions()
-
 		bootstrap_opts.JS = []string{
 			"/javascript/bootstrap.min.js",
 		}
@@ -260,8 +262,9 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 		tangramjs_opts.NextzenOptions.APIKey = nextzen_apikey
 		tangramjs_opts.NextzenOptions.StyleURL = nextzen_style_url
 		tangramjs_opts.NextzenOptions.TileURL = nextzen_tile_url
+		tangramjs_opts.Prefix = static_prefix
 
-		err = bootstrap.AppendAssetHandlersWithPrefix(mux, url_prefix)
+		err = bootstrap.AppendAssetHandlers(mux, bootstrap_opts)
 
 		if err != nil {
 			return fmt.Errorf("Failed to append Bootstrap assets, %w", err)
@@ -305,8 +308,8 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 			return fmt.Errorf("Failed to create search handler, %w", err)
 		}
 
-		search_handler = bootstrap.AppendResourcesHandlerWithPrefix(search_handler, bootstrap_opts, static_prefix)
-		search_handler = tangramjs.AppendResourcesHandlerWithPrefix(search_handler, tangramjs_opts, static_prefix)
+		search_handler = bootstrap.AppendResourcesHandler(search_handler, bootstrap_opts)
+		search_handler = tangramjs.AppendResourcesHandler(search_handler, tangramjs_opts)
 
 		if enable_opensearch {
 
@@ -366,7 +369,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 		mux.Handle(search_url, search_handler)
 		// logger.Printf("Installed search handler on %s", search_url)
 
-		err = tangramjs.AppendAssetHandlersWithPrefix(mux, url_prefix)
+		err = tangramjs.AppendAssetHandlers(mux, tangramjs_opts)
 
 		if err != nil {
 			return fmt.Errorf("Failed to append Tangram assets, %w", err)

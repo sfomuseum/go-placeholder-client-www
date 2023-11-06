@@ -2,13 +2,14 @@ package http
 
 import (
 	"errors"
+	"html/template"
+	_ "log"
+	gohttp "net/http"
+
 	"github.com/aaronland/go-http-sanitize"
 	"github.com/sfomuseum/go-http-auth"
 	"github.com/sfomuseum/go-placeholder-client"
 	"github.com/sfomuseum/go-placeholder-client/results"
-	"html/template"
-	_ "log"
-	gohttp "net/http"
 )
 
 type SearchVars struct {

@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/sfomuseum/go-placeholder-client-www/application/server"
 	"log"
+
+	"github.com/sfomuseum/go-placeholder-client-www/application/server"
 )
 
 func main() {

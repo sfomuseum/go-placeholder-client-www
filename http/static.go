@@ -2,11 +2,12 @@ package http
 
 import (
 	"fmt"
-	"github.com/sfomuseum/go-placeholder-client-www/static"
 	"io/fs"
 	gohttp "net/http"
 	"net/url"
 	"strings"
+
+	"github.com/sfomuseum/go-placeholder-client-www/static"
 )
 
 func StaticAssetsHandler() (gohttp.Handler, error) {

@@ -1,10 +1,11 @@
 package http
 
 import (
-	"github.com/sfomuseum/go-placeholder-client/filters"
-	wof_sanitize "github.com/whosonfirst/go-sanitize"
 	gohttp "net/http"
 	"strings"
+
+	"github.com/sfomuseum/go-placeholder-client/filters"
+	wof_sanitize "github.com/whosonfirst/go-sanitize"
 )
 
 func SearchFiltersWithRequest(req *gohttp.Request) ([]filters.Filter, error) {

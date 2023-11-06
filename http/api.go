@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/aaronland/go-http-sanitize"
-	"github.com/sfomuseum/go-http-auth"
-	"github.com/sfomuseum/go-placeholder-client"
 	_ "log"
 	gohttp "net/http"
 	"path/filepath"
+
+	"github.com/aaronland/go-http-sanitize"
+	"github.com/sfomuseum/go-http-auth"
+	"github.com/sfomuseum/go-placeholder-client"
 )
 
 func getString(req *gohttp.Request, param string) (string, error) {
